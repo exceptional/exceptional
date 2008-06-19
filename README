@@ -1,0 +1,24 @@
+= Exceptional Plugin for Ruby on Rails
+
+The Exceptional plugin posts errors to getexceptional.com where we collate and notify you based on the notification mediums you set up on the site.
+
+When an error occurs we post data about the request, session, and environment, and also a backtrace of the exception.
+
+== Usage
+
+Include the Exceptional::Rescuer mixin in whichever controller you want to catch error data (typically ApplicationController):
+
+  class ApplicationController < ActionController::Base
+    include Exceptional::Rescuer
+    ...
+  end
+
+== Configuration
+
+Create a new file (exceptional.yml) in /config and add the following configuration line.
+
+api-key: yourapikeyhere
+
+And you're done. Hope you enjoy getting Exceptional! Please send any questions or comments to hello@getexceptional.com.
+
+Copyright (c) 2008 Contrast, released under the MIT license.
