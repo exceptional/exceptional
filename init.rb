@@ -5,8 +5,13 @@ Exceptional::Agent.api_key = nil
 config_file = "#{RAILS_ROOT}/config/exceptional.yml"
 load_error = nil
 
-mongrel = nil;
+if RAILS_ENV == 'production'
+  ActionController::Base.class_eval do
+    include Exceptional::Rescuer
+  end
+end
 
+mongrel = nil;
 if defined?(Mongrel)
   ObjectSpace.each_object(Mongrel::HttpServer) do |mongrel_instance|
     agent.log.info("Multiple Mongrels in the Ruby vm? this might not work!") if mongrel  
