@@ -8,7 +8,7 @@ module Exceptional
   REMOTE_HOST = "getexceptional.com"
   REMOTE_PORT = 80
   
-  class Agent  
+  class Agent
     
     cattr_accessor :api_key
     
