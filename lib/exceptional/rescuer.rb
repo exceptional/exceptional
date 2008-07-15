@@ -6,7 +6,7 @@ module Exceptional
       response_code = response_code_for_rescue(exception)
       unless response_code == :notfound
         begin
-          Exceptional::Agent.send_data(exception, self, request)
+          Exceptional::Agent.instance.queue_to_send(exception, self, request)
         rescue Exception => exception
           if logger
             logger.fatal "Exceptional FAIL. Sorry, an exception occurred while trying to log your exception. How Ironic."
