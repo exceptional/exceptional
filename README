@@ -1,17 +1,13 @@
 = Exceptional plugin for Ruby on Rails
 
-This plugin posts exception data to Exceptional (getexceptional.com) where we collect it and notify you based on the mediums you set up in your account. Data about the request, session, and environment, and also a backtrace of the exception is transmitted.
+This plugin posts exception data to Exceptional (http://getexceptional.com). Data about the request, session, environment and a backtrace of the exception is transmitted.
 
-== Usage
+= Exceptional
 
-The plugin is automatically initialized when the Rails application is started.
+Exceptional (http://getexceptional.com) is a web-based exception tracking and managing system for Ruby on Rails folks and their apps.
 
-== Configuration
+= Installation
 
-Create a new file (exceptional.yml) in /config and add the following configuration line:
-
-api-key: your_api_key
-
-For further help, follow the installation steps displayed after adding a new app to your account. Please send any questions or comments to hello@getexceptional.com.
+For installation instructions, follow the steps displayed after adding a new app to your account. Please send any questions or comments to hello@getexceptional.com.
 
 Copyright © 2008 Contrast.
