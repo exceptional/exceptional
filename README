@@ -4,7 +4,7 @@ This plugin posts exception data to Exceptional (http://getexceptional.com). Dat
 
 = Exceptional
 
-Exceptional (http://getexceptional.com) is a web-based exception tracking and managing system for Ruby on Rails folks and their apps.
+Exceptional (http://getexceptional.com) is a web-based exception tracking and managing system for Ruby on Rails folks and their apps. It's currently in early, private beta.
 
 = Installation
 
