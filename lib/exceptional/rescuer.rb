@@ -1,4 +1,4 @@
-1module Exceptional
+module Exceptional
   
   module Rescuer
 
