@@ -21,13 +21,17 @@ module Exceptional::Agent
     include Singleton
     attr_reader :api_key, :log
     
-    # Helper methods
     include Munger
     include Interregator
     include Logging
     
     
     def start(config)
+      unless RAILS_ENV == "production"
+        to_stderr "Not running in production environment, disabling Exceptional"
+        return
+      end
+      
       if @started
         log! "Agent Started Already!"
         raise Exception.new("Duplicate attempt to start the Exceptional agent")
@@ -54,7 +58,7 @@ module Exceptional::Agent
       end
           
       @worker_thread = Thread.new do 
-        run_worker
+        @worker.run
       end
       
       log! "API key: " + @api_key
@@ -77,93 +81,5 @@ module Exceptional::Agent
       end
     end
     
-    protected
-    
-    def setup_log
-      log_file = "#{RAILS_ROOT}/log/exceptional."
-      log_file += @local_port ? "#{@local_port}.log" : "log"
-      
-      @log = Logger.new log_file
-      @log.level = Logger::INFO
-            
-      log! "Agent Initialized: pid = #{$$}"
-      to_stderr "Agent Log is found in #{log_file}"
-      log.info "Runtime environment: #{@environment.to_s.titleize}"  
-    end
-    
-    def run_worker
-      #return unless should_run?
-      
-      #until @connected
-      #  should_retry = connect
-      #  return unless should_retry
-      #end
-          
-      @worker.run
-    end
-    
-    
-    # Attempt to connect to the exceptional server
-    def connect
-      @connection_retry_period ||= 5
-      @connection_attempts ||= 0
-
-      sleep @connect_retry_period.to_i
-
-      @agent_id = invoke_remote :launch, @local_host, @local_port, determine_home_directory, $$, @launch_time.to_f
-
-      log! "Connected to Exceptional Service at #{@remote_host}:#{@remote_port}."
-      log.debug "Agent ID = #{@agent_id}."
-
-      # Ask the server for permission to send transaction samples.  determined by suvbscription license.
-      @connection_allowed = invoke_remote :should_collect_samples, @agent_id
-
-      @connected = true
-      return true
-      
-    rescue LicenseException => e
-      log! e.message, :error
-      log! "Invalid API key, signup for an account at getexceptional.com"
-      log! "Turning Exceptional Agent off."
-      return false
-
-    rescue Exception => e
-      log.error "Error attempting to connect to Exceptional Service at #{@remote_host}:#{@remote_port}"
-      log.error e.message
-      log.debug e.backtrace.join("\n")
-
-      @connect_attempts += 1
-      if @connect_attempts > 20
-        @connect_retry_period, period_msg = 10.minutes, "10 minutes"
-      elsif @connect_attempts > 10
-        @connect_retry_period, period_msg = 1.minutes, "1 minute"
-      elsif @connect_attempts > 5
-        @connect_retry_period, period_msg = 30, nil
-      else
-        @connect_retry_period, period_msg = 5, nil
-      end
-
-      log.info "Will re-attempt in #{period_msg}" if period_msg
-      return true
-    end
-    
-    # Ping the exceptional server 
-    def disconnect
-      
-    end
-    
-    # send the given message to STDERR as well as the agent log, so that it shows
-    # up in the console.  This should be used for important informational messages at boot
-    def log!(msg, level = :info)
-      to_stderr msg
-      log.send level, msg if log
-    end
-    
-    def to_stderr(msg)
-      # only log to stderr when we are running as a mongrel process, so it doesn't
-      # muck with daemons and the like.
-      unless @environment == :unknown
-        STDERR.puts "** [Exceptional] " + msg 
-      end
-    end
+  end
 end

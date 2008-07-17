@@ -6,12 +6,7 @@ When an error occurs we post data about the request, session, and environment, a
 
 == Usage
 
-Include the Exceptional::Rescuer mixin in whichever controller you want to catch error data (typically ApplicationController):
-
-  class ApplicationController < ActionController::Base
-    include Exceptional::Rescuer
-    ...
-  end
+The plugin is automatically initialized when the Rails application is started.
 
 == Configuration
 
