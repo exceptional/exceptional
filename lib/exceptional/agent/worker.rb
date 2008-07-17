@@ -1,6 +1,5 @@
 module Exceptional::Agent
-    
-  # In teh background sending yer excepshuns
+  
   class Worker
     
     attr_reader :log

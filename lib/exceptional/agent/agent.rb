@@ -28,13 +28,13 @@ module Exceptional::Agent
     
     def start(config)
       unless RAILS_ENV == "production"
-        to_stderr "Not running in production environment, plugin deactivated."
+        to_stderr "Not running in production environment. Plugin deactivated."
         return
       end
       
       if @started
-        log! "Agent Started Already!"
-        raise Exception.new("Duplicate attempt to start the Exceptional agent")
+        log! "Agent started already!"
+        raise Exception.new("Duplicate attempt to start the Exceptional agent.")
       end
 
       @config = config
@@ -53,7 +53,7 @@ module Exceptional::Agent
       default_port = @use_ssl ? 443 : 80
   
       unless @api_key && @api_key.length == 40
-        log! "No API key found.  Please insert your API key into config/exceptional.yml"
+        log! "No API key found. Please insert your API key into config/exceptional.yml."
         return
       end
           
