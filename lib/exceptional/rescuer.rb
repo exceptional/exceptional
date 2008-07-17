@@ -1,4 +1,4 @@
-module Exceptional
+1module Exceptional
   
   module Rescuer
 
@@ -9,7 +9,7 @@ module Exceptional
           Exceptional::Agent.instance.queue_to_send(exception, self, request)
         rescue Exception => exception
           if logger
-            logger.fatal "Exceptional FAIL. Sorry, an exception occurred while trying to log your exception. How Ironic."
+            logger.fatal "Exceptional fail! Sorry, an exception occurred while trying to log your exception. How Ironic."
             log_error(exception)
           end
         end
