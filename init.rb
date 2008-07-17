@@ -26,7 +26,7 @@ begin
 
 rescue Errno::ENOENT => e
   logger.fatal "*"*78
-  logger.fatal = "** WARNING: Exceptional config file not found (RAILS_ROOT/config/exceptional.yml)"
+  logger.fatal "** WARNING: Exceptional config file not found (RAILS_ROOT/config/exceptional.yml)"
   logger.fatal "*"*78
 rescue Exception => e
   logger.fatal "*"*78
