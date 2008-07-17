@@ -28,7 +28,7 @@ module Exceptional::Agent
     
     def start(config)
       unless RAILS_ENV == "production"
-        to_stderr "Not running in production environment, disabling Exceptional"
+        to_stderr "Not running in production environment, plugin deactivated."
         return
       end
       
