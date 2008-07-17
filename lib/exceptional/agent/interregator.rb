@@ -10,11 +10,10 @@ module Exceptional::Agent
     def determine_environment_and_port
       port = nil
       @environment = :unknown
-
       # Webrick (The OPTIONS constant will be set if launched with script/server)
       port = OPTIONS.fetch :port, DEFAULT_PORT
       @environment = :webrick
-
+      
     rescue NameError
       # Mongrel
       if defined? Mongrel::HttpServer
@@ -23,14 +22,11 @@ module Exceptional::Agent
           @environment = :mongrel
         end
       end
-      
     rescue NameError
       log.info "Could not determine port.  Likely running as a cgi"
-      
     ensure
       return port
     end
-    
     
   end
 end

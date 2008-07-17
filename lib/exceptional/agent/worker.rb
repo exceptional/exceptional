@@ -1,5 +1,6 @@
 module Exceptional::Agent
     
+  # In teh background sending yer excepshuns
   class Worker
     
     attr_reader :log
@@ -47,5 +48,6 @@ module Exceptional::Agent
        @log.debug e.backtrace.join("\n")
       end
     end
+    
   end
 end
