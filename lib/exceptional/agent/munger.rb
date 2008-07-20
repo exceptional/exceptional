@@ -2,7 +2,20 @@ module Exceptional::Agent
   
   # Methods for preparing exception data
   module Munger
-
+    
+    # Filters any paramters from being sent to Exceptional that have 
+    # been specified in the 'filter-parameters' config option.
+    # 
+    # By default, any parameter matching /password/ will not be sent.
+    #
+    def filtered_params(params)
+      params.each do |k, v|
+        params[k] = "[filtered]" if @param_filters.any? do |filter|
+          k.to_s.match(/#{filter}/)
+        end
+      end
+    end
+    
     def prepare_xml(exception,controller,request)
       xml = Builder::XmlMarkup.new
       xml.instruct! 
@@ -33,7 +46,7 @@ module Exceptional::Agent
     def prepare_request_to_send(request)
       req = ""
       req << "URL: #{request.protocol}#{request.env["HTTP_HOST"]}#{request.request_uri}\n"
-      req << "Parameters: #{request.parameters.inspect}\n"
+      req << "Parameters: #{filtered_params(request.parameters).inspect}\n"
       req << "Rails root: #{RAILS_ROOT}"
       req
     end

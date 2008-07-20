@@ -38,7 +38,12 @@ module Exceptional::Agent
       end
 
       @config = config
-     
+           
+      @param_filters = ['password']
+      if config.has_key?('filter-parameters')
+        @param_filters = @param_filters | config['filter-parameters'].split(',').map { |p| p.strip }
+      end
+      
       @local_port = determine_environment_and_port
       @local_host = determine_host
      
