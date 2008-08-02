@@ -19,8 +19,13 @@ module Exceptional::Agent
       
       @log = Logger.new log_file
       @log.level = Logger::INFO
-            
-      log! "Agent Initialized: pid = #{$$}"
+      
+      allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
+      if @config['log-level'] && allowed_log_levels.include?(@config['log-level'])
+        @log.level = "Logger::#{@config['log-level'].upcase}".constantize
+      end
+      
+      log! "Agent Initialized, pid: #{$$}"
       to_stderr "Agent Log is found in #{log_file}"
       log.info "Runtime environment: #{@environment.to_s.titleize}"  
     end

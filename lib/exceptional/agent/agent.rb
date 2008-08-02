@@ -1,6 +1,8 @@
 require 'net/https' 
 require 'net/http'
 require 'builder'
+require 'logger'
+require 'singleton'
 
 module Exceptional::Agent
   
@@ -14,7 +16,7 @@ module Exceptional::Agent
   
   class Agent
     
-    PROTOCOL_VERSION = 1
+    PROTOCOL_VERSION = 2
     REMOTE_HOST = "getexceptional.com"
     REMOTE_PORT = 80
     
@@ -25,12 +27,8 @@ module Exceptional::Agent
     include Interregator
     include Logging
     
-    
     def start(config)
-      unless RAILS_ENV == "production"
-        to_stderr "Not running in production environment. Plugin deactivated."
-        return
-      end
+      return unless RAILS_ENV == "production"
       
       if @started
         log! "Agent started already!"
@@ -51,39 +49,107 @@ module Exceptional::Agent
      
       @worker = Worker.new(@log)
       @started = true
-     
+      @start_time = Time.now 
+      
       @api_key = config['api-key']
      
       @use_ssl = config['ssl'] || false
       default_port = @use_ssl ? 443 : 80
-  
+      @remote_port = config['port'] ? config['port'].to_i : default_port
+      @remote_host = config['host'] || REMOTE_HOST
+      
       unless @api_key && @api_key.length == 40
         log! "No API key found. Please insert your API key into config/exceptional.yml."
         return
       end
-          
-      @worker_thread = Thread.new do 
-        @worker.run
+            
+      @worker_thread = Thread.new do
+        run_worker
       end
       
-      log! "API key: " + @api_key
-      log! "Mongrel (port): " + @local_port.to_s
+      log.debug "API key: " + @api_key
+      log.debug "Mongrel (port): " + @local_port.to_s
+      log.debug "Posting to: #{@remote_host}:#{@remote_port}"
       log! "Exceptional plugin loaded"
+      
+      at_exit do
+        disconnect
+        @worker_thread.terminate if @worker_thread
+      end
+    end
+    
+    def run_worker
+      until @connected
+        should_retry = connect
+        return unless should_retry
+      end 
+      
+      @worker.run
+    end
+    
+    def connect
+      @connection_attempts ||= 0
+      @connection_retry_timeout ||= 5 # chill and let the web server boot
+      sleep @connection_retry_timeout.to_i
+      
+      xml = prepare_connection_xml
+      @agent_id = call_remote(:connect, xml)
+      @connected = true
+      log! "Connected to Exceptional."
+      log.debug "Agent ID: #{@agent_id}."
+      
+    rescue Exception => e
+      log.error "Unable to connect to Exceptional."
+      log.error e.message
+      log.debug e.backtrace.join("/n")
+      
+      @connection_attempts += 1
+      if @connection_retry_timeout < 15.minutes
+        @connection_retry_timeout += rand(60)
+      else
+        @connection_retry_timeout = 15.minutes
+      end
+      
+      log.info "Re-attempting connection in #{@connection_retry_timeout} seconds."
+      return true
+    end
+    
+    def disconnect
+      return unless @connected
+      begin
+        log.info "Disconnecting from Exceptional."
+        call_remote :disconnect, prepare_disconnection_xml
+        log.debug "ktnxbai!"
+      rescue Exception => e
+        log.warn "Error disconnecting from Exceptional."
+        log.warn e
+        log.debug e.backtrace.join("\n")
+      end
     end
     
     def queue_to_send(exception, controller, request)
-      xml = prepare_xml(exception,controller,request)
+      xml = prepare_exception_xml(exception,controller,request)
       @worker.add_exception(xml)
     end
-    # TODO make controller and request optional to handle errors in daemons
     
-    def send_data(data)
-      http = Net::HTTP.new(REMOTE_HOST, REMOTE_PORT.to_i) 
-      uri = "/errors?&api_key=#{@api_key}&protocol_version=#{PROTOCOL_VERSION}"
+    def call_remote(method, xml)
+      http = Net::HTTP.new(@remote_host, @remote_port) 
+      uri = "/#{method.to_s}?&api_key=#{@api_key}&protocol_version=#{PROTOCOL_VERSION}"
       headers = { 'Content-Type' => 'application/xml', 'Accept' => 'application/xml' }
       response = http.start do |http|
-        http.post(uri, data, headers) 
+        http.post(uri, xml, headers) 
       end
+      
+      if response.kind_of? Net::HTTPSuccess
+        return response.body
+      else
+        raise Exception.new("#{response.code}: #{response.message}")
+      end 
+
+    rescue Exception => e
+      log.error "Error contacting Exceptional: #{e}"
+      log.debug e.backtrace.join("\n")
+      raise e
     end
     
   end

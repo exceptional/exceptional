@@ -8,7 +8,7 @@ module Exceptional::Agent
       @exceptions = []
       @mutex = Mutex.new
       @log = log
-      @log.info "Started worker."
+      @log.info "Started Exceptional Worker."
     end
     
     def add_exception(data)
@@ -41,9 +41,9 @@ module Exceptional::Agent
       data = exception_to_send
       
       begin
-       Exceptional::Agent.instance.send_data(data)
+       Exceptional::Agent.instance.call_remote(:errors, data)
       rescue Exception => e
-       @log.debug "Error sending exception data: #{e}" 
+       @log.error "Error sending exception data: #{e}" 
        @log.debug e.backtrace.join("\n")
       end
     end

@@ -16,49 +16,64 @@ module Exceptional::Agent
       end
     end
     
-    def prepare_xml(exception,controller,request)
+    def prepare_connection_xml
+      xml = Builder::XmlMarkup.new
+      xml.instruct!
+      xml.agent do |a|
+        a.hostname @local_host
+        a.port @local_port
+        a.pid $$
+        a.started_at @start_time
+        a.rails_root RAILS_ROOT
+        a.environment @environment.to_s
+      end
+      xml.target!
+    end
+    
+    def prepare_disconnection_xml
+      xml = Builder::XmlMarkup.new
+      xml.instruct!
+      xml.agent do |a|
+        a.agent_id @agent_id
+        a.stopped_at Time.now.to_s
+      end
+      xml.target!
+    end
+    
+    def prepare_exception_xml(exception,controller,request)
       xml = Builder::XmlMarkup.new
       xml.instruct! 
       xml.error do |e|
-        e.api_key @api_key
+        e.agent_id @agent_id
         e.controller_name controller.controller_name
         e.action_name controller.action_name
+        e.error_class exception.class.name
+        e.message exception.message
         e.backtrace exception.backtrace.join("\n")
-        e.user_ip request.env["HTTP_X_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]
-        e.host_ip request.env["HTTP_HOST"]
-        e.environment prepare_environment_to_send(request.env)
-        e.session prepare_session_to_send(request.session)
-        e.request prepare_request_to_send(request)
         e.occurred_at Time.now.to_s
-        e.summary "#{controller.controller_name}##{controller.action_name} (#{exception.class}) #{exception.message.inspect}"
+        e.rails_root RAILS_ROOT
+        e.url "#{request.protocol}#{request.host}#{request.request_uri}"
+        
+        e.environment do |env|
+          request.env.each do |k,v|
+            env.tag! k.downcase.to_sym, v.to_s.strip
+          end
+        end
+
+        e.session do |sess|
+          request.session.instance_variables.each do |v|
+            next if v =~ /db/
+            # can not haz @ in an xml tag
+            var = v.sub("@","")
+            sess.tag! var, request.session.instance_variable_get(v)
+          end
+        end
+        
+        e.parameters filtered_params(request.parameters).inspect
+        
       end
       xml.target!
     end
 
-    def prepare_environment_to_send(environment)
-      env = ""
-      environment.keys.sort.each do |key|
-        env << "#{key}:, #{environment[key].to_s.strip}\n"
-      end
-      env
-    end
-
-    def prepare_request_to_send(request)
-      req = ""
-      req << "URL: #{request.protocol}#{request.env["HTTP_HOST"]}#{request.request_uri}\n"
-      req << "Parameters: #{filtered_params(request.parameters).inspect}\n"
-      req << "Rails root: #{RAILS_ROOT}"
-      req
-    end
-
-    def prepare_session_to_send(session)
-      ses = ""
-      for variable in session.instance_variables
-        next if variable =~ /^@db/
-        ses << "#{variable}: #{session.instance_variable_get(variable)}\n"
-      end
-      ses
-    end
   end
-  
 end

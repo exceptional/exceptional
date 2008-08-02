@@ -23,7 +23,7 @@ module Exceptional::Agent
         end
       end
     rescue NameError
-      log.info "Could not determine port. Likely running as a cgi."
+      log.info "Could not determine port."
     ensure
       return port
     end
