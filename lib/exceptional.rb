@@ -53,7 +53,7 @@ module Exceptional
     def authenticate
       # No data required to authenticate, send a nil string? hacky
       return @authenticated if @authenticated
-      authenticated = call_remote(:authenticate, "")
+      authenticated = post(:authenticate, "")
       @authenticated = authenticated =~ /true/
     end
     
