@@ -1,37 +1,20 @@
-require 'exceptional/agent'
+require 'exceptional'
 
-logger = RAILS_DEFAULT_LOGGER
-config_file = "#{RAILS_ROOT}/config/exceptional.yml"
+def to_stderr(s)
+  STDERR.puts "** [Exceptional] " + s
+end
+
+config_file = File.join(RAILS_ROOT,"/config/exceptional.yml")
 
 begin 
-  # Load exceptional config file
-  config = YAML::load(File.open(config_file))
-
-  agent = Exceptional::Agent.instance
-  agent.start(config)
+  Exceptional.application_root = RAILS_ROOT
+  Exceptional.environment = RAILS_ENV
   
-  mongrel = nil;
-  if defined?(Mongrel)
-    ObjectSpace.each_object(Mongrel::HttpServer) do |mongrel_instance|
-      agent.log.info("Multiple Mongrels in the Ruby VM? This might not work!") if mongrel  
-      mongrel = mongrel_instance
-    end
+  Exceptional.load_config(config_file)
+  if Exceptional.enabled?
+    Exceptional::Rails.init
   end
-
-  if RAILS_ENV == 'production'
-    ActionController::Base.class_eval do
-      include Exceptional::Rescuer
-    end
-  end
-
-rescue Errno::ENOENT => e
-  logger.fatal "*"*78
-  logger.fatal "** WARNING: Exceptional config file not found (RAILS_ROOT/config/exceptional.yml)."
-  logger.fatal "*"*78
 rescue Exception => e
-  logger.fatal "*"*78
-  logger.fatal "** Exceptional plugin not loaded."
-  logger.fatal "** " + e
-  logger.fatal e.backtrace.join
-  logger.fatal "*"*78
+  to_stderr e
+  to_stderr "Plugin disabled."
 end

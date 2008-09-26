@@ -2,10 +2,11 @@ module Exceptional::Agent
   
   class Worker
     
-    attr_reader :log
+    attr_reader :log, :timeout, :exceptions
     
     def initialize(log = Logger.new(STDERR))
       @exceptions = []
+      @timeout = ::WORKER_TIMEOUT
       @mutex = Mutex.new
       @log = log
       @log.info "Started Exceptional Worker."
@@ -34,14 +35,14 @@ module Exceptional::Agent
     
     def send_any_exception_data
       if @exceptions.empty?
-        sleep 42
+        sleep @timeout
         return
       end
       
       data = exception_to_send
       
       begin
-       Exceptional::Agent.instance.call_remote(:errors, data)
+       Exceptional.post(data)
       rescue Exception => e
        @log.error "Error sending exception data: #{e}" 
        @log.debug e.backtrace.join("\n")
