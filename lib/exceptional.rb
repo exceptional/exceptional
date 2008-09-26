@@ -51,10 +51,16 @@ module Exceptional
     end
     
     def authenticate
-      # No data required to authenticate, send a nil string? hacky
-      return @authenticated if @authenticated
-      authenticated = post(:authenticate, "")
-      @authenticated = authenticated =~ /true/
+      begin    
+        # No data required to authenticate, send a nil string? hacky
+        return @authenticated if @authenticated
+        authenticated = call_remote(:authenticate, "")
+        @authenticated = authenticated =~ /true/
+      rescue 
+        @authenticated = false
+      ensure
+        return @authenticated
+      end
     end
     
     def post(exception_data)
