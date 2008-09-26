@@ -1,5 +1,4 @@
 $:.unshift File.dirname(__FILE__)
-require 'exceptional/merb'
 require 'exceptional/rails'
 require 'exceptional/deployed_environment'
 require 'exceptional/agent/worker'
@@ -12,7 +11,7 @@ require 'cgi'
 require 'net/http'
 require 'logger'
 require 'yaml'
-
+require 'json'
 
 module Exceptional
   class LicenseException < StandardError; end
@@ -76,8 +75,8 @@ module Exceptional
       e.action_name = controller.action_name
       e.application_root = self.application_root
       e.occurred_at = Time.now.to_s
-      e.environment = ENV.to_hash
-      # e.url "#{request.protocol}#{request.host}#{request.request_uri}"
+      e.environment = request.env.to_hash
+      e.url "#{request.protocol}#{request.host}#{request.request_uri}"
        
       safe_session = {}
       request.session.instance_variables.each do |v|

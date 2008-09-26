@@ -1,4 +1,3 @@
-require 'json'
 module Exceptional
   class DataError < StandardError; end
   
