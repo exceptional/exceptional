@@ -58,7 +58,11 @@ module Exceptional
     end
     
     def post(exception_data)
-      call_remote(:errors, exception_data.to_json)
+      begin
+        call_remote(:errors, exception_data.to_json)
+      rescue
+        
+      end
     end
     
     def catch(exception)
@@ -184,8 +188,8 @@ module Exceptional
       end 
 
     rescue Exception => e
-      # log.error "Error contacting Exceptional: #{e}"
-      # log.debug e.backtrace.join("\n")
+      log! "Error contacting Exceptional: #{e}", 'info'
+      log! e.backtrace.join("\n"), 'debug'
       raise e
     end
     
