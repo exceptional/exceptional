@@ -3,21 +3,22 @@ module Exceptional
     class Rails
       
       def self.init
-        if Exceptional.authenticate           
-          Exceptional.deployed_environment = DeployedEnvironment.new
+        Exceptional.deployed_environment = DeployedEnvironment.new
+        setup_log
+        Exceptional.log_config_info
         
-          setup_log
+        if Exceptional.authenticate           
+        
           if Exceptional.mode == :queue
             Exceptional.worker = Agent::Worker.new(@log)
             Exceptional.worker_thread = Thread.new do
               Exceptional.worker.run
             end
           end
-       
+          
           require File.join(File.dirname(__FILE__), 'integration', 'rails')
-        
-          Exceptional.log_config_info
-        
+          
+          
           at_exit do
             if Exceptional.mode == :queue         
               Exceptional.worker_thread.terminate if Exceptional.worker_thread

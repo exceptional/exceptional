@@ -178,7 +178,7 @@ module Exceptional
         raise LicenseException.new("API Key must be configured") 
       end
       
-      http = Net::HTTP.new(@remote_host, @remote_port) 
+      http = Net::HTTP.new(remote_host, remote_port) 
       uri = "/#{method.to_s}?&api_key=#{@api_key}&protocol_version=#{::PROTOCOL_VERSION}"
       # headers = { 'Content-Type' => 'text/x-json', 'Accept' => 'text/x-json' }
       headers = { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' }
