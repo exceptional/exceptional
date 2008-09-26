@@ -80,7 +80,7 @@ module Exceptional
       e.application_root = self.application_root
       e.occurred_at = Time.now.to_s
       e.environment = request.env.to_hash
-      e.url "#{request.protocol}#{request.host}#{request.request_uri}"
+      e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
        
       safe_session = {}
       request.session.instance_variables.each do |v|
