@@ -42,7 +42,7 @@ module Exceptional
 
         allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
         if Exceptional.log_level && allowed_log_levels.include?(Exceptional.log_level)
-          @log.level = eval("Logger::#{Exceptional.log_level.upcase}")
+          @log.level = "Logger::#{Exceptional.log_level.upcase}".constantize
         end
 
         Exceptional.log = @log
