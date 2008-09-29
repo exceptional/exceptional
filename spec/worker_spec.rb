@@ -9,7 +9,7 @@ describe Exceptional::Agent::Worker do
   describe "after initialisation" do
     
     it "should default worker timeout" do
-      @worker.timeout.should == 42
+      @worker.timeout.should == 10
     end
   
     it "should have no exceptions" do

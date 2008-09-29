@@ -25,7 +25,7 @@ module Exceptional
   ::SSL = false
   ::LOG_LEVEL = 'info'
   ::LOG_PATH = nil
-  ::WORKER_TIMEOUT = 5 # seconds
+  ::WORKER_TIMEOUT = 10 # seconds
   ::MODE = :direct
   
   class << self
@@ -64,11 +64,7 @@ module Exceptional
     end
     
     def post(exception_data)
-      begin
-        call_remote(:errors, exception_data.to_json)
-      rescue
-        
-      end
+      call_remote(:errors, exception_data.to_json)
     end
     
     def catch(exception)
@@ -102,7 +98,13 @@ module Exceptional
       if mode == :queue
         worker.add_exception(e)
       else # :direct mode
-        post e
+        begin
+          post e
+        rescue
+          log! "Error posting data to Exceptional."
+          log! e.message
+          log! e.backtace.join("\n"), 'debug'
+        end
       end
     end
     
