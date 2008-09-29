@@ -19,6 +19,10 @@ module Exceptional
       
     end
     
+    def should_start_worker?
+      !identifier.nil?
+    end
+    
     def determine_mode
       @server == :passenger ? :direct : :queue      
     end

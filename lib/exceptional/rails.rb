@@ -4,6 +4,10 @@ module Exceptional
       
       def self.init
         Exceptional.deployed_environment = DeployedEnvironment.new
+        # If no server environment detected, don't perform magic. 
+        # Means rake, script/console etc perform as expected
+        return false unless Exceptional.deployed_environment.should_start_worker?
+        
         setup_log
         Exceptional.log_config_info
         
