@@ -10,12 +10,4 @@ Exceptional (http://getexceptional.com) is a web-based exception tracking and ma
 
 For installation instructions, follow the steps displayed after adding a new app to your account. Please send any questions or comments to hello@getexceptional.com.
 
-= Extra Configuration
-
-If there are any parameters that you would like to be filtered from the data we send back to Exceptional you can supply an additional configuration option.
-
-filter-parameters: foo, bar, baz
-
-By default any parameter matching /password/ will be filtered.
-
 Copyright © 2008 Contrast.
