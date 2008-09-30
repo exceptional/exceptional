@@ -142,7 +142,9 @@ module Exceptional
     end
     
     def to_stderr(msg)
-      STDERR.puts "** [Exceptional] " + msg 
+      if deployed_environment && deployed_environment.server != :unknown
+        STDERR.puts "** [Exceptional] " + msg 
+      end
     end
     
     def log_config_info
@@ -182,7 +184,6 @@ module Exceptional
       
       http = Net::HTTP.new(remote_host, remote_port) 
       uri = "/#{method.to_s}?&api_key=#{@api_key}&protocol_version=#{::PROTOCOL_VERSION}"
-      # headers = { 'Content-Type' => 'text/x-json', 'Accept' => 'text/x-json' }
       headers = { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' }
       compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))
       response = http.start do |http|

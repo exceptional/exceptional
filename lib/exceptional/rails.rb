@@ -14,7 +14,7 @@ module Exceptional
         if Exceptional.authenticate           
         
           if Exceptional.mode == :queue
-            Exceptional.worker = Agent::Worker.new(@log)
+            Exceptional.worker = Agent::Worker.new(Exceptional.log)
             Exceptional.worker_thread = Thread.new do
               Exceptional.worker.run
             end
