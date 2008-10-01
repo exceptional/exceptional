@@ -1,7 +1,7 @@
 # This is the post install hook for when Exceptional is installed as a plugin.
 require 'ftools'
 
-puts IO.read(File.join(File.dirname(__FILE__), 'README'))
+# puts IO.read(File.join(File.dirname(__FILE__), 'README'))
 
 config_file = File.expand_path("#{File.dirname(__FILE__)}/../../../config/exceptional.yml")
 example_config_file = "#{File.dirname(__FILE__)}/exceptional.yml"
@@ -14,5 +14,5 @@ else
   puts "  From #{example_config_file}"
   puts "For exceptional to work you need to configure your API Key"
   puts "  See #{example_config_file}"
-  puts "If you don't have an API Key, get one here http://getexceptional.com/"
+  puts "If you don't have an API Key, get one at http://getexceptional.com/"
 end  
