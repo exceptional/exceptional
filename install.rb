@@ -1,7 +1,7 @@
 # This is the post install hook for when Exceptional is installed as a plugin.
 require 'ftools'
 
-puts IO.read(File.join(File.dirname(__FILE__), 'README.txt'))
+puts IO.read(File.join(File.dirname(__FILE__), 'README'))
 
 config_file = File.expand_path("#{File.dirname(__FILE__)}/../../../config/exceptional.yml")
 example_config_file = "#{File.dirname(__FILE__)}/exceptional.yml"
