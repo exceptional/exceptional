@@ -33,6 +33,9 @@ module Exceptional
                   :worker_thread, :environment, :application_root
     attr_writer   :remote_host, :remote_port, :ssl_enabled, :log_level
     
+    # rescue any exceptions within the given block,
+    # send it to exceptional,
+    # then raise
     def rescue(&block)
       begin
         block.call 
@@ -42,6 +45,7 @@ module Exceptional
       end
     end 
     
+    # parse an exception into an ExceptionData object
     def parse(exception)
       exception_data = ExceptionData.new
       exception_data.exception_backtrace = exception.backtrace
@@ -50,9 +54,13 @@ module Exceptional
       exception_data
     end
     
+    # authenticate with getexceptional.com
+    # returns true if the configured api_key is registered and can send data
+    # otherwise false
     def authenticate
       begin    
-        # No data required to authenticate, send a nil string? hacky
+        # TODO No data required to authenticate, send a nil string? hacky
+        # TODO should retry if a http connection failed
         return @authenticated if @authenticated
         authenticated = call_remote(:authenticate, "")
         @authenticated = authenticated =~ /true/
@@ -63,15 +71,22 @@ module Exceptional
       end
     end
     
+    # post the given exception data to getexceptional.com
     def post(exception_data)
       call_remote(:errors, exception_data.to_json)
     end
     
+    # given a regular ruby Exception class, will parse into an ExceptionData
+    # object and post to getexceptional.com
     def catch(exception)
       exception_data = parse(exception)
       post(exception_data)
     end
     
+    # used with Rails, takes an exception, controller, request and parameters
+    # creates an ExceptionData object
+    # if Exceptional is running in :direct mode, will post to getexceptional.com
+    # if Exceptional is running in :queue mode, the data will be queued and posted later
     def handle(exception, controller, request, params)
       log! "Handling #{exception.message}", 'info'
       e = parse(exception)
@@ -108,6 +123,7 @@ module Exceptional
       end
     end
     
+    # TODO these configuration methods & defaults should have their own class
     def remote_host
       @remote_host || ::REMOTE_HOST
     end

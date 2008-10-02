@@ -1,10 +1,10 @@
+# This class encapsulates data about an exception.
 module Exceptional
   class DataError < StandardError; end
   
-  # ExceptionData is a class encapsulating the data about an exception
   class ExceptionData
     ::LANGUAGE = "ruby"
-    ::BASE_ATTRS = [:exception_class, :exception_message, :exception_backtrace, :filename]
+    ::BASE_ATTRS = [:exception_class, :exception_message, :exception_backtrace]
     ::OPTIONAL_ATTRS = [:framework, :controller_name, :action_name, :application_root, 
                         :url, :occurred_at, :environment, :session, :parameters]
     ::ACCESSIBLE_ATTRS = ::BASE_ATTRS + ::OPTIONAL_ATTRS

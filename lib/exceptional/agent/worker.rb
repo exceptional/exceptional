@@ -1,3 +1,6 @@
+# The Worker is used by Exceptional when started in :queue mode
+# It queues and sends exception data asynchronously.
+
 module Exceptional::Agent
   
   class Worker

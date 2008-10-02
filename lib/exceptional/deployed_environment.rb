@@ -1,6 +1,5 @@
-module Exceptional
-  
-  class DeployedEnvironment
+# This class is used to determine the server environment
+class DeployedEnvironment
     
     attr_reader :server, :identifier, :hostname#, :environment
     
