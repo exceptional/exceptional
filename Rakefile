@@ -8,11 +8,12 @@ begin
     p.url          = "http://getexceptional.com/"
     p.author       = ['David Rice']
     p.email        = "david@contrast.ie"
+    p.dependencies = ["json"]
   end
  
-rescue LoadError => boom
+rescue LoadError => e
   puts "You are missing a dependency required for meta-operations on this gem."
-  puts "#{boom.to_s.capitalize}."
+  puts "#{e.to_s.capitalize}."
 end
  
 # add spec tasks, if you have rspec installed
