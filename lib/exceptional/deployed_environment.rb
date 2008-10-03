@@ -80,6 +80,4 @@ class DeployedEnvironment
       end
     end
     
-  end
-    
 end
