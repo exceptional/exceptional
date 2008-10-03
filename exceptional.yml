@@ -4,7 +4,7 @@ common: &default_settings
   api-key: PASTE_YOUR_API_KEY_HERE
   # Exceptional creates a separate log file from your application's logs
   # available levels are debug, info, warn, error, fatal
-  log_level: info
+  log-level: info
   # The exceptional agent sends data via regular http by default
   # Setting this value to true will send data over SSL, increasing security
   # There will be an additional CPU overhead in encrypting the data, however
