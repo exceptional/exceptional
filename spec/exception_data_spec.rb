@@ -9,7 +9,6 @@ describe Exceptional::ExceptionData do
       @exception_data.exception_class = "Error"
       @exception_data.exception_message = "There was an error"
       @exception_data.exception_backtrace = "/var/www/app/fail.rb:42 Error('There was an error')"
-      @exception_data.filename = "fail.rb" 
     end
     
     it "language should be ruby" do
@@ -23,7 +22,7 @@ describe Exceptional::ExceptionData do
     it "should convert to hash" do
       @exception_data.to_hash.should == {:exception_class => "Error", :exception_message => "There was an error",
                                          :exception_backtrace => "/var/www/app/fail.rb:42 Error('There was an error')",
-                                         :filename => "fail.rb", :language => "ruby"}
+                                         :language => "ruby"}
     end
         
     it "should convert to json" do
