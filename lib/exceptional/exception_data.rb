@@ -37,8 +37,8 @@ module Exceptional
       hash
     end
     
-    def to_json(*args)
-      self.to_hash.stringify_keys.to_json(*args)
+    def to_json
+      self.to_hash.stringify_keys.to_json
     end
     
   end
