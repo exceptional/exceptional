@@ -101,6 +101,7 @@ module Exceptional
        
       safe_session = {}
       request.session.instance_variables.each do |v|
+        next if v =~ /cgi/
         next if v =~ /db/
         # remove prepended @'s
         var = v.sub("@","")

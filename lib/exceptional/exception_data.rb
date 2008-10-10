@@ -38,9 +38,7 @@ module Exceptional
     end
     
     def to_json
-      hash = self.to_hash.stringify_keys
-      return hash.to_json
-      # self.to_hash.stringify_keys.to_json
+      self.to_hash.to_json
     end
     
   end
