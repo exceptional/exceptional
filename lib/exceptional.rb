@@ -96,9 +96,12 @@ module Exceptional
       e.action_name = controller.action_name
       e.application_root = self.application_root
       e.occurred_at = Time.now.to_s
-      e.environment = request.env.to_hash
       e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
-       
+      # Need to remove rack data from environment hash
+      safe_environment = request.env.to_hash
+      safe_environment.delete_if { |k,v| k =~ /rack/ }
+      e.environment = safe_environment
+      
       safe_session = {}
       request.session.instance_variables.each do |v|
         next if v =~ /cgi/
