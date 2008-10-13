@@ -1,3 +1,4 @@
+exceptional.gemspec
 exceptional.yml
 History.txt
 init.rb
@@ -9,6 +10,7 @@ lib/exceptional/integration/rails.rb
 lib/exceptional/rails.rb
 lib/exceptional/version.rb
 lib/exceptional.rb
+Manifest
 Rakefile
 README
 spec/deployed_environment_spec.rb
@@ -16,4 +18,3 @@ spec/exception_data_spec.rb
 spec/exceptional_spec.rb
 spec/spec_helper.rb
 spec/worker_spec.rb
-Manifest

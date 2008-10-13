@@ -11,7 +11,7 @@ require 'cgi'
 require 'net/http'
 require 'logger'
 require 'yaml'
-# require 'json'
+require 'json' unless defined? Rails
 
 module Exceptional
   class LicenseException < StandardError; end
