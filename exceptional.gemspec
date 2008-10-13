@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
       "spec/exception_data_spec.rb",
       "spec/exceptional_spec.rb",
       "spec/spec_helper.rb",
-      "spec/worker_spec.rbrb"]
+      "spec/worker_spec.rb"]
   s.rdoc_options = ["--main", "README"]
   s.extra_rdoc_files = ["History.txt", "Manifest", "README"]
   s.add_dependency("json", ["> 0.0.0"])
