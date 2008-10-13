@@ -95,7 +95,8 @@ module Exceptional
       e.controller_name = controller.controller_name
       e.action_name = controller.action_name
       e.application_root = self.application_root
-      e.occurred_at = Time.now.to_s
+      e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+      e.environment = request.env.to_hash
       e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
       # Need to remove rack data from environment hash
       safe_environment = request.env.to_hash

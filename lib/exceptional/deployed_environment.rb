@@ -80,5 +80,7 @@ module Exceptional
         @identifier = 'passenger'
       end
     end
+    
   end
 end
+
