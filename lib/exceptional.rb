@@ -82,6 +82,7 @@ module Exceptional
     # object and post to getexceptional.com
     def catch(exception)
       exception_data = parse(exception)
+      exception_data.controller_name = File.basename($0)
       post(exception_data)
     end
     
