@@ -75,7 +75,10 @@ module Exceptional
     
     # post the given exception data to getexceptional.com
     def post(exception_data)
-      call_remote(:errors, exception_data.to_json)
+      hash = exception_data.to_hash
+      hash[:session].delete("initialization_options")
+      hash[:session].delete("request")
+      call_remote(:errors, hash.to_json)
     end
     
     # given a regular ruby Exception class, will parse into an ExceptionData
