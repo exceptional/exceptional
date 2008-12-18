@@ -13,10 +13,7 @@ require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
 # Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
-begin
-  ActiveSupport::JSON.unquote_hash_key_identifiers = false if (defined? ActiveSupport::JSON && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers)) 
-rescue
-end
+ActiveSupport::JSON.unquote_hash_key_identifiers = false if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
 
 module Exceptional
   class LicenseException < StandardError; end
