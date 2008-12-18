@@ -18,7 +18,6 @@ begin
 rescue
 end
 
-
 module Exceptional
   class LicenseException < StandardError; end
   class ConfigurationException < StandardError; end
