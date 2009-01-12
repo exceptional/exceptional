@@ -126,7 +126,7 @@ module Exceptional
         rescue Exception => exception
           log! "Error posting data to Exceptional."
           log! exception.message
-          log! exception.backtace.join("\n"), 'debug'
+          log! exception.backtrace.join("\n"), 'debug'
         end
       end
     end
