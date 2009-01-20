@@ -207,6 +207,7 @@ module Exceptional
       end
       
       http = Net::HTTP.new(remote_host, remote_port) 
+      http.use_ssl = true if ssl_enabled?
       uri = "/#{method.to_s}?&api_key=#{@api_key}&protocol_version=#{::PROTOCOL_VERSION}"
       headers = { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' }
       compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))
