@@ -12,6 +12,8 @@ require 'net/http'
 require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
+# Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
+ActiveSupport::JSON.unquote_hash_key_identifiers = false if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
 
 module Exceptional
   class LicenseException < StandardError; end
@@ -73,7 +75,10 @@ module Exceptional
     
     # post the given exception data to getexceptional.com
     def post(exception_data)
-      call_remote(:errors, exception_data.to_json)
+      hash = exception_data.to_hash
+      hash[:session].delete("initialization_options")
+      hash[:session].delete("request")
+      call_remote(:errors, hash.to_json)
     end
     
     # given a regular ruby Exception class, will parse into an ExceptionData
@@ -124,7 +129,7 @@ module Exceptional
         rescue Exception => exception
           log! "Error posting data to Exceptional."
           log! exception.message
-          log! exception.backtace.join("\n"), 'debug'
+          log! exception.backtrace.join("\n"), 'debug'
         end
       end
     end
@@ -205,6 +210,7 @@ module Exceptional
       end
       
       http = Net::HTTP.new(remote_host, remote_port) 
+      http.use_ssl = true if ssl_enabled?
       uri = "/#{method.to_s}?&api_key=#{@api_key}&protocol_version=#{::PROTOCOL_VERSION}"
       headers = { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' }
       compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))

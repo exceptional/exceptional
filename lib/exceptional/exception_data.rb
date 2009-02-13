@@ -32,7 +32,7 @@ module Exceptional
       hash = {}
       ::ATTRS.each do |attribute|
         value = send(attribute)
-        hash[attribute] = value unless (value.nil? || value.empty?)
+        hash[attribute] = value unless (value.nil? || value.empty? || attribute.is_a?(TCPSocket) || attribute.is_a?(TCPServer))
       end
       hash
     end
