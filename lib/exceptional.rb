@@ -76,8 +76,10 @@ module Exceptional
     # post the given exception data to getexceptional.com
     def post(exception_data)
       hash = exception_data.to_hash
-      hash[:session].delete("initialization_options")
-      hash[:session].delete("request")
+      if hash[:session]
+        hash[:session].delete("initialization_options")
+        hash[:session].delete("request")
+      end
       call_remote(:errors, hash.to_json)
     end
     

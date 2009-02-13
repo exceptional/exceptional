@@ -1,0 +1,2 @@
+0.0.2 - Fix a bug introduced with nil sessions
+0.0.1 - First Version
