@@ -12,8 +12,11 @@ require 'net/http'
 require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
+
 # Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
-ActiveSupport::JSON.unquote_hash_key_identifiers = false if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
+if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
+  ActiveSupport::JSON.unquote_hash_key_identifiers = false 
+end
 
 module Exceptional
   class LicenseException < StandardError; end
@@ -106,21 +109,8 @@ module Exceptional
       e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
       e.environment = request.env.to_hash
       e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
-      # Need to remove rack data from environment hash
-      safe_environment = request.env.to_hash
-      safe_environment.delete_if { |k,v| k =~ /rack/ }
-      e.environment = safe_environment
-      
-      safe_session = {}
-      request.session.instance_variables.each do |v|
-        next if v =~ /cgi/
-        next if v =~ /db/
-        # remove prepended @'s
-        var = v.sub("@","")
-        safe_session[var] = request.session.instance_variable_get(v)
-      end
-      
-      e.session = safe_session
+      e.environment = safe_environment(request)  
+      e.session = safe_session(request.session)
       e.parameters = params.to_hash
 
       if mode == :queue
@@ -230,6 +220,20 @@ module Exceptional
       log! "Error contacting Exceptional: #{e}", 'info'
       log! e.backtrace.join("\n"), 'debug'
       raise e
+    end
+
+    def safe_environment(request)
+      safe_environment = request.env.to_hash
+      safe_environment.delete_if { |k,v| k =~ /rack/ } # Need to remove rack data from environment hash    
+    end
+    
+    def safe_session(session)
+      session.instance_variables.inject({}) do |result, v|
+        next if v =~ /cgi/ || v =~ /db/
+        
+        var = v.sub("@","") # remove prepended @'s
+        result[var] = session.instance_variable_get(v)
+      end
     end
     
   end
