@@ -77,4 +77,27 @@ describe Exceptional do
     end
     
   end
+  
+  describe "with helper methods" do
+    
+    it "safe_environment() should delete all rack related stuff from environment" do
+      request = mock(request, :env => { 'rack_var' => 'value', 'non_ack' => 'value2' })
+      Exceptional.send(:safe_environment, request).should == { 'non_ack' => 'value2' }
+    end
+    
+    it "safe_session() should filter all /db/, /cgi/ variables and sub @ for blank" do
+      class SessionHelper
+         def initialize
+           @some_var = 1
+           @cgi_var = 2
+           @x_db = 3
+         end
+      end
+      
+      session = SessionHelper.new
+      Exceptional.send(:safe_session, session).should == { 'some_var' => 1 }
+    end
+    
+  end
+  
 end
