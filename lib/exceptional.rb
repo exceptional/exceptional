@@ -231,7 +231,9 @@ module Exceptional
         next if v =~ /cgi/ || v =~ /db/
         
         var = v.sub("@","") # remove prepended @'s
+        result ||= {}
         result[var] = session.instance_variable_get(v)
+        result
       end
     end
     
