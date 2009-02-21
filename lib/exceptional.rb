@@ -195,7 +195,6 @@ module Exceptional
       @api_key && @api_key.length == 40
     end
 
-    
     def call_remote(method, data)
       if @api_key.nil?
         raise LicenseException.new("API Key must be configured") 
