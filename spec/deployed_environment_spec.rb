@@ -135,13 +135,11 @@ describe Exceptional::DeployedEnvironment do
     
   end
   
-  describe "passenger" do
+  describe "passenger <= 2.0.6" do
     
     before(:all) do
-      class << self
-        module ::Passenger
-          const_set "AbstractServer", 0
-        end
+      module ::Passenger
+        const_set "AbstractServer", 0
       end
       @deployed_environment = Exceptional::DeployedEnvironment.new
     end
@@ -155,11 +153,45 @@ describe Exceptional::DeployedEnvironment do
       @deployed_environment.identifier.should == 'passenger'
     end
     
-    it "mode should be queue" do
+    it "mode should be direct" do
       @deployed_environment.determine_mode.should == :direct
     end
     
     after(:all) do
+      module ::Passenger
+        remove_const "AbstractServer"
+      end
+      ObjectSpace.garbage_collect
+    end
+    
+  end
+  
+  describe "passenger > 2.0.6" do
+    
+    before(:all) do
+      module ::PhusionPassenger
+        const_set "AbstractServer", 0
+      end
+      @deployed_environment = Exceptional::DeployedEnvironment.new
+    end
+    
+    it "server should be passenger" do
+      @deployed_environment.server.should == :passenger
+    end
+    
+    # Would be nicer to identify passenger by some
+    it "identifier should be passenger" do
+      @deployed_environment.identifier.should == 'passenger'
+    end
+    
+    it "mode should be direct" do
+      @deployed_environment.determine_mode.should == :direct
+    end
+    
+    after(:all) do
+      module ::PhusionPassenger
+        remove_const "AbstractServer"
+      end
       ObjectSpace.garbage_collect
     end
     

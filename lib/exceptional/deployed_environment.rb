@@ -75,7 +75,7 @@ module Exceptional
     end
   
     def is_passenger?
-      if defined? Passenger::AbstractServer
+      if defined?(Passenger::AbstractServer) || defined?(PhusionPassenger::AbstractServer)
         @server = :passenger
         @identifier = 'passenger'
       end
