@@ -23,7 +23,12 @@ describe "Exceptional with rescue_from() support" do
   end
 
   it "should not call Exceptional" do
-    Exceptional.should_not_receive(:handle)
+    @controller.should_receive(:rescue_action_without_exceptional).and_return(true)
+    if Gem::Requirement.create(">=2.2.0").satisfied_by?(Gem.loaded_specs['rails'].version)
+      Exceptional.should_not_receive(:handle)
+    else
+      Exceptional.should_receive(:handle)
+    end
     @controller.send(:rescue_action, MyException.new("test")).should == true
   end
   
