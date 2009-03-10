@@ -54,7 +54,7 @@ describe Exceptional do
     end
     
   end
-  
+    
   describe "with a custom host" do
     
     it "should overwrite default host" do
