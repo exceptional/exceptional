@@ -223,12 +223,14 @@ module Exceptional
 
     def safe_environment(request)
       safe_environment = request.env.to_hash
-      safe_environment.delete_if { |k,v| k =~ /rack/ } # Need to remove rack data from environment hash    
+      # From Rails 2.3 these objects that cause a circular reference error on .to_json need removed
+      # TODO a more generic solution is needed
+      safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ }
     end
     
     def safe_session(session)
       session.instance_variables.inject({}) do |result, v|
-        next if v =~ /cgi/ || v =~ /db/
+        next if v =~ /cgi/ || v =~ /db/ || v =~ /env/
         
         var = v.sub("@","") # remove prepended @'s
         result ||= {}
