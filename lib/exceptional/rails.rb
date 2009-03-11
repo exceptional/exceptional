@@ -22,7 +22,6 @@ module Exceptional
           
           require File.join(File.dirname(__FILE__), 'integration', 'rails')
           
-          
           at_exit do
             if Exceptional.mode == :queue         
               Exceptional.worker_thread.terminate if Exceptional.worker_thread
