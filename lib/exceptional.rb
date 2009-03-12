@@ -11,7 +11,7 @@ require 'cgi'
 require 'net/http'
 require 'logger'
 require 'yaml'
-require 'json' unless defined? Rails
+require 'active_support'
 
 # Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
 if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
@@ -223,18 +223,26 @@ module Exceptional
 
     def safe_environment(request)
       safe_environment = request.env.to_hash
-      safe_environment.delete_if { |k,v| k =~ /rack/ } # Need to remove rack data from environment hash    
+      safe_environment.delete_if { |k,v| k =~ /rack/ } # Need to remove rack data from environment hash
+      sanitize_hash(safe_environment)
     end
     
     def safe_session(session)
-      session.instance_variables.inject({}) do |result, v|
+      result = {}
+      session.instance_variables.each do |v|
         next if v =~ /cgi/ || v =~ /db/
-        
+      
         var = v.sub("@","") # remove prepended @'s
-        result ||= {}
         result[var] = session.instance_variable_get(v)
-        result
       end
+      sanitize_hash(result)
+    end
+    
+    private
+    
+    def sanitize_hash(hash)
+      return {} if hash.nil?
+      Hash.from_xml(hash.to_xml)['hash']
     end
     
   end

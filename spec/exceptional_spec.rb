@@ -98,6 +98,22 @@ describe Exceptional do
       Exceptional.send(:safe_session, session).should == { 'some_var' => 1 }
     end
     
+    it "sanitize_hash() should sanitize cyclic problem for to_json" do
+      class MyClass
+        def initialize
+          @test = self
+        end
+        
+        def to_hash
+          { :test => self }
+        end
+      end
+      my_class = MyClass.new
+      
+      lambda { my_class.to_json }.should raise_error ActiveSupport::JSON::CircularReferenceError
+      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should == "{\"test\": \"#\\u003CMyClass:0x1954b3c\\u003E\"}"
+    end
+    
   end
   
 end
