@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Exceptional do
   
   describe "with no configuration" do
+    before(:each) do
+      Exceptional.stub!(:to_stderr) # Don't print error when testing
+    end
+    
     it "should connect to getexceptional.com by default" do
       Exceptional.remote_host.should == "getexceptional.com"
     end

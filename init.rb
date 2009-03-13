@@ -12,7 +12,13 @@ begin
   
   Exceptional.load_config(config_file)
   if Exceptional.enabled?
-    Exceptional::Rails.init
+    if Exceptional.authenticate
+      Exceptional.setup_log
+      require File.join(File.dirname(__FILE__), 'integration', 'rails')
+    else  
+      Exceptional.log! "Plugin not authenticated, check your API Key"
+      Exceptional.log! "Disabling Plugin."
+    end
   end
 rescue Exception => e
   to_stderr e

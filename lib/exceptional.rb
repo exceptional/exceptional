@@ -1,10 +1,4 @@
 $:.unshift File.dirname(__FILE__)
-require 'exceptional/rails'
-require 'exceptional/deployed_environment'
-require 'exceptional/agent/worker'
-require 'exceptional/exception_data'
-require 'exceptional/version'
-
 require 'zlib'
 require 'cgi'
 require 'net/http'
@@ -12,10 +6,8 @@ require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
 
-# Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
-if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
-  ActiveSupport::JSON.unquote_hash_key_identifiers = false 
-end
+require 'exceptional/exception_data'
+require 'exceptional/version'
 
 module Exceptional
   class LicenseException < StandardError; end
@@ -29,25 +21,22 @@ module Exceptional
   ::SSL = false
   ::LOG_LEVEL = 'info'
   ::LOG_PATH = nil
-  ::WORKER_TIMEOUT = 10 # seconds
-  ::MODE = :direct
   
   class << self
-    attr_accessor :api_key, :log, :deployed_environment, :log_path, :worker, 
-                  :worker_thread, :environment, :application_root
-    attr_writer   :remote_host, :remote_port, :ssl_enabled, :log_level
+    attr_accessor :api_key, :log, :log_path, :environment, :application_root
+    attr_writer :remote_host, :remote_port, :ssl_enabled, :log_level
     
     # rescue any exceptions within the given block,
     # send it to exceptional,
     # then raise
-    def rescue(&block)
-      begin
-        block.call 
-      rescue Exception => e
-        self.catch(e)
-        raise(e)
-      end
-    end 
+    # def rescue(&block)
+    #   begin
+    #     block.call 
+    #   rescue Exception => e
+    #     self.catch(e)
+    #     raise(e)
+    #   end
+    # end               
     
     # parse an exception into an ExceptionData object
     def parse(exception)
@@ -93,10 +82,13 @@ module Exceptional
       post(exception_data)
     end
     
+    def handle_exceptions?
+      !defined?(IRB)
+    end
+    
     # used with Rails, takes an exception, controller, request and parameters
     # creates an ExceptionData object
     # if Exceptional is running in :direct mode, will post to getexceptional.com
-    # if Exceptional is running in :queue mode, the data will be queued and posted later
     def handle(exception, controller, request, params)
       log! "Handling #{exception.message}", 'info'
       e = parse(exception)
@@ -112,16 +104,12 @@ module Exceptional
       e.session = safe_session(request.session)
       e.parameters = params.to_hash
 
-      if mode == :queue
-        worker.add_exception(e)
-      else # :direct mode
-        begin
-          post e
-        rescue Exception => exception
-          log! "Error posting data to Exceptional."
-          log! exception.message
-          log! exception.backtrace.join("\n"), 'debug'
-        end
+      begin
+        post(e)
+      rescue Exception => exception
+        log! "Error posting data to Exceptional."
+        log! exception.message
+        log! exception.backtrace.join("\n"), 'debug'
       end
     end
     
@@ -136,10 +124,6 @@ module Exceptional
     
     def log_level
       @log_level || ::LOG_LEVEL
-    end
-    
-    def mode
-      deployed_environment ? deployed_environment.determine_mode : ::MODE
     end
     
     def default_port
@@ -160,18 +144,28 @@ module Exceptional
     end
     
     def to_stderr(msg)
-      if deployed_environment && deployed_environment.server != :unknown
-        STDERR.puts "** [Exceptional] " + msg 
-      end
+      STDERR.puts "** [Exceptional] " + msg 
     end
     
     def log_config_info
       log! "API Key: #{api_key}", 'debug'
-      log! "Deployed Environment: #{deployed_environment.to_s}", 'debug'
       log! "Remote Host: #{remote_host}:#{remote_port}", 'debug'
-      log! "Mode: #{mode}", 'debug'
       log! "Log level: #{log_level}", 'debug'
       log! "Log path: #{log_path}", 'debug'
+    end
+    
+    def setup_log
+      log_file = "#{Exceptional.application_root}/log/exceptional.log"
+
+      log = Logger.new log_file
+      log.level = Logger::INFO
+
+      allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
+      if log_level && allowed_log_levels.include?(log_level)
+        log.level = eval("Logger::#{log_level.upcase}")
+      end
+
+      self.log = log
     end
     
     def load_config(file)
