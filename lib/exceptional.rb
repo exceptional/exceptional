@@ -6,6 +6,7 @@ require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
 
+require 'exceptional/deployed_environment'
 require 'exceptional/exception_data'
 require 'exceptional/version'
 
@@ -29,14 +30,14 @@ module Exceptional
     # rescue any exceptions within the given block,
     # send it to exceptional,
     # then raise
-    # def rescue(&block)
-    #   begin
-    #     block.call 
-    #   rescue Exception => e
-    #     self.catch(e)
-    #     raise(e)
-    #   end
-    # end               
+    def rescue(&block)
+      begin
+        block.call 
+      rescue Exception => e
+        self.catch(e)
+        raise(e)
+      end
+    end               
     
     # parse an exception into an ExceptionData object
     def parse(exception)
@@ -82,8 +83,12 @@ module Exceptional
       post(exception_data)
     end
     
-    def handle_exceptions?
-      !defined?(IRB)
+    def deployed_environment
+      DeployedEnvironment.new
+    end
+    
+    def active?
+      Exceptional.deployed_environment.unknown?
     end
     
     # used with Rails, takes an exception, controller, request and parameters
@@ -138,26 +143,31 @@ module Exceptional
       @enabled
     end
     
+    def format_log_message(msg)
+      "** [Exceptional] " + msg 
+    end
+
+    def to_stderr(msg)
+      STDERR.puts format_log_message(msg)
+    end
+    
     def log!(msg, level = 'info')
       to_stderr msg
       log.send level, msg if log
     end
     
-    def to_stderr(msg)
-      STDERR.puts "** [Exceptional] " + msg 
-    end
-    
     def log_config_info
-      log! "API Key: #{api_key}", 'debug'
-      log! "Remote Host: #{remote_host}:#{remote_port}", 'debug'
-      log! "Log level: #{log_level}", 'debug'
-      log! "Log path: #{log_path}", 'debug'
+      return if RAILS_DEFAULT_LOGGER.nil?
+      RAILS_DEFAULT_LOGGER.debug(format_log_message("API Key: #{api_key}"))
+      RAILS_DEFAULT_LOGGER.debug(format_log_message("Remote Host: #{remote_host}:#{remote_port}"))
+      RAILS_DEFAULT_LOGGER.debug(format_log_message("Log level: #{log_level}"))
+      RAILS_DEFAULT_LOGGER.debug(format_log_message("Log path: #{log_path}"))
     end
     
     def setup_log
-      log_file = "#{Exceptional.application_root}/log/exceptional.log"
-
-      log = Logger.new log_file
+      self.log_path = "#{Exceptional.application_root}/log/exceptional.log"
+      
+      log = Logger.new log_path
       log.level = Logger::INFO
 
       allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
