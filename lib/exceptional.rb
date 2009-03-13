@@ -96,23 +96,24 @@ module Exceptional
     # if Exceptional is running in :direct mode, will post to getexceptional.com
     def handle(exception, controller, request, params)
       log! "Handling #{exception.message}", 'info'
-      e = parse(exception)
-      # Additional data for Rails Exceptions
-      e.framework = "rails"
-      e.controller_name = controller.controller_name
-      e.action_name = controller.action_name
-      e.application_root = self.application_root
-      e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
-      e.environment = request.env.to_hash
-      e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
-      e.environment = safe_environment(request)  
-      e.session = safe_session(request.session)
-      e.parameters = params.to_hash
-
       begin
+        e = parse(exception)
+        # Additional data for Rails Exceptions
+        e.framework = "rails"
+        e.controller_name = controller.controller_name
+        e.action_name = controller.action_name
+        e.application_root = self.application_root
+        e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+        e.environment = request.env.to_hash
+        e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
+        e.environment = safe_environment(request)  
+        e.session = safe_session(request.session)
+        e.parameters = params.to_hash
+        
+        to_log e.inspect
         post(e)
       rescue Exception => exception
-        log! "Error posting data to Exceptional."
+        log! "Error preparing exception data."
         log! exception.message
         log! exception.backtrace.join("\n"), 'debug'
       end
@@ -153,15 +154,18 @@ module Exceptional
     
     def log!(msg, level = 'info')
       to_stderr msg
+      to_log level, msg
+    end
+    
+    def to_log(level, msg)
       log.send level, msg if log
     end
     
     def log_config_info
-      return if RAILS_DEFAULT_LOGGER.nil?
-      RAILS_DEFAULT_LOGGER.debug(format_log_message("API Key: #{api_key}"))
-      RAILS_DEFAULT_LOGGER.debug(format_log_message("Remote Host: #{remote_host}:#{remote_port}"))
-      RAILS_DEFAULT_LOGGER.debug(format_log_message("Log level: #{log_level}"))
-      RAILS_DEFAULT_LOGGER.debug(format_log_message("Log path: #{log_path}"))
+      to_log('debug', format_log_message("API Key: #{api_key}"))
+      to_log('debug', format_log_message("Remote Host: #{remote_host}:#{remote_port}"))
+      to_log('debug', format_log_message("Log level: #{log_level}"))
+      to_log('debug', format_log_message("Log path: #{log_path}"))
     end
     
     def setup_log
@@ -228,7 +232,8 @@ module Exceptional
       safe_environment = request.env.to_hash
       # From Rails 2.3 these objects that cause a circular reference error on .to_json need removed
       # TODO potentially remove this case, should be covered by sanitize_hash
-      safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ }
+      safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ || k == "_" }
+      # needed to add a filter for the hash for "_", causing invalid xml.
       sanitize_hash(safe_environment)
     end
     
