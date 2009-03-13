@@ -223,18 +223,28 @@ module Exceptional
     def safe_environment(request)
       safe_environment = request.env.to_hash
       # From Rails 2.3 these objects that cause a circular reference error on .to_json need removed
-      # TODO a more generic solution is needed
+      # TODO potentially remove this case, should be covered by sanitize_hash
       safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ }
+      sanitize_hash(safe_environment)
     end
     
     def safe_session(session)
-      session.instance_variables.inject({}) do |result, v|
+      result = {}
+      session.instance_variables.each do |v|
         next if v =~ /cgi/ || v =~ /db/ || v =~ /env/
         var = v.sub("@","") # remove prepended @'s
-        result ||= {}
         result[var] = session.instance_variable_get(v)
-        result
       end
+      sanitize_hash(result)
+    end
+    
+    private
+    
+    # This (ironic) method sanitizes a hash by removing un-json-able objects from the passed in hash.
+    #   needed as active_support's fails in some cases with a cyclical reference error.
+    def sanitize_hash(hash)
+      return {} if hash.nil?
+      Hash.from_xml(hash.to_xml)['hash']
     end
     
   end
