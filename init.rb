@@ -7,11 +7,11 @@ end
 config_file = File.join(RAILS_ROOT,"/config/exceptional.yml")
 
 begin 
-  if Exceptional.enabled?
-    Exceptional.application_root = RAILS_ROOT
-    Exceptional.environment = RAILS_ENV
+  Exceptional.application_root = RAILS_ROOT
+  Exceptional.environment = RAILS_ENV
+  Exceptional.load_config(config_file)
   
-    Exceptional.load_config(config_file)
+  if Exceptional.enabled?
     if Exceptional.authenticate
       Exceptional.setup_log
       require File.join('exceptional', 'integration', 'rails')
