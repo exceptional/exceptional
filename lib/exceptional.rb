@@ -4,7 +4,6 @@ require 'exceptional/deployed_environment'
 require 'exceptional/agent/worker'
 require 'exceptional/exception_data'
 require 'exceptional/version'
-require 'rubygems'
 
 require 'zlib'
 require 'cgi'
