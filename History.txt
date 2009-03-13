@@ -1,2 +1,3 @@
+0.0.3 - Dropped background queing of exceptions, send them all directly. Fixed issues with session/environment data. Working with rails 2.3 (some hacks needed to get there, need to refactor.)
 0.0.2 - Fix a bug introduced with nil sessions
 0.0.1 - First Version
