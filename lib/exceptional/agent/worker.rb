@@ -12,7 +12,7 @@ module Exceptional::Agent
       @timeout = ::WORKER_TIMEOUT
       @mutex = Mutex.new
       @log = log
-      @log.info "Started Exceptional Worker."
+      @log.info "Started Exceptional Worker." if @log
     end
     
     def add_exception(data)
@@ -47,8 +47,8 @@ module Exceptional::Agent
       begin
        Exceptional.post(data)
       rescue Exception => e
-       @log.error "Error sending exception data: #{e}" 
-       @log.debug e.backtrace.join("\n")
+       @log.error "Error sending exception data: #{e}" if @log
+       @log.debug e.backtrace.join("\n") if @log
       end
     end
     
