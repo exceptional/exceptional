@@ -57,7 +57,7 @@ module Exceptional
         # TODO should retry if a http connection failed
         return @authenticated if @authenticated
         authenticated = call_remote(:authenticate, "")
-        @authenticated = authenticated =~ /true/
+        @authenticated = authenticated =~ /true/ ? true : false
       rescue 
         @authenticated = false
       ensure
@@ -89,6 +89,10 @@ module Exceptional
     
     def active?
       Exceptional.deployed_environment.unknown?
+    end
+    
+    def authenticated?
+      @authenticated || false
     end
     
     # used with Rails, takes an exception, controller, request and parameters
