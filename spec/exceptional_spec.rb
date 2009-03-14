@@ -114,7 +114,7 @@ describe Exceptional do
       end
       my_class = MyClass.new
 
-      lambda { my_class.to_json }.should raise_error ActiveSupport::JSON::CircularReferenceError
+      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
       Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should be_kind_of(String)
     end
 
@@ -157,7 +157,7 @@ describe Exceptional do
       Exceptional.should_receive(:catch)
       lambda{ Exceptional.rescue do
         raise IOError
-      end}.should raise_error IOError
+      end}.should raise_error(IOError)
 
     end
   end
