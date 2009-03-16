@@ -105,7 +105,7 @@ module Exceptional
         e.session = safe_session(request.session)
         e.parameters = params.to_hash
         
-        to_log e.inspect
+        to_log log_level, e.inspect
         post(e)
       rescue Exception => exception
         log! "Error preparing exception data."
