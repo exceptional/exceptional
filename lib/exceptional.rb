@@ -1,9 +1,5 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'zlib'
-require 'cgi'
-require 'net/http'
-require 'yaml'
 require 'json' unless defined? Rails
 
 require 'exceptional/exception_data'
