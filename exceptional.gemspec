@@ -16,14 +16,12 @@ Gem::Specification.new do |s|
 		"exceptional.yml",
 		"init.rb", 
 		"install.rb", 
-    "lib/exceptional/deployed_environment.rb",
     "lib/exceptional/exception_data.rb",
     "lib/exceptional/integration/rails.rb",
     "lib/exceptional/rails.rb",
     "lib/exceptional/version.rb",
     "lib/exceptional.rb"]
-  s.test_files = ["spec/deployed_environment_spec.rb",
-      "spec/exception_data_spec.rb",
+  s.test_files = ["spec/exception_data_spec.rb",
       "spec/exceptional_rescue_from_spec.rb",
       "spec/exceptional_spec.rb",
       "spec/spec_helper.rb"]

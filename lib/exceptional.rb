@@ -6,7 +6,6 @@ require 'logger'
 require 'yaml'
 require 'json' unless defined? Rails
 
-require 'exceptional/deployed_environment'
 require 'exceptional/exception_data'
 require 'exceptional/version'
 
@@ -81,14 +80,6 @@ module Exceptional
       exception_data = parse(exception)
       exception_data.controller_name = File.basename($0)
       post(exception_data)
-    end
-    
-    def deployed_environment
-      DeployedEnvironment.new
-    end
-    
-    def active?
-      Exceptional.deployed_environment.unknown?
     end
     
     def authenticated?
