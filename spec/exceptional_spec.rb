@@ -7,14 +7,6 @@ describe Exceptional do
     Exceptional.stub!(:to_stderr) # Don't print error when testing
     end
 
-    it "should connect to getexceptional.com by default" do
-      Exceptional.remote_host.should == "getexceptional.com"
-    end
-
-    it "should connect to port 80 by default" do
-      Exceptional.remote_port.should == 80
-    end
-
     it "should parse exception into exception data object" do
       exception = mock(Exception, :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
@@ -30,7 +22,9 @@ describe Exceptional do
       :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
       :class => Exception, :to_hash => { :message => "Something bad has happened" })
-      Exceptional.should_receive(:call_remote, :with => [:errors, exception_data])
+      Exceptional::Remote.should_receive(:authenticated?).once.and_return(true)
+      Exceptional::Remote.should_receive(:call_remote, :with => [:errors, exception_data])
+
       Exceptional.post(exception_data)
     end
 
@@ -47,37 +41,17 @@ describe Exceptional do
       Exceptional.catch(exception)
     end
 
-    it "should raise a license exception if api key is not set" do
+    it "should raise a remoting exception if not authenticated" do
       exception_data = mock(Exceptional::ExceptionData,
       :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
       :class => Exception,
       :to_hash => { :message => "Something bad has happened" })
-      Exceptional.api_key.should == nil
-      lambda { Exceptional.post(exception_data) }.should raise_error(Exceptional::LicenseException)
-    end
 
-  end
+      Exceptional::Config.api_key.should == nil
+      Exceptional::Remote.should_receive(:authenticated?).once.and_return(false)
 
-  describe "with a custom host" do
-
-    it "should overwrite default host" do
-      Exceptional.remote_host = "localhost"
-      Exceptional.remote_host.should == "localhost"
-    end
-
-    it "should overwrite default port" do
-      Exceptional.remote_port = 3000
-      Exceptional.remote_port.should == 3000
-      Exceptional.remote_port = nil
-    end
-  end
-
-  describe "with ssl enabled" do
-
-    it "should connect to port 443" do
-      Exceptional.ssl_enabled = true
-      Exceptional.remote_port.should == 443
+      lambda { Exceptional.post(exception_data) }.should raise_error(Exceptional::Remote::RemoteException)
     end
 
   end
@@ -119,37 +93,7 @@ describe Exceptional do
     end
 
   end
-  
-  describe "authentication" do
 
-    it "should not be authenticated if API authentication unsuccessful" do
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("false")
-      Exceptional.authenticate.should be_false
-      Exceptional.authenticated?.should be_false
-    end
-
-    it "should not be authenticated if error during API authenticate" do
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_raise(IOError)
-
-      Exceptional.authenticate.should be_false
-      Exceptional.authenticated?.should be_false
-    end
-
-    it "should not re-authenticate subsequently if authenitcation successful " do
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("true")
-      # If authentication is successful, authenticate called only once
-
-      Exceptional.authenticate.should be_true
-      Exceptional.authenticated?.should be_true
-
-      Exceptional.authenticate.should be_true
-      Exceptional.authenticated?.should be_true
-    end
-
-  end
 
   describe "rescue" do
 
@@ -162,4 +106,35 @@ describe Exceptional do
     end
   end
 
+  describe "startup" do
+
+    before(:all) do
+      log = Exceptional::Log
+
+      def log.reset_state
+        @log = nil
+      end
+    end
+
+    after(:each) do
+      Exceptional::Log.reset_state
+    end
+
+    it "should authenticate and initialize log" do
+
+      Exceptional::Log.should_receive(:setup)
+      Exceptional::Remote.should_receive(:authenticate).once.and_return(true)
+
+      Exceptional.startup
+    end
+
+    it "should initialize log if authentication fails" do
+
+      Exceptional::Log.should_receive(:setup)
+      Exceptional::Remote.should_receive(:authenticate).once.and_return(false)
+
+      Exceptional.startup
+    end
+
+  end
 end

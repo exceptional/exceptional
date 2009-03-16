@@ -7,21 +7,13 @@ end
 config_file = File.join(RAILS_ROOT,"/config/exceptional.yml")
 
 begin 
-  Exceptional.application_root = RAILS_ROOT
-  Exceptional.environment = RAILS_ENV
-  Exceptional.load_config(config_file)
+  Config.load_config(config_file, RAILS_ENV, RAILS_ROOT)
   
-  if Exceptional.enabled?
-    if Exceptional.authenticate
-      Exceptional.setup_log
-      require File.join('exceptional', 'integration', 'rails')
-      Exceptional.log_config_info
-    else  
-      Exceptional.log! "Plugin not authenticated, check your API Key"
-      Exceptional.log! "Disabling Plugin."
-    end
+  if Config.enabled?
+    Exceptional.startup
   end
+  
 rescue Exception => e
   to_stderr e
-  to_stderr "Plugin disabled."
+  to_stderr "Exceptional Plugin disabled."
 end
