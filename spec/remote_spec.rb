@@ -6,9 +6,7 @@ describe Exceptional::Remote do
   TEST_API_KEY = "TEST_API_KEY"
 
   before(:all) do
-    config = Exceptional::Config
-
-    def config.reset_state
+    def Exceptional.reset_state
       @api_key = nil
       @ssl_enabled = nil
       @log_level = nil
@@ -18,57 +16,55 @@ describe Exceptional::Remote do
       @applicaton_root = nil
     end
 
-    remoting = Exceptional::Remote
-
-    def remoting.reset_authentication
+    def Exceptional.reset_authentication
       @authenticated = false
     end
   end
 
   after(:each) do
-    Exceptional::Config.reset_state
-    Exceptional::Remote.reset_authentication
+    Exceptional.reset_state
+    Exceptional.reset_authentication
   end
 
   describe "authentication" do
 
     it "should not be authenticated if API authentication unsuccessful" do
-      Exceptional::Config.api_key = TEST_API_KEY
+      Exceptional.api_key = TEST_API_KEY
 
-      Exceptional::Remote.authenticated?.should be_false
-      Exceptional::Remote.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("false")
-      Exceptional::Remote.authenticate.should be_false
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.authenticated?.should be_false
+      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("false")
+      Exceptional.authenticate.should be_false
+      Exceptional.authenticated?.should be_false
     end
 
     it "should not be authenticated if error during API authenticate" do
-      Exceptional::Config.api_key = TEST_API_KEY
+      Exceptional.api_key = TEST_API_KEY
 
-      Exceptional::Remote.authenticated?.should be_false
-      Exceptional::Remote.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_raise(IOError)
+      Exceptional.authenticated?.should be_false
+      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_raise(IOError)
 
-      Exceptional::Remote.authenticate.should be_false
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.authenticate.should be_false
+      Exceptional.authenticated?.should be_false
     end
 
-    it "should not re-authenticate subsequently if authenitcation successful " do
-      Exceptional::Config.api_key = TEST_API_KEY
+    it "should not re-authenticate subsequently if 1 successful " do
+      Exceptional.api_key = TEST_API_KEY
 
-      Exceptional::Remote.authenticated?.should be_false
-      Exceptional::Remote.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("true")
+      Exceptional.authenticated?.should be_false
+      Exceptional.should_receive(:call_remote, {:method => "authenticate", :data => ""}).once.and_return("true")
       # If authentication is successful, authenticate called only once
 
-      Exceptional::Remote.authenticate.should be_true
-      Exceptional::Remote.authenticated?.should be_true
+      Exceptional.authenticate.should be_true
+      Exceptional.authenticated?.should be_true
 
-      Exceptional::Remote.authenticate.should be_true
-      Exceptional::Remote.authenticated?.should be_true
+      Exceptional.authenticate.should be_true
+      Exceptional.authenticated?.should be_true
     end
 
     it "with no API Key set throws Configuration Exception" do
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.authenticated?.should be_false
 
-      lambda {Exceptional::Remote.authenticate}.should raise_error(Exceptional::Config::ConfigurationException)
+      lambda {Exceptional.authenticate}.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
 
@@ -78,10 +74,10 @@ describe Exceptional::Remote do
 
       OK_RESPONSE_BODY = "OK-RESP-BODY"
       
-      Exceptional::Config.api_key = TEST_API_KEY
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.authenticated?.should be_false
 
-      Exceptional::Remote.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:authenticated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -92,15 +88,15 @@ describe Exceptional::Remote do
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
-      Exceptional::Remote.post_exception("data").should == OK_RESPONSE_BODY
+      Exceptional.post_exception("data").should == OK_RESPONSE_BODY
     end
     
     it "should raise error if network problem during sending exception" do
 
-      Exceptional::Config.api_key = TEST_API_KEY
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.authenticated?.should be_false
 
-      Exceptional::Remote.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:authenticated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -110,17 +106,17 @@ describe Exceptional::Remote do
       mock_http.should_receive(:start).once.and_raise(IOError)
 
       #surpress the logging of the exception
-      Exceptional::Log.should_receive(:log!).twice
+      Exceptional.should_receive(:log!).twice
 
-      lambda{Exceptional::Remote.post_exception("data")}.should raise_error(IOError) 
+      lambda{Exceptional.post_exception("data")}.should raise_error(IOError) 
     end
 
     it "should raise Exception if sending exception unsuccessful" do
 
-      Exceptional::Config.api_key = TEST_API_KEY
-      Exceptional::Remote.authenticated?.should be_false
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.authenticated?.should be_false
 
-      Exceptional::Remote.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:authenticated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -133,9 +129,9 @@ describe Exceptional::Remote do
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
       #surpress the logging of the exception
-      Exceptional::Log.should_receive(:log!).twice
+      Exceptional.should_receive(:log!).twice
 
-      lambda{Exceptional::Remote.post_exception("data")}.should raise_error(Exceptional::Remote::RemoteException) 
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Remote::RemoteException) 
     end    
   end
 end

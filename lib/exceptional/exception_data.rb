@@ -32,15 +32,13 @@ module Exceptional
       hash = {}
       ::ATTRS.each do |attribute|
         value = send(attribute)
-        hash[attribute] = value unless (value.nil? || value.empty? || attribute.is_a?(TCPSocket) || attribute.is_a?(TCPServer))
+        hash[attribute] = value unless (value.nil? || value.empty? || attribute.is_a?(TCPSocket) || attribute.is_a?(TCPServer)) 
       end
       hash
     end
     
     def to_json
       self.to_hash.to_json
-    end
-    
+    end    
   end
-  
 end

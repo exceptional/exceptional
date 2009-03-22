@@ -1,44 +1,11 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
+
 describe Exceptional do
 
   describe "with no configuration" do
     before(:each) do
-    Exceptional.stub!(:to_stderr) # Don't print error when testing
-    end
-
-    it "should parse exception into exception data object" do
-      exception = mock(Exception, :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
-      exception_data = Exceptional.parse(exception)
-      exception_data.kind_of?(Exceptional::ExceptionData).should be_true
-      exception_data.exception_message.should == exception.message
-      exception_data.exception_backtrace.should == exception.backtrace
-      exception_data.exception_class.should == exception.class.to_s
-    end
-
-    it "should post exception" do
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception, :to_hash => { :message => "Something bad has happened" })
-      Exceptional::Remote.should_receive(:authenticated?).once.and_return(true)
-      Exceptional::Remote.should_receive(:call_remote, :with => [:errors, exception_data])
-
-      Exceptional.post(exception_data)
-    end
-
-    it "should catch exception" do
-      exception = mock(Exception, :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception, :to_hash => { :message => "Something bad has happened" })
-      exception_data.should_receive(:controller_name=).with(File.basename($0))
-      Exceptional.should_receive(:parse, :with => [exception]).and_return(exception_data)
-      Exceptional.should_receive(:post, :with => [exception_data])
-      Exceptional.catch(exception)
+      Exceptional.stub!(:to_stderr) # Don't print error when testing
     end
 
     it "should raise a remoting exception if not authenticated" do
@@ -48,93 +15,62 @@ describe Exceptional do
       :class => Exception,
       :to_hash => { :message => "Something bad has happened" })
 
-      Exceptional::Config.api_key.should == nil
-      Exceptional::Remote.should_receive(:authenticated?).once.and_return(false)
+      Exceptional.api_key.should == nil
+      Exceptional.should_receive(:authenticated?).once.and_return(false)
 
-      lambda { Exceptional.post(exception_data) }.should raise_error(Exceptional::Remote::RemoteException)
-    end
-
-  end
-
-  describe "with helper methods" do
-
-    it "safe_environment() should delete all rack related stuff from environment" do
-      request = mock(request, :env => { 'rack_var' => 'value', 'non_ack' => 'value2' })
-      Exceptional.send(:safe_environment, request).should == { 'non_ack' => 'value2' }
-    end
-
-    it "safe_session() should filter all /db/, /cgi/ variables and sub @ for blank" do
-      class SessionHelper
-        def initialize
-          @some_var = 1
-          @cgi_var = 2
-          @x_db = 3
-        end
-      end
-
-      session = SessionHelper.new
-      Exceptional.send(:safe_session, session).should == { 'some_var' => 1 }
-    end
-
-    it "sanitize_hash() should sanitize cyclic problem for to_json" do
-      class MyClass
-        def initialize
-          @test = self
-        end
-
-        def to_hash
-          { :test => self }
-        end
-      end
-      my_class = MyClass.new
-
-      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should be_kind_of(String)
-    end
-
-  end
-
-
-  describe "rescue" do
-
-    it "should send exception data onto catch" do
-      Exceptional.should_receive(:catch)
-      lambda{ Exceptional.rescue do
-        raise IOError
-      end}.should raise_error(IOError)
-
+      lambda { Exceptional.post_exception(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
-
-  describe "startup" do
-
-    before(:all) do
-      log = Exceptional::Log
-
-      def log.reset_state
-        @log = nil
-      end
+  
+  describe "setup" do
+    
+    TEST_ENVIRONMENT= "development"
+    
+    it "should initialize the config and log" do
+      Exceptional.should_receive(:setup_config)
+      Exceptional.should_receive(:setup_log)
+      
+      Exceptional.setup(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
-
-    after(:each) do
-      Exceptional::Log.reset_state
+    
+    it "should authenticate if enabled" do
+      Exceptional.should_receive(:setup_config)
+      Exceptional.should_receive(:setup_log)
+      Exceptional.should_receive(:enabled?).and_return(true)
+      Exceptional.should_receive(:authenticate).and_return(true)
+      STDERR.should_not_receive(:puts) #Should be no errors to report
+      
+      Exceptional.setup(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
+    
+    it "should not authenticate if not enabled" do
+      Exceptional.should_receive(:setup_config)
+      Exceptional.should_receive(:setup_log)
+      Exceptional.should_receive(:enabled?).and_return(false)
+      Exceptional.should_not_receive(:authenticate)
+      STDERR.should_not_receive(:puts) # Will silently not enable itself 
 
-    it "should authenticate and initialize log" do
-
-      Exceptional::Log.should_receive(:setup)
-      Exceptional::Remote.should_receive(:authenticate).once.and_return(true)
-
-      Exceptional.startup
+      
+      Exceptional.setup(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
-
-    it "should initialize log if authentication fails" do
-
-      Exceptional::Log.should_receive(:setup)
-      Exceptional::Remote.should_receive(:authenticate).once.and_return(false)
-
-      Exceptional.startup
+    
+    it "should report to STDERR if authentication fails" do
+      Exceptional.should_receive(:setup_config)
+      Exceptional.should_receive(:setup_log)
+      Exceptional.should_receive(:enabled?).and_return(true)
+      Exceptional.should_receive(:authenticate).and_return(false)
+      STDERR.should_receive(:puts) #Should be no errors to report
+      
+      Exceptional.setup(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
-
+    
+    it "should report to STDERR if error during config initialization" do
+      Exceptional.should_receive(:setup_config).and_raise(Exceptional::Config::ConfigurationException)
+      Exceptional.should_not_receive(:setup_log)
+      Exceptional.should_not_receive(:authenticate).and_return(false)
+      STDERR.should_receive(:puts).twice() #Should be no errors to report
+      
+      Exceptional.setup(TEST_ENVIRONMENT, File.dirname(__FILE__))
+    end
   end
 end
