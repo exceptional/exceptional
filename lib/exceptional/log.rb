@@ -9,7 +9,10 @@ module Exceptional
       begin
         Dir.mkdir(log_dir) unless File.directory?(log_dir)
 
-        log = Logger.new File.join(log_dir, "/exceptional.log")
+        
+        log_path = File.join(log_dir, "/exceptional.log")
+        log = Logger.new log_path
+        
         log.level = log_level
 
         allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
@@ -19,7 +22,7 @@ module Exceptional
 
         @log = log
       rescue Exception => e
-        raise Exceptional::Config::ConfigurationException.new("Unable to create log file #{log_path} ", e)
+        raise Exceptional::Config::ConfigurationException.new("Unable to create log file #{log_path} #{e.message}")
       end
     end
 
