@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 
-describe Exceptional do
+describe Exceptional::Api do
 
 
   describe "with no configuration" do

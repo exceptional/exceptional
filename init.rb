@@ -1,2 +1,2 @@
 require 'exceptional'
-Exceptional.setup(RAILS_ENV, RAILS_ROOT)
+Exceptional.bootstrap(RAILS_ENV, RAILS_ROOT)

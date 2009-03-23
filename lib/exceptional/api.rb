@@ -3,7 +3,7 @@ require 'json' unless defined? Rails
 
 module Exceptional
 
-  module ExceptionalHandler
+  module Api
     # parse an exception into an ExceptionData object
     def parse(exception)
       exception_data = ExceptionData.new
