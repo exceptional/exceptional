@@ -1,6 +1,5 @@
 $:.unshift File.dirname(__FILE__)
 
-
 require 'exceptional/exception_data'
 require 'exceptional/version'
 require 'exceptional/log'
