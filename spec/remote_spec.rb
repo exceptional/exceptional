@@ -10,9 +10,9 @@ describe Exceptional::Remote do
       OK_RESPONSE_BODY = "OK-RESP-BODY"
       
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validated?.should be_false
 
-      Exceptional.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -29,9 +29,9 @@ describe Exceptional::Remote do
     it "should raise error if network problem during sending exception" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validated?.should be_false
 
-      Exceptional.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -49,9 +49,9 @@ describe Exceptional::Remote do
     it "should raise Exception if sending exception unsuccessful" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validated?.should be_false
 
-      Exceptional.should_receive(:authenticated?).once.and_return(true)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)

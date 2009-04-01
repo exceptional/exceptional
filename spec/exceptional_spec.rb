@@ -8,7 +8,7 @@ describe Exceptional do
       Exceptional.stub!(:to_stderr) # Don't print error when testing
     end
 
-    it "should raise a remoting exception if not authenticated" do
+    it "should raise a remoting exception if not api_key_validated" do
       exception_data = mock(Exceptional::ExceptionData,
       :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
@@ -16,7 +16,7 @@ describe Exceptional do
       :to_hash => { :message => "Something bad has happened" })
 
       Exceptional.api_key.should == nil
-      Exceptional.should_receive(:authenticated?).once.and_return(false)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(false)
 
       lambda { Exceptional.post_exception(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
     end

@@ -16,7 +16,7 @@ describe Exceptional::APIKeyValidation do
     end
 
     def Exceptional.reset_authentication
-      @authenticated = false
+      @api_key_validated = false
     end
   end
 
@@ -27,43 +27,43 @@ describe Exceptional::APIKeyValidation do
 
   describe "authentication" do
 
-    it "should not be authenticated if API authentication unsuccessful" do
+    it "should not be api_key_validated if API authentication unsuccessful" do
       Exceptional.api_key = TEST_API_KEY
 
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:http_call_remote, {:method => "authenticate", :data => ""}).once.and_return("false")
-      Exceptional.authenticate.should be_false
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validated?.should be_false
+      Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("false")
+      Exceptional.api_key_validate.should be_false
+      Exceptional.api_key_validated?.should be_false
     end
 
-    it "should not be authenticated if error during API authenticate" do
+    it "should not be api_key_validated if error during API api_key_validate" do
       Exceptional.api_key = TEST_API_KEY
 
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:http_call_remote, {:method => "authenticate", :data => ""}).once.and_raise(IOError)
+      Exceptional.api_key_validated?.should be_false
+      Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_raise(IOError)
 
-      Exceptional.authenticate.should be_false
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validate.should be_false
+      Exceptional.api_key_validated?.should be_false
     end
 
-    it "should not re-authenticate subsequently if 1 successful " do
+    it "should not re-api_key_validate subsequently if 1 successful " do
       Exceptional.api_key = TEST_API_KEY
 
-      Exceptional.authenticated?.should be_false
-      Exceptional.should_receive(:http_call_remote, {:method => "authenticate", :data => ""}).once.and_return("true")
-      # If authentication is successful, authenticate called only once
+      Exceptional.api_key_validated?.should be_false
+      Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("true")
+      # If authentication is successful, api_key_validate called only once
 
-      Exceptional.authenticate.should be_true
-      Exceptional.authenticated?.should be_true
+      Exceptional.api_key_validate.should be_true
+      Exceptional.api_key_validated?.should be_true
 
-      Exceptional.authenticate.should be_true
-      Exceptional.authenticated?.should be_true
+      Exceptional.api_key_validate.should be_true
+      Exceptional.api_key_validated?.should be_true
     end
 
     it "with no API Key set throws Configuration Exception" do
-      Exceptional.authenticated?.should be_false
+      Exceptional.api_key_validated?.should be_false
 
-      lambda {Exceptional.authenticate}.should raise_error(Exceptional::Config::ConfigurationException)
+      lambda {Exceptional.api_key_validate}.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
 end

@@ -15,21 +15,21 @@ describe Exceptional::Bootstrap do
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
 
-    it "should authenticate if enabled" do
+    it "should api_key_validate if enabled" do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:setup_log)
       Exceptional.should_receive(:enabled?).and_return(true)
-      Exceptional.should_receive(:authenticate).and_return(true)
+      Exceptional.should_receive(:api_key_validate).and_return(true)
       STDERR.should_not_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
 
-    it "should not authenticate if not enabled" do
+    it "should not api_key_validate if not enabled" do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:setup_log)
       Exceptional.should_receive(:enabled?).and_return(false)
-      Exceptional.should_not_receive(:authenticate)
+      Exceptional.should_not_receive(:api_key_validate)
       STDERR.should_not_receive(:puts) # Will silently not enable itself
 
 
@@ -40,7 +40,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:setup_log)
       Exceptional.should_receive(:enabled?).and_return(true)
-      Exceptional.should_receive(:authenticate).and_return(false)
+      Exceptional.should_receive(:api_key_validate).and_return(false)
       STDERR.should_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
@@ -49,7 +49,7 @@ describe Exceptional::Bootstrap do
     it "should report to STDERR if error during config initialization" do
       Exceptional.should_receive(:setup_config).and_raise(Exceptional::Config::ConfigurationException)
       Exceptional.should_not_receive(:setup_log)
-      Exceptional.should_not_receive(:authenticate).and_return(false)
+      Exceptional.should_not_receive(:api_key_validate).and_return(false)
       STDERR.should_receive(:puts).twice() #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))

@@ -8,10 +8,10 @@ module Exceptional
         setup_log(File.join(application_root, "log"), log_level)
 
         if enabled?
-          if authenticate
+          if api_key_validate
             require File.join('exceptional', 'integration', 'rails')
           else
-            STDERR.puts "Exceptional plugin not authenticated, check your API Key"
+            STDERR.puts "Exceptional plugin not api_key_validated, check your API Key"
           end
         end
       rescue Exception => e

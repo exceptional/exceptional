@@ -5,28 +5,28 @@ module Exceptional
    
     include Exceptional::Utils::HttpUtils
     
-    def authenticate
+    def api_key_validate
 
-      return @authenticated if @authenticated
+      return @api_key_validated if @api_key_validated
 
       if Exceptional.api_key.nil?
         raise Exceptional::Config::ConfigurationException.new("API Key must be configured")
       end
 
       begin
-        # TODO No data required to authenticate, send a nil string? hacky
-        authenticated = http_call_remote(:authenticate, "")
+        # TODO No data required to api_key_validate, send a nil string? hacky
+        api_key_validated = http_call_remote(:authenticate, "")
         
-        @authenticated = authenticated =~ /true/ ? true : false
+        @api_key_validated = api_key_validated =~ /true/ ? true : false
       rescue
-        @authenticated = false
+        @api_key_validated = false
       ensure
-        return @authenticated
+        return @api_key_validated
       end
     end
 
-    def authenticated?
-      @authenticated || false
+    def api_key_validated?
+      @api_key_validated || false
     end
     
   end
