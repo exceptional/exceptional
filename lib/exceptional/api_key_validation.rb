@@ -5,6 +5,11 @@ module Exceptional
    
     include Exceptional::Utils::HttpUtils
     
+    
+    # authenticate with getexceptional.com
+    # returns true if the configured api_key is registered and can send data
+    # otherwise false
+
     def api_key_validate
 
       return @api_key_validated if @api_key_validated

@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'net/http'
 
-describe Exceptional::Remote do
-
+describe Exceptional::AdapterManager do
+  
+  OK_RESPONSE_BODY = "OK-RESP-BODY" unless defined?(OK_RESPONSE_BODY)
+  
   describe "sending data " do
 
     it "should return response body if successful" do
 
-      OK_RESPONSE_BODY = "OK-RESP-BODY"
-      
       Exceptional.api_key = TEST_API_KEY
       Exceptional.api_key_validated?.should be_false
 
@@ -43,7 +43,7 @@ describe Exceptional::Remote do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{Exceptional.post_exception("data")}.should raise_error(IOError) 
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapter::HttpAdapterException) 
     end
 
     it "should raise Exception if sending exception unsuccessful" do
@@ -66,7 +66,7 @@ describe Exceptional::Remote do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Utils::HttpUtils::HttpUtilsException) 
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapter::HttpAdapterException) 
     end    
   end
 end

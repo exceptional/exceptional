@@ -8,14 +8,14 @@ module Exceptional
 
       class HttpUtilsException < StandardError; end
 
-      ::PROTOCOL_VERSION = 3
+      PROTOCOL_VERSION = 3 unless defined?(PROTOCOL_VERSION)
       # TODO should retry if a http connection failed
       
       def http_call_remote(method, data)
         begin
           http = Net::HTTP.new(Exceptional.remote_host, Exceptional.remote_port)
           http.use_ssl = true if Exceptional.ssl_enabled?
-          uri = "/#{method.to_s}?&api_key=#{Exceptional.api_key}&protocol_version=#{::PROTOCOL_VERSION}"
+          uri = "/#{method.to_s}?&api_key=#{Exceptional.api_key}&protocol_version=#{PROTOCOL_VERSION}"
           headers = method.to_s == 'errors' ? { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' } : {}
 
           compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))

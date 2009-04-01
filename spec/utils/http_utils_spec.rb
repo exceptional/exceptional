@@ -2,12 +2,12 @@ describe Exceptional::Utils::HttpUtils do
 
   include Exceptional::Utils::HttpUtils
 
+  OK_RESPONSE_BODY = "OK-RESP-BODY" unless defined?(OK_RESPONSE_BODY)
+
   describe "sending data " do
 
     it "should return response body if successful" do
 
-      OK_RESPONSE_BODY = "OK-RESP-BODY"
-      
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
 
@@ -16,10 +16,10 @@ describe Exceptional::Utils::HttpUtils do
       mock_http_response.should_receive(:body).once.and_return(OK_RESPONSE_BODY)
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
-      
+
       http_call_remote(:message, "data").should == OK_RESPONSE_BODY
     end
-    
+
     it "should raise error if network problem during sending exception" do
 
       mock_http = mock(Net::HTTP)
@@ -32,7 +32,7 @@ describe Exceptional::Utils::HttpUtils do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{http_call_remote(:message, "data")}.should raise_error(IOError) 
+      lambda{http_call_remote(:message, "data")}.should raise_error(IOError)
     end
 
     it "should raise Exception if sending exception unsuccessful" do
@@ -50,7 +50,7 @@ describe Exceptional::Utils::HttpUtils do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{http_call_remote(:message, "data")}.should raise_error(Exceptional::Utils::HttpUtils::HttpUtilsException) 
-    end    
+      lambda{http_call_remote(:message, "data")}.should raise_error(Exceptional::Utils::HttpUtils::HttpUtilsException)
+    end
   end
 end
