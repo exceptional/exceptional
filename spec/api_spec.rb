@@ -41,7 +41,7 @@ describe Exceptional::Api do
       :class => Exception, :to_hash => { :message => "Something bad has happened" })
       Exceptional.api_key = "TEST_API_KEY"
       Exceptional.should_receive(:authenticate).once.and_return(true)
-      Exceptional.should_receive(:call_remote, :with => [:errors, exception_data]).once
+      Exceptional.should_receive(:http_call_remote, :with => [:errors, exception_data]).once
       Exceptional.post(exception_data)
 
     end
