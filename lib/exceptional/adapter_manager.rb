@@ -14,8 +14,8 @@ module Exceptional
     
     def adapter
       begin
-        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name # read from config
-        @adapter || @adapter = eval(adapter_name).new
+        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name
+        @adapter || @adapter = eval(adapter_name).new # Instantiate adapter
       rescue Exception => e
         raise AdapterException.new e.message
       end

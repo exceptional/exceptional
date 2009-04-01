@@ -11,11 +11,11 @@ module Exceptional
     LOG_LEVEL = 'info'
     LOG_PATH = nil
     DEFAULT_ADAPTER_NAME = "HttpAdapter"
-
+    
     class ConfigurationException < StandardError; end
 
     attr_reader :api_key
-    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key
+    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name
 
     def setup_config(environment, config_file)
       begin
@@ -27,6 +27,7 @@ module Exceptional
         @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
         @remote_host = config['remote-host'] unless config['remote-host'].nil?
         @adapter_name = config['adapter'] unless config['adapter'].nil?
+        @work_dir = config['work_dir'] unless config['work_dir'].nil?
         
         @applicaton_root = application_root
 
@@ -37,7 +38,7 @@ module Exceptional
     end
 
     def application_root
-      @applicaton_root || (File.dirname(__FILE__) + '/../..')
+      @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../..')
     end
 
     def remote_host
@@ -60,6 +61,9 @@ module Exceptional
       @adapter_name || DEFAULT_ADAPTER_NAME
     end
 
+    def work_dir
+      @work_dir || @work_dir = File.join(application_root, "/tmp/exeptional")
+    end
 
     def ssl_enabled?
       @ssl_enabled || SSL

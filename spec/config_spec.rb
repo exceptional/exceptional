@@ -13,6 +13,7 @@ describe Exceptional::Config do
       @remote_port = nil
       @remote_host = nil
       @applicaton_root = nil
+      @adapter_name = nil
     end
   end
 
@@ -36,6 +37,10 @@ describe Exceptional::Config do
       Exceptional.log_level.should == "info"
     end
 
+    it "should use HttpAdapter by default" do
+      Exceptional.adapter_name.should == "HttpAdapter"
+    end
+    
     it "should not be enabled by default" do
       Exceptional.enabled?.should be_false
     end
