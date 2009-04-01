@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/utils/http_utils'
+require File.dirname(__FILE__) + '/adapters/http_adapter'
 
 module Exceptional
   module Remote
 
-    include Exceptional::Utils::HttpUtils
+    include Exceptional::Adapters::HttpAdapter
 
     # authenticate with getexceptional.com
     # returns true if the configured api_key is registered and can send data
@@ -13,7 +13,7 @@ module Exceptional
         api_key_validate
       end
 
-      http_call_remote(:errors, data)
+      publish_exception(data)
     end
 
   end
