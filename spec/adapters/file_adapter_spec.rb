@@ -11,9 +11,11 @@ describe Exceptional::Adapters::FileAdapter do
 
   before(:each) do
     Exceptional.reset_adapter
-    Exceptional.adapter_name = "FileAdapter"    
+    Exceptional.adapter_name = "FileAdapter"
+
+    Exceptional.stub!(:to_stderr) # Don't print error when testing
   end
-  
+
   after(:all) do
     Exceptional.reset_adapter
   end
@@ -32,9 +34,9 @@ describe Exceptional::Adapters::FileAdapter do
       File.should_receive(:open).once
       FileTest.should_receive(:exists?).twice.and_return(true)
       FileTest.should_receive(:directory?).once.and_return(true)
-      
+
       Exceptional.post_exception("data").should == true
     end
   end
-  
+
 end

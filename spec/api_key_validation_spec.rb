@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::APIKeyValidation do
   
-  TEST_API_KEY = "TEST_API_KEY"
+  TEST_API_KEY = "TEST_API_KEY" unless defined?(TEST_API_KEY)
 
   before(:all) do
     def Exceptional.reset_state

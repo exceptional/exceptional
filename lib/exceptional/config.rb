@@ -38,7 +38,7 @@ module Exceptional
     end
 
     def application_root
-      @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../..')
+      @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../../../../..')
     end
 
     def remote_host
