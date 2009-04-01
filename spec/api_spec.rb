@@ -40,8 +40,10 @@ describe Exceptional::Api do
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
       :class => Exception, :to_hash => { :message => "Something bad has happened" })
       Exceptional.api_key = "TEST_API_KEY"
+      mock_adapter = mock(Exceptional::Adapters::HttpAdapter)
+      mock_adapter.should_receive(:publish_exception).once
+      Exceptional.should_receive(:adapter).once.and_return(mock_adapter)
       Exceptional.should_receive(:api_key_validate).once.and_return(true)
-      Exceptional.should_receive(:http_call_remote, :with => [:errors, exception_data]).once
       Exceptional.post(exception_data)
 
     end

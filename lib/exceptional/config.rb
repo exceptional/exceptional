@@ -10,6 +10,7 @@ module Exceptional
     SSL = false
     LOG_LEVEL = 'info'
     LOG_PATH = nil
+    DEFAULT_ADAPTER_NAME = "HttpAdapter"
 
     class ConfigurationException < StandardError; end
 
@@ -25,6 +26,8 @@ module Exceptional
         @enabled = config['enabled'] unless config['enabled'].nil?
         @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
         @remote_host = config['remote-host'] unless config['remote-host'].nil?
+        @adapter_name = config['adapter'] unless config['adapter'].nil?
+        
         @applicaton_root = application_root
 
         log_config_info
@@ -53,6 +56,11 @@ module Exceptional
       ssl_enabled? ? REMOTE_SSL_PORT : REMOTE_PORT
     end
 
+    def adapter_name
+      @adapter_name || DEFAULT_ADAPTER_NAME
+    end
+
+
     def ssl_enabled?
       @ssl_enabled || SSL
     end
@@ -60,7 +68,7 @@ module Exceptional
     def enabled?
       @enabled || false
     end
-
+    
     def valid_api_key?
       @api_key && @api_key.length == 40 ? true : false
     end

@@ -2,9 +2,10 @@ require File.dirname(__FILE__) + '/../utils/http_utils'
 
 module Exceptional
   module Adapters
-    module HttpAdapter
 
-      class HttpAdapterException < StandardError; end
+    class HttpAdapterException < StandardError; end
+
+    class HttpAdapter
 
       include Exceptional::Utils::HttpUtils
 
@@ -15,6 +16,7 @@ module Exceptional
           raise HttpAdapterException.new e.message
         end
       end
+      
     end
   end
 end

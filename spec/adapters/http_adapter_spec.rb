@@ -1,14 +1,15 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'net/http'
 
 describe Exceptional::Adapters::HttpAdapter do
-
-  include Exceptional::Adapters::HttpAdapter
 
   OK_RESPONSE_BODY = "OK-RESP-BODY" unless defined?(OK_RESPONSE_BODY)
 
   describe "sending data " do
 
     it "should return response body if successful" do
+      
+      http_adapter = Exceptional::Adapters::HttpAdapter.new
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -19,10 +20,12 @@ describe Exceptional::Adapters::HttpAdapter do
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
-      publish_exception("data").should == OK_RESPONSE_BODY
+      http_adapter.publish_exception("data").should == OK_RESPONSE_BODY
     end
 
     it "should raise error if network problem during sending exception" do
+
+      http_adapter = Exceptional::Adapters::HttpAdapter.new
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -34,10 +37,12 @@ describe Exceptional::Adapters::HttpAdapter do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapter::HttpAdapterException)
+      lambda{http_adapter.publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
 
     it "should raise Exception if sending exception unsuccessful" do
+
+      http_adapter = Exceptional::Adapters::HttpAdapter.new
 
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
@@ -52,7 +57,7 @@ describe Exceptional::Adapters::HttpAdapter do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      lambda{publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapter::HttpAdapterException)
+      lambda{http_adapter.publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
   end
 end
