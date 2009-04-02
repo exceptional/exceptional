@@ -15,7 +15,7 @@ module Exceptional
     class ConfigurationException < StandardError; end
 
     attr_reader :api_key
-    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name
+    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name, :work_dir
 
     def setup_config(environment, config_file)
       begin
