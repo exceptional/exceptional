@@ -42,63 +42,11 @@ begin
     require 'lib/exceptional'
 
     EXCEPTIONAL_CONFIG_FILE = "exceptional.yml"
-    RELATIVE_RAILS_ROOT = "../../../"
-    RELATIVE_RAILS_CONFIG_PATH = RELATIVE_RAILS_ROOT + "config"
-
-    def get_config_dir
-
-      if !ENV['config_dir']
-        config_dir = ENV['config_dir']
-      else
-        config_dir = File.join(File.dirname(__FILE__), RELATIVE_RAILS_CONFIG_PATH)
-      end
-    end
-
-    def get_config_file
-      # Exceptional Config File
-      if !ENV['config_file'].nil?
-        config_file = ENV['config_file']
-      else
-        rails_config_dir = get_config_dir
-
-        if !FileTest.directory?(rails_config_dir)
-          STDERR.puts "Invalid Config Directory #{rails_config_dir}"
-          raise IOError "Exceptional Config File not found #{config_file}"
-        end
-
-        config_file = File.join(rails_config_dir, EXCEPTIONAL_CONFIG_FILE)
-      end
-
-      if !FileTest.exists?(config_file)
-        STDERR.puts "Exceptional Config File not found #{config_file}"
-        raise IOError "Exceptional Config File not found #{config_file}"
-      end
-
-      return config_file
-    end
-
-    def get_work_dir
-      # Directory where to look for exception files
-      if !ENV['work_dir'].nil?
-        work_dir = ENV['work_dir']
-      else
-        work_dir = File.join(RELATIVE_RAILS_ROOT, '/tmp/exceptional')
-      end
-    end
-
-    def get_rails_root
-      # The application root
-      if !ENV['rails_root'].nil?
-        rails_root = ENV['rails_root']
-      else
-        rails_root = File.join(File.dirname(__FILE__), RELATIVE_RAILS_ROOT)
-      end
-    end
 
     desc "Install Exceptional Plugin"
     task :rails_install do
       require 'ftools'
-
+      require 'lib/exceptional/utils/rake_dir_tools'
 
       key = ENV['api_key']
 
@@ -109,12 +57,14 @@ begin
         return
       end
 
-      rails_root = get_rails_root
+      rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
 
       exceptional_config_template = File.join(File.dirname(__FILE__), EXCEPTIONAL_CONFIG_FILE)
 
-      if File.copy(exceptional_config_template, get_config_dir, true)
-        new_config_file = File.join(get_config_dir, EXCEPTIONAL_CONFIG_FILE)
+      config_dir = Exceptional::Utils::RakeDirTools.get_config_dir
+
+      if File.copy(exceptional_config_template, config_dir, true)
+        new_config_file = File.join(config_dir, EXCEPTIONAL_CONFIG_FILE)
 
         s = 'PASTE_YOUR_API_KEY_HERE'
         r = key
@@ -125,9 +75,9 @@ begin
         File.open(new_config_file, "w"){|f| f.write(lines) }
 
 
-        Exceptional.setup_config("test", new_config_file, rails_root)
+        Exceptional.setup_config("test", new_config_file)
 
-        if !Exceptional.validate
+        if !Exceptional.api_key_validate
           STDERR.puts "Error Authenticating API-Key"
           STDERR.puts " *** Exceptional Installation Failed "
           return
@@ -150,10 +100,11 @@ begin
 
       require 'logger'
       require 'lib/exceptional/utils/file_sweeper'
-
-      config_file = get_config_file
-      work_dir = get_work_dir
-      rails_root = get_rails_root
+      require 'lib/exceptional/utils/rake_dir_tools'
+      
+      config_file = Exceptional::Utils::RakeDirTools.get_config_file
+      work_dir = Exceptional::Utils::RakeDirTools.get_work_dir
+      rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
 
       log_dir = File.join(rails_root, "log")
       Dir.mkdir(log_dir) unless File.directory?(log_dir)
