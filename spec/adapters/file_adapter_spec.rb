@@ -37,6 +37,20 @@ describe Exceptional::Adapters::FileAdapter do
 
       Exceptional.post_exception("data").should == true
     end
+    
+    it "should raise error if configured work_dir is invalid" do
+
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.api_key_validated?.should be_false
+
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+
+      FileTest.should_receive(:directory?).once.and_return(false)
+      FileTest.should_receive(:exists?).once.and_return(false)
+
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Adapters::FileAdapterException)
+    end
+    
   end
 
 end

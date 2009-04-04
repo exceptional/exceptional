@@ -27,6 +27,7 @@ module Exceptional
           except_file = File.join(Exceptional.work_dir, file_name)
 
           Exceptional.log! "Creating Exception file #{except_file}"
+
           File.open(except_file, 'w') {|f|
             f.write(json_data)
           }
