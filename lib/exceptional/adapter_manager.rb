@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/adapters/http_adapter'
 
+
 # require all adapters
-Dir.glob(File.join(File.dirname(__FILE__), 'adapters/*.rb')).each {|f| require f }
+Dir.glob(File.join(File.dirname(__FILE__), 'adapters/*_adapter.rb')).each {|f| require f }
 
 
 module Exceptional
   module AdapterManager
 
     ADAPTER_MODULE_PREFIX = "Exceptional::Adapters::"
-
 
     class AdapterManagerException < StandardError; end
 

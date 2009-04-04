@@ -7,6 +7,7 @@ module Exceptional
 
     class FileSweeper
 
+      # Have to pick default environment as is required to load the config. Should be a default parameter in the config module instead!?
       DEFAULT_ENVIRONMENT = "production"
 
       def initialize(config_file, work_dir, application_root, log)

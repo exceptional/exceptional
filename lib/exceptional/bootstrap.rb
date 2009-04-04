@@ -9,7 +9,7 @@ module Exceptional
 
         if enabled?
           if api_key_validate
-            if !adapter.nil? # Change to setup/bootstrap adapter
+            if !adapter.bootstrap # Change to setup/bootstrap adapter
               require File.join('exceptional', 'integration', 'rails')
             end            
           else

@@ -62,7 +62,7 @@ module Exceptional
     end
 
     def work_dir
-      @work_dir || @work_dir = File.join(application_root, "/tmp/exeptional")
+      @work_dir || @work_dir = File.expand_path(File.join(application_root, "/tmp/exeptional"))
     end
 
     def ssl_enabled?

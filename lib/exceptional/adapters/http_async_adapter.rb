@@ -1,14 +1,16 @@
 require File.dirname(__FILE__) + '/../utils/http_utils'
+require File.dirname(__FILE__) + '/base_adapter'
+
 
 module Exceptional
   module Adapters
 
     class HttpAsyncAdapterException < StandardError; end
 
-    class HttpAsyncAdapter
+    class HttpAsyncAdapter < BaseAdapter
 
       include Exceptional::Utils::HttpUtils
-
+      
       def publish_exception(json_data)
         begin
           # Temporarily create a Thread just for this send

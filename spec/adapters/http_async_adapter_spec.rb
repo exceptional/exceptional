@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 
-describe Exceptional::Adapters::FileAdapter do
+describe Exceptional::Adapters::HttpAsyncAdapter do
 
   before(:all) do
     def Exceptional.reset_adapter
@@ -11,7 +11,7 @@ describe Exceptional::Adapters::FileAdapter do
 
   before(:each) do
     Exceptional.reset_adapter
-    Exceptional.adapter_name = "FileAdapter"
+    Exceptional.adapter_name = "HttpAsyncAdapter"
 
   Exceptional.stub!(:to_stderr) # Don't print error when testing
   end
@@ -31,22 +31,20 @@ describe Exceptional::Adapters::FileAdapter do
 
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
-      File.should_receive(:open).once
-      FileTest.should_receive(:exists?).and_return(true)
-
-      Exceptional.post_exception("data").should == true
+      Thread.should_receive(:new).once
+      Exceptional.post_exception("data")
     end
-  end
-  
-  describe "bootstrapping " do
 
-    it "should raise error if configured work_dir is invalid" do
+    it "should raise error of error instantiating thread" do
 
-      adapter = Exceptional::Adapters::FileAdapter.new
-      
-      FileTest.should_receive(:exists?).twice.and_return(false)
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.api_key_validated?.should be_false
 
-      lambda{adapter.bootstrap}.should raise_error(Exceptional::Adapters::FileAdapterException)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+
+      Thread.should_receive(:new).and_raise(IOError)
+
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Adapters::HttpAsyncAdapterException)
     end
   end
 end
