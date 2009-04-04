@@ -2,13 +2,49 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 
 describe Exceptional::AdapterManager do
-  
+
+  after(:each) do
+    def Exceptional.reset_state
+      @adapter = nil
+    end
+
+    Exceptional.reset_state
+  end
+
+  describe "instantiating valid adapter" do
+    it "should instantiate HTTPAdapter adapter" do
+      Exceptional.should_receive(:adapter_name).once.and_return("HttpAdapter")
+      Exceptional::Adapters::HttpAdapter.should_receive(:new)
+      Exceptional.adapter
+    end
+
+    it "should instantiate FileAdapter adapter" do
+      Exceptional.should_receive(:adapter_name).once.and_return("FileAdapter")
+      Exceptional::Adapters::FileAdapter.should_receive(:new)
+      Exceptional.adapter
+    end
+
+    it "should instantiate HttpAsyncAdapter adapter" do
+      Exceptional.should_receive(:adapter_name).once.and_return("HttpAsyncAdapter")
+      Exceptional::Adapters::HttpAsyncAdapter.should_receive(:new)
+      Exceptional.adapter
+    end
+    
+    it "should raise Config error if invalid adapter configured" do
+      Exceptional.should_receive(:adapter_name).twice.and_return("InvalidAdapterName")
+      lambda {Exceptional.adapter}.should raise_error(Exceptional::AdapterManager::AdapterManagerException)
+    end
+    
+  end
+
   describe "sending data " do
 
     it "should return response body if successful" do
-      
+
+      OK_RESPONSE_BODY = "ok" unless defined? OK_RESPONSE_BODY
+
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
-      
+
       mock_http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with("getexceptional.com", 80).once.and_return(mock_http)
 
@@ -23,7 +59,7 @@ describe Exceptional::AdapterManager do
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
       :class => Exception,
       :to_hash => { :message => "Something bad has happened" })
-      
+
       Exceptional.post(exception_data).should == OK_RESPONSE_BODY
     end
 
@@ -40,13 +76,13 @@ describe Exceptional::AdapterManager do
 
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
-      
+
       exception_data = mock(Exceptional::ExceptionData,
       :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
       :class => Exception,
       :to_hash => { :message => "Something bad has happened" })
-      
+
 
       lambda{Exceptional.post(exception_data)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end

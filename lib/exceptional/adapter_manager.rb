@@ -10,15 +10,10 @@ module Exceptional
     ADAPTER_MODULE_PREFIX = "Exceptional::Adapters::"
 
 
-    class AdapterException < StandardError; end
-    
+    class AdapterManagerException < StandardError; end
+
     def adapter
-      begin
-        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name
-        @adapter || @adapter = eval(adapter_name).new # Instantiate adapter
-      rescue Exception => e
-        raise AdapterException.new e.message
-      end
+      @adapter || @adapter = load_adapter
     end
 
     def post_exception(data)
@@ -27,6 +22,17 @@ module Exceptional
       end
 
       adapter.publish_exception(data)
+    end
+
+    protected
+
+    def load_adapter
+      begin
+        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name
+        eval(adapter_name).new # Instantiate adapter
+      rescue NameError => e
+        raise AdapterManagerException.new "Invalid Adapter Name #{Exceptional.adapter_name}"
+      end
     end
   end
 end

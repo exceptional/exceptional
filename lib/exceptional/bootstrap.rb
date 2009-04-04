@@ -9,7 +9,7 @@ module Exceptional
 
         if enabled?
           if api_key_validate
-            if !adapter.nil?
+            if !adapter.nil? # Change to setup/bootstrap adapter
               require File.join('exceptional', 'integration', 'rails')
             end            
           else
@@ -17,6 +17,7 @@ module Exceptional
           end
         end
       rescue Exception => e
+        # Should these be writing to Exceptional.log! ?
         STDERR.puts e.message
         STDERR.puts "Exceptional Plugin disabled. #{e.message}"
       end
