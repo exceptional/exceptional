@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../utils/http_utils'
+require File.dirname(__FILE__) + '/../utils/file_sweeper'
 require File.dirname(__FILE__) + '/base_adapter'
 
 

@@ -1,4 +1,5 @@
 require 'ftools'
+require File.dirname(__FILE__) + '/file_utils'
 
 module Exceptional
   module Utils
@@ -7,23 +8,22 @@ module Exceptional
 
     class FileSweeper
 
-      # Have to pick default environment as is required to load the config. Should be a default parameter in the config module instead!?
-      DEFAULT_ENVIRONMENT = "production"
+      include Exceptional::Utils::FileUtils
+
+      # This shouldnt need to be passed, should be figured out from the current environment somehow
+      COMMON_CONFIG_SCOPE = "common"
 
       def initialize(config_file, work_dir, application_root, log)
-        Exceptional.setup_config(DEFAULT_ENVIRONMENT, config_file)
-        Exceptional.work_dir = work_dir
+        Exceptional.setup_config(COMMON_CONFIG_SCOPE, config_file)
 
-        if ! (FileTest.directory?(Exceptional.work_dir) && FileTest.exists?(Exceptional.work_dir))
-          raise FileSweeperException.new "Invalid Sweep Directory - #{Exceptional.work_dir}"
-        end
+        ensure_work_directory log
 
         @adapter = Exceptional::Adapters::HttpAdapter.new
         @log = log
       end
 
       def sweep
-        @log.send "info", "FileAdapter Sweep Starting"
+        @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir}"
         begin
           Dir.glob("#{Exceptional.work_dir}/*.json") {|file|
             @log.send "info", "File Adapter Sweep - Found #{file}"
