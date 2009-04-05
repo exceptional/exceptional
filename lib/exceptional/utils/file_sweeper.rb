@@ -16,7 +16,7 @@ module Exceptional
       def initialize(config_file, work_dir, application_root, log)
         Exceptional.setup_config(COMMON_CONFIG_SCOPE, config_file)
 
-        ensure_work_directory log
+        ensure_work_directory(log)
 
         @adapter = Exceptional::Adapters::HttpAdapter.new
         @log = log
@@ -25,7 +25,7 @@ module Exceptional
       def sweep
         @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir}"
         begin
-          Dir.glob("#{Exceptional.work_dir}/*.json") {|file|
+          Dir.glob("#{Exceptional.work_dir}/*.json") { |file|
             @log.send "info", "File Adapter Sweep - Found #{file}"
             json_data = read_data(file)
             @adapter.publish_exception(json_data.to_json)

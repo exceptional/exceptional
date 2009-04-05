@@ -2,10 +2,10 @@ module Exceptional
   module Utils
     module RakeDirTools
 
-      EXCEPTIONAL_CONFIG_FILE = "exceptional.yml"
-      RELATIVE_RAILS_ROOT = "../../../../../../"
-      RELATIVE_RAILS_CONFIG_PATH = RELATIVE_RAILS_ROOT + "config"
-      RELATIVE_WORK_DIR_PATH = RELATIVE_RAILS_ROOT + "tmp/exceptional"
+      EXCEPTIONAL_CONFIG_FILE = "exceptional.yml" if !defined? EXCEPTIONAL_CONFIG_FILE
+      RELATIVE_RAILS_ROOT = "../../../../../../" if !defined? RELATIVE_RAILS_ROOT
+      RELATIVE_RAILS_CONFIG_PATH = RELATIVE_RAILS_ROOT + "config" if !defined? RELATIVE_RAILS_CONFIG_PATH
+      RELATIVE_WORK_DIR_PATH = RELATIVE_RAILS_ROOT + "tmp/exceptional" if !defined? RELATIVE_WORK_DIR_PATH
 
       def RakeDirTools.get_config_dir
         if !ENV['config_dir'].nil?
@@ -23,16 +23,16 @@ module Exceptional
           rails_config_dir = get_config_dir
 
           if !FileTest.directory?(rails_config_dir)
-            STDERR.puts "Invalid Config Directory #{rails_config_dir}"
-            raise IOError "Exceptional Config File not found #{config_file}"
+            STDERR.puts "Invalid Config Directory #{File.expand_path(rails_config_dir)}"
+            raise IOError.new "Exceptional Config File not found #{File.expand_path(config_file)}"
           end
 
           config_file = File.join(rails_config_dir, EXCEPTIONAL_CONFIG_FILE)
         end
 
         if !FileTest.exists?(config_file)
-          STDERR.puts "Exceptional Config File not found #{config_file}"
-          raise IOError "Exceptional Config File not found #{config_file}"
+          STDERR.puts "Exceptional Config File not found #{File.expand_path(config_file)}"
+          raise IOError.new "Exceptional Config File not found #{File.expand_path(config_file)}"
         end
 
         return config_file
