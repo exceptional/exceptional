@@ -20,6 +20,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_log)
       Exceptional.should_receive(:enabled?).and_return(true)
       Exceptional.should_receive(:api_key_validate).and_return(true)
+      Exceptional.adapter.should_receive(:name).and_return("test name")
       STDERR.should_not_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
