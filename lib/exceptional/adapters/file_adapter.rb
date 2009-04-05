@@ -37,11 +37,9 @@ module Exceptional
           # Return fact that file now exists
           FileTest.exists?(except_file)
         rescue Exception => e
-          puts "#{e.backtrace}"
           raise FileAdapterException.new e.message
         end
       end
-
     end
   end
 end

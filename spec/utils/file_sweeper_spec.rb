@@ -66,7 +66,7 @@ describe Exceptional::Utils::FileSweeper do
 
       mock_file = mock(File)      
             
-      Dir.should_receive(:glob).with(SWEEPER_WORK_DIR + '/*.json').and_return([mock_file])
+      Dir.should_receive(:glob).with(SWEEPER_WORK_DIR + '/*.json').and_return {mock_file}
 
       sweeper = Exceptional::Utils::FileSweeper.new SWEEPER_CONFIG_FILE, SWEEPER_WORK_DIR, SWEEPER_APP_ROOT, mock_logger
       sweeper.sweep

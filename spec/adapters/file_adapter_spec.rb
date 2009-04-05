@@ -36,6 +36,18 @@ describe Exceptional::Adapters::FileAdapter do
 
       Exceptional.post_exception("data").should == true
     end
+    
+    it "should raise error if sending is unsuccessful" do
+
+      Exceptional.api_key = TEST_API_KEY
+      Exceptional.api_key_validated?.should be_false
+
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+
+      File.should_receive(:open).once.and_raise(IOError)
+
+      lambda{Exceptional.post_exception("data")}.should raise_error(Exceptional::Adapters::FileAdapterException)
+    end
   end
   
   describe "bootstrapping " do
