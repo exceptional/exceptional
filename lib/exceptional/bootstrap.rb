@@ -12,7 +12,7 @@ module Exceptional
           if api_key_validate            
             if adapter.bootstrap
               require File.join('exceptional', 'integration', 'rails')
-              Exceptional.to_log "Exceptional plugin enabled" 
+              Exceptional.to_log "Exceptional plugin enabled #{adapter.name}" 
             else
               raise Exceptional::ConfigException "Unable to boostrap adapter"
             end

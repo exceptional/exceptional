@@ -11,10 +11,8 @@ module Exceptional
       include Exceptional::Utils::FileUtils
 
       # This shouldnt need to be passed, should be figured out from the current environment somehow
-      COMMON_CONFIG_SCOPE = "common"
-
       def initialize(config_file, work_dir, application_root, log)
-        Exceptional.setup_config(COMMON_CONFIG_SCOPE, config_file)
+        Exceptional.setup_config("common", config_file)
 
         ensure_work_directory(log)
 
