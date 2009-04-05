@@ -90,7 +90,7 @@ begin
 
       puts ""
       puts " ----- Exceptional Installation Successful ---- "
-      puts "Config File :  #{new_config_file}"
+      puts "Config File :  #{File.expand_path(new_config_file)}"
       puts "Key : #{key}"
       puts ""
     end
