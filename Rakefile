@@ -39,14 +39,14 @@ begin
   end
 
   namespace :exceptional do
-    require 'lib/exceptional'
+    require File.join(File.dirname(__FILE__), 'lib/exceptional')
 
     EXCEPTIONAL_CONFIG_FILE = "exceptional.yml"
 
     desc "Install Exceptional Plugin"
     task :rails_install do
       require 'ftools'
-      require 'lib/exceptional/utils/rake_dir_tools'
+      require File.join(File.dirname(__FILE__), 'lib/exceptional/utils/rake_dir_tools')
 
       key = ENV['api_key']
 
@@ -99,8 +99,8 @@ begin
     task :file_sweeper do
 
       require 'logger'
-      require 'lib/exceptional/utils/file_sweeper'
-      require 'lib/exceptional/utils/rake_dir_tools'
+      require File.join(File.dirname(__FILE), 'lib/exceptional/utils/file_sweeper')
+      require File.join(File.dirname(__FILE), 'lib/exceptional/utils/rake_dir_tools')
       
       config_file = Exceptional::Utils::RakeDirTools.get_config_file
       work_dir = Exceptional::Utils::RakeDirTools.get_work_dir
