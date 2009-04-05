@@ -24,7 +24,6 @@ module Exceptional
         end
       end
 
-      # needs to be an adapter bootstrap method
       def publish_exception(json_data)
         begin
           file_name = "#{EXCEPTIONAL_FILE_PREFIX}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.json"

@@ -5,7 +5,7 @@ module Exceptional
       EXCEPTIONAL_CONFIG_FILE = "exceptional.yml"
       RELATIVE_RAILS_ROOT = "../../../../../../"
       RELATIVE_RAILS_CONFIG_PATH = RELATIVE_RAILS_ROOT + "config"
-      RELATIVE_WORK_DIR_PATH = RELATIVE_RAILS_ROOT + "config"
+      RELATIVE_WORK_DIR_PATH = RELATIVE_RAILS_ROOT + "tmp/exceptional"
 
       def RakeDirTools.get_config_dir
         if !ENV['config_dir'].nil?

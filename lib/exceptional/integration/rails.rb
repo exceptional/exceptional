@@ -19,7 +19,7 @@ if defined? ActionController
           params_to_send = (respond_to? :filter_parameters) ? filter_parameters(params) : params
           Exceptional.handle(exception, self, request, params_to_send)
         end
-            
+
         rescue_action_without_exceptional exception
       end
     

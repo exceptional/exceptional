@@ -78,9 +78,9 @@ module Exceptional
     end
 
     def log_config_info
-      Exceptional.to_log('debug', "API Key: #{api_key}")
-      Exceptional.to_log('debug', "Remote Host: #{remote_host}:#{remote_port}")
-      Exceptional.to_log('debug', "Log level: #{log_level}")
+      Exceptional.to_log("API Key: #{api_key}", 'debug')
+      Exceptional.to_log("Remote Host: #{remote_host}:#{remote_port}", 'debug')
+      Exceptional.to_log("Log level: #{log_level}", 'debug')
     end
   end
 end

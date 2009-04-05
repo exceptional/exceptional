@@ -27,7 +27,7 @@ module Exceptional
     end
 
     def log!(msg, level = 'info')
-      to_log level, msg
+      to_log msg, level
       to_stderr msg
     end
 
@@ -35,9 +35,7 @@ module Exceptional
       STDERR.puts format_log_message(msg)
     end
 
-    protected
-
-    def to_log(level, msg)
+    def to_log(msg, level = 'info')
       @log.send level, msg if @log
     end
 

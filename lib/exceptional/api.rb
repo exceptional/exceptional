@@ -71,7 +71,7 @@ module Exceptional
     protected
 
     def safe_environment(request)
-      safe_environment = request.env.to_hash
+      safe_environment = request.env.dup.to_hash
       # From Rails 2.3 these objects that cause a circular reference error on .to_json need removed
       # TODO potentially remove this case, should be covered by sanitize_hash
       safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ || k == "_" }

@@ -8,18 +8,23 @@ module Exceptional
         setup_log(File.join(application_root, "log"), log_level)
 
         if enabled?
+          Exceptional.to_log "Exceptional plugin enabled" 
+
           if api_key_validate
-            if !adapter.bootstrap # Change to setup/bootstrap adapter
+            
+            if adapter.bootstrap
               require File.join('exceptional', 'integration', 'rails')
-            end            
+              Exceptional.to_log "Exceptional plugin bootstrapped"
+            else
+              raise Exceptional::ConfigException "Unable to boostrap adapter"
+            end
           else
-            STDERR.puts "Exceptional plugin not api_key_validated, check your API Key"
+            Exceptional.log! "Exceptional plugin not api_key_validated, check your API Key"
           end
         end
       rescue Exception => e
         # Should these be writing to Exceptional.log! ?
-        STDERR.puts e.message
-        STDERR.puts "Exceptional Plugin disabled. #{e.message}"
+        Exceptional.log! "Exceptional Plugin disabled. #{e.message}"
       end
     end
   end

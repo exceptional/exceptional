@@ -50,7 +50,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_config).and_raise(Exceptional::Config::ConfigurationException)
       Exceptional.should_not_receive(:setup_log)
       Exceptional.should_not_receive(:api_key_validate).and_return(false)
-      STDERR.should_receive(:puts).twice() #Should be no errors to report
+      STDERR.should_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
