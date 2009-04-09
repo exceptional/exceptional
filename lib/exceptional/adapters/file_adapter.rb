@@ -1,5 +1,5 @@
-require File.expand_path(File.join(File.dirname(__FILE__) , '/../utils/file_utils'))
-require File.dirname(__FILE__) + '/base_adapter'
+require 'exceptional/utils/file_utils'
+require 'exceptional/adapters/base_adapter'
 
 require 'ftools'
 

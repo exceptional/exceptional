@@ -1,6 +1,5 @@
-require File.dirname(__FILE__) + '/../utils/file_sweeper'
-require File.dirname(__FILE__) + '/base_adapter'
-
+require 'exceptional/utils/file_sweeper'
+require 'exceptional/adapters/base_adapter'
 
 module Exceptional
   module Adapters

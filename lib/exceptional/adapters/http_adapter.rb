@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../utils/http_utils'
-require File.dirname(__FILE__) + '/base_adapter'
+require 'exceptional/utils/http_utils'
+require 'exceptional/adapters/base_adapter'
 
 module Exceptional
   module Adapters

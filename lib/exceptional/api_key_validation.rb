@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/utils/http_utils'
+require 'exceptional/utils/http_utils'
 
 module Exceptional
   module APIKeyValidation
