@@ -20,31 +20,34 @@ module Exceptional
         @log = log
       end
 
+      def adapter
+        return @adapter
+      end
+
       def sweep
         @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir}"
-        begin
-          Dir.glob("#{Exceptional.work_dir}/*.json") { |file|
+
+        Dir.glob("#{Exceptional.work_dir}/*.json").each { |file|
+          begin
             @log.send "info", "File Adapter Sweep - Found #{file}"
             json_data = read_data(file)
             @adapter.publish_exception(json_data.to_json)
             File.delete(file)
-          }
+          rescue Exception => e
+            @log.send "error", "#{e.message}"
+            File.rename(file, "#{file} + .error")
+            raise FileSweeperException.new e.message
+          end
+        }
 
-        rescue Exception => e
-          @log.send "error", "#{e.message}"
-          raise FileSweeperException.new e.message
-        ensure
-          @log.send "info", "FileAdapter Sweep Finished"
-        end
+        @log.send "info", "FileAdapter Sweep Finished"
       end
 
       def read_data(filename)
-        open(filename) do |f|
+        File.open(filename) do |f|
           json = f.read
           return JSON.parse(json.sub(/^[^{]+/, ''))
         end
-      rescue => e
-        raise FileSweeperException.new e.message
       end
     end
   end
