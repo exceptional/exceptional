@@ -34,7 +34,7 @@ module Exceptional
         e.framework = "rails"
         e.controller_name = controller.controller_name
         e.action_name = controller.action_name
-        e.application_root = Exceptional.application_root
+        e.application_root = Exceptional.application_root?
         e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
         e.environment = request.env.to_hash
         e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
@@ -43,7 +43,7 @@ module Exceptional
         e.parameters = sanitize_hash(params.to_hash)
 
         # Add info about current user if configure
-        if(Exceptional.send_user_data && controller.responds_to?('current_user'))
+        if(Exceptional.send_user_data? && controller.responds_to?('current_user'))
           add_user_data(e, controller.current_user)
         end          
 

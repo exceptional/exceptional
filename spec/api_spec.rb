@@ -14,11 +14,11 @@ describe Exceptional::Api do
     end
 
     it "should connect to getexceptional.com by default" do
-      Exceptional.remote_host.should == "getexceptional.com"
+      Exceptional.remote_host?.should == "getexceptional.com"
     end
 
     it "should connect to port 80 by default" do
-      Exceptional.remote_port.should == 80
+      Exceptional.remote_port?.should == 80
     end
 
     it "should parse exception into exception data object" do

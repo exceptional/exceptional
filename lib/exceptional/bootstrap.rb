@@ -4,7 +4,7 @@ module Exceptional
     def bootstrap(environment, application_root)
       begin
         setup_config(environment, File.join(application_root,"config", "exceptional.yml"))
-        setup_log(File.join(application_root, "log"), log_level)
+        setup_log(File.join(application_root, "log"), Exceptional.log_level?)
 
         if enabled?
           

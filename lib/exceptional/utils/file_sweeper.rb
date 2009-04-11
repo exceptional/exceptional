@@ -26,9 +26,9 @@ module Exceptional
       end
 
       def sweep
-        @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir}"
+        @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir?}"
 
-        Dir.glob("#{Exceptional.work_dir}/*.json").each { |file|
+        Dir.glob("#{Exceptional.work_dir?}/*.json").each { |file|
           begin
             @log.send "info", "File Adapter Sweep - Found #{file}"
             json_data = read_data(file)

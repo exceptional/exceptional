@@ -13,25 +13,25 @@ describe Exceptional::AdapterManager do
 
   describe "instantiating valid adapter" do
     it "should instantiate HTTPAdapter adapter" do
-      Exceptional.should_receive(:adapter_name).once.and_return("HttpAdapter")
+      Exceptional.should_receive(:adapter_name?).once.and_return("HttpAdapter")
       Exceptional::Adapters::HttpAdapter.should_receive(:new)
       Exceptional.adapter
     end
 
     it "should instantiate FileAdapter adapter" do
-      Exceptional.should_receive(:adapter_name).once.and_return("FileAdapter")
+      Exceptional.should_receive(:adapter_name?).once.and_return("FileAdapter")
       Exceptional::Adapters::FileAdapter.should_receive(:new)
       Exceptional.adapter
     end
 
     it "should instantiate HttpAsyncAdapter adapter" do
-      Exceptional.should_receive(:adapter_name).once.and_return("HttpAsyncAdapter")
+      Exceptional.should_receive(:adapter_name?).once.and_return("HttpAsyncAdapter")
       Exceptional::Adapters::HttpAsyncAdapter.should_receive(:new)
       Exceptional.adapter
     end
     
     it "should raise Config error if invalid adapter configured" do
-      Exceptional.should_receive(:adapter_name).twice.and_return("InvalidAdapterName")
+      Exceptional.should_receive(:adapter_name?).twice.and_return("InvalidAdapterName")
       lambda {Exceptional.adapter}.should raise_error(Exceptional::AdapterManager::AdapterManagerException)
     end
     

@@ -15,8 +15,8 @@ module Exceptional
     end
 
     def post_exception(data)
-      if !api_key_validated?
-        api_key_validate
+      if !Exceptional.api_key_validated?
+        Exceptional.api_key_validate
       end
 
       adapter.publish_exception(data)
@@ -26,10 +26,10 @@ module Exceptional
 
     def load_adapter
       begin
-        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name
+        adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name?
         eval(adapter_name).new # Instantiate adapter
       rescue NameError => e
-        raise AdapterManagerException.new "Invalid Adapter Name #{Exceptional.adapter_name}"
+        raise AdapterManagerException.new "Invalid Adapter Name #{Exceptional.adapter_name?}"
       end
     end
   end

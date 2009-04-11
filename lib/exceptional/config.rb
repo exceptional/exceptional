@@ -31,7 +31,7 @@ module Exceptional
         @work_dir = config['work_dir'] unless config['work_dir'].nil?
         @send_user_data = config['send-user-data'] unless config['send-user-data'].nil?
 
-        @applicaton_root = application_root
+        @applicaton_root = application_root?
 
         log_config_info
       rescue Exception => e
@@ -39,32 +39,32 @@ module Exceptional
       end
     end
 
-    def application_root
+    def application_root?
       @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../../../../..')
     end
 
-    def remote_host
+    def remote_host?
       @remote_host || REMOTE_HOST
     end
 
-    def remote_port
-      @remote_port || default_port
+    def remote_port?
+      @remote_port || default_port?
     end
 
-    def log_level
+    def log_level?
       @log_level || LOG_LEVEL
     end
 
-    def default_port
+    def default_port?
       ssl_enabled? ? REMOTE_SSL_PORT : REMOTE_PORT
     end
 
-    def adapter_name
+    def adapter_name?
       @adapter_name || DEFAULT_ADAPTER_NAME
     end
 
-    def work_dir
-      @work_dir || @work_dir = File.expand_path(File.join(application_root, "/tmp/exeptional"))
+    def work_dir?
+      @work_dir || @work_dir = File.expand_path(File.join(application_root?, "/tmp/exeptional"))
     end
 
     def ssl_enabled?
@@ -79,14 +79,14 @@ module Exceptional
       @api_key && @api_key.length == 40 ? true : false
     end
 
-    def send_user_data
+    def send_user_data?
       @send_user_data || false
     end
 
     def log_config_info
       Exceptional.to_log("API Key: #{api_key}", 'debug')
-      Exceptional.to_log("Remote Host: #{remote_host}:#{remote_port}", 'debug')
-      Exceptional.to_log("Log level: #{log_level}", 'debug')
+      Exceptional.to_log("Remote Host: #{remote_host?}:#{remote_port?}", 'debug')
+      Exceptional.to_log("Log level: #{log_level?}", 'debug')
     end
   end
 end

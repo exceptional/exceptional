@@ -14,7 +14,7 @@ module Exceptional
 
       def http_call_remote(method, data)
         begin
-          http = Net::HTTP.new(Exceptional.remote_host, Exceptional.remote_port)
+          http = Net::HTTP.new(Exceptional.remote_host?, Exceptional.remote_port?)
           http.use_ssl = true if Exceptional.ssl_enabled?
           uri = "/#{method.to_s}?&api_key=#{Exceptional.api_key}&protocol_version=#{PROTOCOL_VERSION}"
           headers = method.to_s == 'errors' ? { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' } : {}
