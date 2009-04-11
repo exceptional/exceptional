@@ -1,6 +1,6 @@
 module Exceptional
-  module Adapters
-    class BaseAdapter
+  module Adapters  
+    class BaseAdapter #:nodoc:
 
       def bootstrap
         return true

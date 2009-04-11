@@ -11,8 +11,9 @@ module Exceptional
     LOG_LEVEL = 'info'
     LOG_PATH = nil
     DEFAULT_ADAPTER_NAME = "HttpAdapter"
-    
-    class ConfigurationException < StandardError; end
+
+    class ConfigurationException < StandardError  #:nodoc:
+    end
 
     attr_reader :api_key
     attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name, :work_dir
@@ -29,7 +30,7 @@ module Exceptional
         @adapter_name = config['adapter'] unless config['adapter'].nil?
         @work_dir = config['work_dir'] unless config['work_dir'].nil?
         @send_user_data = config['send-user-data'] unless config['send-user-data'].nil?
-        
+
         @applicaton_root = application_root
 
         log_config_info
@@ -73,7 +74,7 @@ module Exceptional
     def enabled?
       @enabled || false
     end
-    
+
     def valid_api_key?
       @api_key && @api_key.length == 40 ? true : false
     end
@@ -81,7 +82,7 @@ module Exceptional
     def send_user_data
       @send_user_data || false
     end
-    
+
     def log_config_info
       Exceptional.to_log("API Key: #{api_key}", 'debug')
       Exceptional.to_log("Remote Host: #{remote_host}:#{remote_port}", 'debug')

@@ -1,10 +1,11 @@
 
 
 module Exceptional
-  module Utils
-    module FileUtils
+  module Utils  #:nodoc:
+    module FileUtils  #:nodoc:
 
-      class FileUtilsException < StandardError; end
+      class FileUtilsException < StandardError    #:nodoc:
+      end
 
       def ensure_work_directory (log)
         if ! (FileTest.exists?(Exceptional.work_dir) && FileTest.directory?(Exceptional.work_dir))

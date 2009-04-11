@@ -1,6 +1,5 @@
 module Exceptional
-  module Bootstrap
-
+  module Bootstrap #:nodoc:  
 
     def bootstrap(environment, application_root)
       begin

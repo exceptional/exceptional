@@ -3,14 +3,15 @@ require 'cgi'
 require 'net/http'
 
 module Exceptional
-  module Utils
-    module HttpUtils
+  module Utils  #:nodoc:
+    module HttpUtils  #:nodoc:
 
-      class HttpUtilsException < StandardError; end
+      class HttpUtilsException < StandardError    #:nodoc:
+      end
 
       PROTOCOL_VERSION = 3 unless defined?(PROTOCOL_VERSION)
       # TODO should retry if a http connection failed
-      
+
       def http_call_remote(method, data)
         begin
           http = Net::HTTP.new(Exceptional.remote_host, Exceptional.remote_port)

@@ -1,8 +1,8 @@
 require 'exceptional/utils/http_utils'
 
 module Exceptional
-  module APIKeyValidation
-   
+  module APIKeyValidation #:nodoc:
+    
     include Exceptional::Utils::HttpUtils
     
     

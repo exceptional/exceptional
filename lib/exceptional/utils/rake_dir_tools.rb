@@ -1,6 +1,6 @@
 module Exceptional
-  module Utils
-    module RakeDirTools
+  module Utils  #:nodoc:
+    module RakeDirTools  #:nodoc:
 
       EXCEPTIONAL_CONFIG_FILE = "exceptional.yml" if !defined? EXCEPTIONAL_CONFIG_FILE
       RELATIVE_RAILS_ROOT = "../../../../../../" if !defined? RELATIVE_RAILS_ROOT

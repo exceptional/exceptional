@@ -6,9 +6,10 @@ require 'ftools'
 module Exceptional
   module Adapters
 
-    class FileAdapterException < StandardError; end
+    class FileAdapterException < StandardError    #:nodoc:
+    end
 
-    class FileAdapter < BaseAdapter
+    class FileAdapter < BaseAdapter   #:nodoc:
 
       include Exceptional::Utils::FileUtils
 

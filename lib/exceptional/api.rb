@@ -42,7 +42,7 @@ module Exceptional
         e.session = safe_session(request.session)
         e.parameters = sanitize_hash(params.to_hash)
 
-        # Add info about current user if configured
+        # Add info about current user if configure
         if(Exceptional.send_user_data && controller.responds_to?('current_user'))
           add_user_data(e, controller.current_user)
         end          

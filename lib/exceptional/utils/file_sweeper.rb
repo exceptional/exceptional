@@ -2,11 +2,12 @@ require 'ftools'
 require File.dirname(__FILE__) + '/file_utils'
 
 module Exceptional
-  module Utils
+  module Utils  #:nodoc:
 
-    class FileSweeperException < StandardError; end
+    class FileSweeperException < StandardError    #:nodoc:
+    end
 
-    class FileSweeper
+    class FileSweeper  #:nodoc:
 
       include Exceptional::Utils::FileUtils
 

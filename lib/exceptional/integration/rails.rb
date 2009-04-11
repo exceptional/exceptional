@@ -9,8 +9,8 @@ end
 
 if defined? ActionController
 
-  module ActionController
-    class Base
+  module ActionController    #:nodoc:
+    class Base    #:nodoc:
     
       def rescue_action_with_exceptional(exception)
         # TODO potentially hook onto rescue_without_handler if it exists? would negate need to check handler_for_rescue every time.

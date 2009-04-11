@@ -3,11 +3,12 @@ Dir.glob(File.join(File.dirname(__FILE__), 'adapters/*_adapter.rb')).each {|f| r
 
 
 module Exceptional
-  module AdapterManager
+  module AdapterManager  #:nodoc:
 
     ADAPTER_MODULE_PREFIX = "Exceptional::Adapters::"
 
-    class AdapterManagerException < StandardError; end
+    class AdapterManagerException < StandardError    #:nodoc:
+    end
 
     def adapter
       @adapter || @adapter = load_adapter

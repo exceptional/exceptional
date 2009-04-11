@@ -1,7 +1,7 @@
 require 'logger'
 
 module Exceptional
-  module Log
+  module Log  #:nodoc:
 
     attr_reader :log
     
