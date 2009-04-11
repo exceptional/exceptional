@@ -28,6 +28,7 @@ module Exceptional
         @remote_host = config['remote-host'] unless config['remote-host'].nil?
         @adapter_name = config['adapter'] unless config['adapter'].nil?
         @work_dir = config['work_dir'] unless config['work_dir'].nil?
+        @send_user_data = config['send-user-data'] unless config['send-user-data'].nil?
         
         @applicaton_root = application_root
 
@@ -77,6 +78,10 @@ module Exceptional
       @api_key && @api_key.length == 40 ? true : false
     end
 
+    def send_user_data
+      @send_user_data || false
+    end
+    
     def log_config_info
       Exceptional.to_log("API Key: #{api_key}", 'debug')
       Exceptional.to_log("Remote Host: #{remote_host}:#{remote_port}", 'debug')

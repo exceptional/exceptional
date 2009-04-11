@@ -42,6 +42,11 @@ module Exceptional
         e.session = safe_session(request.session)
         e.parameters = sanitize_hash(params.to_hash)
 
+        # Add info about current user if configured
+        if(Exceptional.send_user_data && controller.responds_to?('current_user'))
+          add_user_data(e, controller.current_user)
+        end          
+
         post(e)
       rescue Exception => exception
         Exceptional.log! "Error preparing exception data."
@@ -96,6 +101,12 @@ module Exceptional
     def sanitize_hash(hash)
       return {} if hash.nil?
       Hash.from_xml(hash.to_xml)['hash']
+    end
+    
+    def add_user_data(exception_data, user)
+      e.user_id = user.id if user.responds_to? 'id'
+      e.user_login = user.login if user.responds_to? 'login'
+      e.user_email = user.email if user.response_to? 'email'
     end
   end
 end

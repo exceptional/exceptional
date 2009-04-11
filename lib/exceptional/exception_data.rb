@@ -5,9 +5,9 @@ module Exceptional
   class ExceptionData
     ::LANGUAGE = "ruby"
     ::BASE_ATTRS = [:exception_class, :exception_message, :exception_backtrace]
-    ::OPTIONAL_ATTRS = [:framework, :controller_name, :action_name, :application_root, 
-                        :url, :occurred_at, :environment, :session, :parameters]
-    ::ACCESSIBLE_ATTRS = ::BASE_ATTRS + ::OPTIONAL_ATTRS
+    ::OPTIONAL_ATTRS = [:framework, :controller_name, :action_name, :application_root, :url, :occurred_at, :environment, :session, :parameters]
+    ::USER_ATTRS = [:user_id, :user_login, :user_email]
+    ::ACCESSIBLE_ATTRS = ::BASE_ATTRS + ::OPTIONAL_ATTRS + ::USER_ATTRS
     ::ATTRS = [:language] + ::ACCESSIBLE_ATTRS
     
     ::ACCESSIBLE_ATTRS.each do |attribute|
