@@ -5,6 +5,10 @@ module Exceptional
       def bootstrap
         return true
       end
+      
+      def name
+        return self.class
+      end
     end
   end
 end

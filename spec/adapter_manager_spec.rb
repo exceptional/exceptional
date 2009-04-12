@@ -14,27 +14,38 @@ describe Exceptional::AdapterManager do
   describe "instantiating valid adapter" do
     it "should instantiate HTTPAdapter adapter" do
       Exceptional.should_receive(:adapter_name?).once.and_return("HttpAdapter")
-      Exceptional::Adapters::HttpAdapter.should_receive(:new)
-      Exceptional.adapter
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+      adapter_mock = mock(Exceptional::Adapters::HttpAdapter)
+      adapter_mock.should_receive(:publish_exception)
+      Exceptional::Adapters::HttpAdapter.should_receive(:new).and_return(adapter_mock)
+      Exceptional.post_exception(nil)
     end
 
     it "should instantiate FileAdapter adapter" do
       Exceptional.should_receive(:adapter_name?).once.and_return("FileAdapter")
-      Exceptional::Adapters::FileAdapter.should_receive(:new)
-      Exceptional.adapter
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+      adapter_mock = mock(Exceptional::Adapters::FileAdapter)
+      adapter_mock.should_receive(:publish_exception)
+      Exceptional::Adapters::FileAdapter.should_receive(:new).and_return(adapter_mock)
+
+      Exceptional.post_exception(nil)
     end
 
     it "should instantiate HttpAsyncAdapter adapter" do
       Exceptional.should_receive(:adapter_name?).once.and_return("HttpAsyncAdapter")
-      Exceptional::Adapters::HttpAsyncAdapter.should_receive(:new)
-      Exceptional.adapter
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+      adapter_mock = mock(Exceptional::Adapters::HttpAsyncAdapter)
+      adapter_mock.should_receive(:publish_exception)
+      Exceptional::Adapters::HttpAsyncAdapter.should_receive(:new).and_return(adapter_mock)
+      Exceptional.post_exception(nil)
     end
-    
+
     it "should raise Config error if invalid adapter configured" do
       Exceptional.should_receive(:adapter_name?).twice.and_return("InvalidAdapterName")
-      lambda {Exceptional.adapter}.should raise_error(Exceptional::AdapterManager::AdapterManagerException)
+      Exceptional.should_receive(:api_key_validated?).once.and_return(true)      
+      lambda {Exceptional.post_exception(nil)}.should raise_error(Exceptional::AdapterManager::AdapterManagerException)
     end
-    
+
   end
 
   describe "sending data " do
@@ -54,13 +65,7 @@ describe Exceptional::AdapterManager do
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception,
-      :to_hash => { :message => "Something bad has happened" })
-
-      Exceptional.post(exception_data).should == OK_RESPONSE_BODY
+      Exceptional.catch(IOError.new).should == OK_RESPONSE_BODY
     end
 
     it "should raise error if network problem during sending exception" do
@@ -77,14 +82,7 @@ describe Exceptional::AdapterManager do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception,
-      :to_hash => { :message => "Something bad has happened" })
-
-
-      lambda{Exceptional.post(exception_data)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
+      lambda{Exceptional.catch(IOError.new)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
 
     it "should raise Exception if sending exception unsuccessful" do
@@ -104,13 +102,7 @@ describe Exceptional::AdapterManager do
       #surpress the logging of the exception
       Exceptional.should_receive(:log!).twice
 
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception,
-      :to_hash => { :message => "Something bad has happened" })
-
-      lambda{Exceptional.post(exception_data)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
+      lambda{Exceptional.catch(IOError.new)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
   end
 end

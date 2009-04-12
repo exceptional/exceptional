@@ -13,17 +13,6 @@ module Exceptional
       exception_data
     end
 
-    # post the given exception data to getexceptional.com
-    def post(exception_data)
-      hash = exception_data.to_hash
-      if hash[:session]
-        hash[:session].delete("initialization_options")
-        hash[:session].delete("request")
-      end
-
-      Exceptional.post_exception(hash.to_json)
-    end
-
     # used with Rails, takes an exception, controller, request and parameters
     # creates an ExceptionData object
     def handle(exception, controller, request, params)
@@ -42,10 +31,8 @@ module Exceptional
         e.session = safe_session(request.session)
         e.parameters = sanitize_hash(params.to_hash)
 
-        # Add info about current user if configure
-        if(Exceptional.send_user_data? && controller.responds_to?('current_user'))
-          add_user_data(e, controller.current_user)
-        end          
+        # Add info about current user if configured to do so        
+        add_user_data(e, controller.current_user) if(Exceptional.send_user_data? && controller.responds_to?('current_user'))
 
         post(e)
       rescue Exception => exception
@@ -96,10 +83,22 @@ module Exceptional
 
     private
 
+    # post the given exception data to getexceptional.com
+    def post(exception_data)
+      hash = exception_data.to_hash
+      if hash[:session]
+        hash[:session].delete("initialization_options")
+        hash[:session].delete("request")
+      end
+
+      Exceptional.post_exception(hash.to_json)
+    end
+
+   
     # This (ironic) method sanitizes a hash by removing un-json-able objects from the passed in hash.
     #   needed as active_support's fails in some cases with a cyclical reference error.
     def sanitize_hash(hash)
-      return {} if hash.nil?
+      return {} if hash.nil?      
       Hash.from_xml(hash.to_xml)['hash']
     end
     

@@ -33,21 +33,6 @@ describe Exceptional::Api do
 
     end
 
-    it "should post exception" do
-
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception, :to_hash => { :message => "Something bad has happened" })
-      Exceptional.api_key = "TEST_API_KEY"
-      mock_adapter = mock(Exceptional::Adapters::HttpAdapter)
-      mock_adapter.should_receive(:publish_exception).once
-      Exceptional.should_receive(:adapter).once.and_return(mock_adapter)
-      Exceptional.should_receive(:api_key_validate).once.and_return(true)
-      Exceptional.post(exception_data)
-
-    end
-
     it "should catch exception" do
       exception = mock(Exception, :message => "Something bad has happened",
       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
@@ -65,13 +50,8 @@ describe Exceptional::Api do
     end
 
     it "should raise a license exception if api key is not set" do
-      exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception,
-      :to_hash => { :message => "Something bad has happened" })
       Exceptional.api_key.should == nil
-      lambda { Exceptional.post(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
+      lambda { Exceptional.catch(IOError.new) }.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
 

@@ -10,19 +10,19 @@ module Exceptional
     class AdapterManagerException < StandardError    #:nodoc:
     end
 
-    def adapter
-      @adapter || @adapter = load_adapter
-    end
-
     def post_exception(data)
-      if !Exceptional.api_key_validated?
-        Exceptional.api_key_validate
-      end
-
+      Exceptional.api_key_validate if !Exceptional.api_key_validated?
+            
       adapter.publish_exception(data)
     end
 
     protected
+
+    def adapter
+      @adapter || @adapter = load_adapter
+    end
+
+    private
 
     def load_adapter
       begin

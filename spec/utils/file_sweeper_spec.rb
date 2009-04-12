@@ -107,21 +107,25 @@ describe Exceptional::Utils::FileSweeper do
 
     Dir.should_receive(:glob).with(SWEEPER_WORK_DIR + '/*.json').and_return(files)
 
+    mock_adapter = mock(Exceptional::Adapters::HttpAdapter)
+    Exceptional::Adapters::HttpAdapter.should_receive(:new).once.and_return(mock_adapter)
+
     sweeper = Exceptional::Utils::FileSweeper.new SWEEPER_CONFIG_FILE, SWEEPER_WORK_DIR, SWEEPER_APP_ROOT, mock_logger
+    
 
     file_1_exception_data = "fl1exp"
     sweeper.should_receive(:read_data).with("file1").once.and_return(file_1_exception_data)
-    sweeper.adapter.should_receive(:publish_exception).with(file_1_exception_data.to_json)
+    mock_adapter.should_receive(:publish_exception).with(file_1_exception_data.to_json)
     File.should_receive(:delete).with("file1")
 
     file_2_exception_data = "fl2exp"
     sweeper.should_receive(:read_data).with("file2").once.and_return(file_2_exception_data)
-    sweeper.adapter.should_receive(:publish_exception).with(file_2_exception_data.to_json)
+    mock_adapter.should_receive(:publish_exception).with(file_2_exception_data.to_json)
     File.should_receive(:delete).with("file2")
     
     file_3_exception_data = "fl3exp"
     sweeper.should_receive(:read_data).with("file3").once.and_return(file_3_exception_data)
-    sweeper.adapter.should_receive(:publish_exception).with(file_3_exception_data.to_json)
+    mock_adapter.should_receive(:publish_exception).with(file_3_exception_data.to_json)
     File.should_receive(:delete).with("file3")
     sweeper.sweep
   end

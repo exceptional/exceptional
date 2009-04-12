@@ -1,5 +1,3 @@
-
-
 module Exceptional
   module Utils  #:nodoc:
     module FileUtils  #:nodoc:

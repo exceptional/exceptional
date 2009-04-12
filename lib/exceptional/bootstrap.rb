@@ -3,13 +3,13 @@ module Exceptional
 
     def bootstrap(environment, application_root)
       begin
-        setup_config(environment, File.join(application_root,"config", "exceptional.yml"))
-        setup_log(File.join(application_root, "log"), Exceptional.log_level?)
+        Exceptional.setup_config(environment, File.join(application_root,"config", "exceptional.yml"))
+        Exceptional.setup_log(File.join(application_root, "log"), Exceptional.log_level?)
 
-        if enabled?
+        if Exceptional.enabled?
           
-          if api_key_validate            
-            if adapter.bootstrap
+          if Exceptional.api_key_validate            
+            if Exceptional.adapter.bootstrap
               require File.join('exceptional', 'integration', 'rails')
               Exceptional.to_log "Exceptional plugin enabled #{adapter.name}" 
             else
