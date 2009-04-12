@@ -6,7 +6,7 @@ namespace :exceptional do
   desc "Install Exceptional Plugin"
   task :rails_install do
     require 'ftools'
-    require File.join(File.dirname(__FILE__), 'lib/exceptional/utils/rake_dir_tools')
+    require File.join(File.dirname(__FILE__), '../lib/exceptional/utils/rake_dir_tools')
 
     key = ENV['api_key']
 
@@ -19,7 +19,7 @@ namespace :exceptional do
 
     rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
 
-    exceptional_config_template = File.join(File.dirname(__FILE__), EXCEPTIONAL_CONFIG_FILE)
+    exceptional_config_template = File.join(File.dirname(__FILE__), '../', EXCEPTIONAL_CONFIG_FILE)
 
     config_dir = Exceptional::Utils::RakeDirTools.get_config_dir
 

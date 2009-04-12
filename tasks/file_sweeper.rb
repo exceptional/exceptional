@@ -5,8 +5,8 @@ namespace :exceptional do
   task :file_sweeper do
 
     require 'logger'
-    require File.join(File.dirname(__FILE__), 'lib/exceptional/utils/file_sweeper')
-    require File.join(File.dirname(__FILE__), 'lib/exceptional/utils/rake_dir_tools')
+    require File.join(File.dirname(__FILE__), '../lib/exceptional/utils/file_sweeper')
+    require File.join(File.dirname(__FILE__), '../lib/exceptional/utils/rake_dir_tools')
     
     config_file = Exceptional::Utils::RakeDirTools.get_config_file
     work_dir = Exceptional::Utils::RakeDirTools.get_work_dir
