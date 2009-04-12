@@ -35,7 +35,7 @@ namespace :exceptional do
       File.open(new_config_file, "w"){|f| f.write(lines) }
 
 
-      Exceptional.setup_config("test", new_config_file)
+      Exceptional.setup_config("test", new_config_file, rails_root)
 
       if !Exceptional.api_key_validate
         STDERR.puts "Error Authenticating API-Key"
