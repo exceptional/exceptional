@@ -13,7 +13,7 @@ module Exceptional
 
       # This shouldnt need to be passed, should be figured out from the current environment somehow
       def initialize(config_file, work_dir, application_root, log)
-        Exceptional.setup_config("common", config_file)
+        Exceptional.setup_config("common", config_file, application_root)
         ensure_work_directory(log)
         @adapter = Exceptional::Adapters::HttpAdapter.new
         @log = log
