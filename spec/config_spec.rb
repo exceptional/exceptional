@@ -69,39 +69,39 @@ describe Exceptional::Config do
     it "error during config file loading raises configuration exception" do
       File.should_receive(:open).once.and_raise(IOError)
       
-      lambda{Exceptional.setup_config("development", File.dirname(__FILE__))}.should raise_error(Exceptional::Config::ConfigurationException)
+      lambda{Exceptional.setup_config("development", File.dirname(__FILE__), File.dirname(__FILE__))}.should raise_error(Exceptional::Config::ConfigurationException)
     end
 
     it "is enabled for production environment" do
       Exceptional.enabled?.should be_false
 
-      Exceptional.setup_config "production", File.join(File.dirname(__FILE__), "/../exceptional.yml")
+      Exceptional.setup_config "production", File.join(File.dirname(__FILE__), "/../exceptional.yml"), File.dirname(__FILE__)
       Exceptional.enabled?.should be_true
     end
 
     it "is enabled by default for production and staging environments" do
       Exceptional.enabled?.should be_false
 
-      Exceptional.setup_config "production", File.join(File.dirname(__FILE__), "/../exceptional.yml")
+      Exceptional.setup_config "production", File.join(File.dirname(__FILE__), "/../exceptional.yml"), File.dirname(__FILE__)
       Exceptional.enabled?.should be_true
 
       Exceptional.reset_state
       Exceptional.enabled?.should be_false
 
-      Exceptional.setup_config "staging", File.join(File.dirname(__FILE__), "/../exceptional.yml")
+      Exceptional.setup_config "staging", File.join(File.dirname(__FILE__), "/../exceptional.yml"), File.dirname(__FILE__)
       Exceptional.enabled?.should be_true
     end
 
     it "is disabled by default for development & test environments" do
       Exceptional.enabled?.should be_false
 
-      Exceptional.setup_config "development", File.join(File.dirname(__FILE__), "/../exceptional.yml")
+      Exceptional.setup_config "development", File.join(File.dirname(__FILE__), "/../exceptional.yml"), File.dirname(__FILE__)
       Exceptional.enabled?.should be_false
 
       Exceptional.reset_state
       Exceptional.enabled?.should be_false
 
-      Exceptional.setup_config "test", File.join(File.dirname(__FILE__), "/../exceptional.yml")
+      Exceptional.setup_config "test", File.join(File.dirname(__FILE__), "/../exceptional.yml"), File.dirname(__FILE__)
       Exceptional.enabled?.should be_false
     end            
   end

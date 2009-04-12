@@ -18,7 +18,7 @@ module Exceptional
     attr_reader :api_key
     attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name, :work_dir
 
-    def setup_config(environment, config_file)
+    def setup_config(environment, config_file, applicaton_root)
       begin
         config = YAML::load(File.open(config_file))[environment]
         @api_key = config['api-key'] unless config['api-key'].nil?

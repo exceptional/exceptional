@@ -3,7 +3,7 @@ module Exceptional
 
     def bootstrap(environment, application_root)
       begin
-        Exceptional.setup_config(environment, File.join(application_root,"config", "exceptional.yml"))
+        Exceptional.setup_config(environment, File.join(application_root,"config", "exceptional.yml"), application_root)
         Exceptional.setup_log(File.join(application_root, "log"), Exceptional.log_level?)
 
         if Exceptional.enabled?
