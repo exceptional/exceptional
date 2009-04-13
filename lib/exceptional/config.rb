@@ -31,7 +31,7 @@ module Exceptional
         @work_dir = config['work_dir'] unless config['work_dir'].nil?
         @send_user_data = config['send-user-data'] unless config['send-user-data'].nil?
 
-        @applicaton_root = application_root?
+        @applicaton_root = applicaton_root
 
         log_config_info
       rescue Exception => e
