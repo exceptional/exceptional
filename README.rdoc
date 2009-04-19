@@ -11,7 +11,7 @@ This guide covers
 
 == The Exceptional Rails Plugin
 
-The Exceptional plugin for Rails shares the same source repository as the ruby gem, the only thing that makes a Rails plugin a plugin is the init and install ruby files. We think this is cool, if you feel differently let us know :)
+The Exceptional plugin for Rails shares the same source repository as the ruby gem, the only thing that makes a Rails plugin a plugin is the <tt>init.rb</tt> and <tt>install.rb</tt> ruby files. We think this is cool, if you feel differently let us know :)
 
 ==== Installation
 
@@ -32,7 +32,7 @@ You will need an account at http://getexceptional.com
 
 ==== Configuration
 
-The Exceptional Rails plugin is configured via the <tt>RAILS_ROOT/config/exceptional.yml</tt> YAML file. By Default the exceptional plugin is enabled only for the 'Production' rails environment. 
+The Exceptional Rails plugin is configured via the <tt>RAILS_ROOT/config/exceptional.yml</tt> YAML file. By default the exceptional plugin is enabled only for the 'Production' rails environment. 
 
 Configuration Variables
 
@@ -57,7 +57,7 @@ Configuration Variables
 
 ==== The Magic
 
-The Exceptional plugin for Rails performs some magic when a Rails application is booting, here's what happens
+The Exceptional plugin for Rails performs some magic when a Rails application is booting
 
 1. Configuration file loaded from [RAILS_ROOT]/config/exceptional.yml
 2. The deployed environment is checked for what server the Rails application is running within, quietly exiting at this point if no server is detected. (See below for a list of supported server environments)
