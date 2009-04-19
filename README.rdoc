@@ -40,7 +40,7 @@ Configuration Variables
 		Exceptional API Key (Required)
 	
 	enabled
-		Whether to enable the Exceptional Plugin (Default = false)
+		Whether to enable the Exceptional Plugin (Default = true)
 		
 	ssl
 		To use SSL to communicate with getexceptional.com (Default = false)

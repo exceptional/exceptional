@@ -10,7 +10,7 @@ module Exceptional   #:nodoc:
 #                Exceptional API Key (Required)
 #
 #       enabled
-#                Whether to enable the Exceptional Plugin (Default = false)
+#                Whether to enable the Exceptional Plugin (Default = true)
 #
 #       ssl
 #                To use SSL to communicate with getexceptional.com (Default = false)
@@ -35,7 +35,7 @@ module Exceptional   #:nodoc:
 #
     
 module Config
-    DEFAULT_ENABLED = false
+    DEFAULT_ENABLED = true
     DEFAULT_HOST = "getexceptional.com"
     DEFAULT_PORT = 80
     DEFAULT_SSL_PORT = 443
