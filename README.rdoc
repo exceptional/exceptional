@@ -6,8 +6,8 @@ This guide covers
 
 1. The Exceptional Rails Plugin
 2. The Exceptional Ruby Gem
-3. Configuration Reference
-4. Advanced Exceptional (API, Adapter Framework)
+3. Advanced Exceptional (Adapters, API)
+
 
 == The Exceptional Rails Plugin
 
@@ -30,7 +30,30 @@ You will need an account at http://getexceptional.com
 
 4. Check RAILS_ROOT/log/exceptional.log to ensure the Exceptional plugin is successfully enabled
 
-By Default the exceptional plugin is only enabled for the 'Production' rails environment. If you are using any other environment and wish to use exceptional, then you need to set the <tt>enabled:</tt> config variable within the <tt>exceptional.yml</tt> file
+==== Configuration
+
+The Exceptional Rails plugin is configured via the <tt>RAILS_ROOT/config/exceptional.yml</tt> YAML file. By Default the exceptional plugin is enabled only for the 'Production' rails environment. 
+
+Configuration Variables
+
+	api-key
+		Exceptional API Key (Required)
+	
+	enabled
+		Whether to enable the Exceptional Plugin (Default = false)
+		
+	ssl
+		To use SSL to communicate with getexceptional.com (Default = false)
+	
+	log-level
+		Log Level for RAILS_ROOT/log/exceptional.log (Default 'info')
+	
+	send-user-data
+		Whether to publish current_user data to the Exceptional Server (Default = false)
+	
+	adapter
+		Exception data publish adapter (Default = 'HttpAdapter') - (see adapters section below) 
+		
 
 ==== The Magic
 
@@ -72,19 +95,29 @@ The Exceptional plugin for Rails performs some magic when a Rails application is
 		nil.boom!
 	end
 
-== Configuration Reference
+
+== Advanced Exceptional
+
+The Exceptional Gem/Plugin has some extra features. A brief overview is given below, but more detail is
+available by generating the rdoc directly from the project. Within the exceptional plugin directory run
+
+	rake docs
+ 
+
+=== Pluggable Publishing Adapters
+
+How the Exceptional Gem/Plugin publishes data to the Exceptional server is pluggable. This is implemented via Adapters, and the different adapter implementations allow for various qualities of service. 
+
+===== HttpAdapter
+The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the exceptional server
+
+==== HttpAsyncAdapter
+The HttpAsyncAdapter dispatches exception data to the exceptional server in a temporary thread
+
+==== FileAdapter
+The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server by a file_sweeper cron job
 
 
-== Advanced Exceptioinal 
+=== Exceptional API
+The Exceptional API based on published data in .json format. The API is currently in beta, and likely to change. Please contact us at support@getexceptional.com if you wish to understand more about our plans for the API.
 
-Configuration Options
-
-You can download a prepared config from within your app's dashboard
-
-Exceptional API
-
-LINK TO API
-
-Adapters
-
-LINK TO API

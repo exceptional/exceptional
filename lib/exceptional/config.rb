@@ -1,28 +1,53 @@
 require 'yaml'
 
-module Exceptional
-  
-  # api-key your API-key
-  # log-level defaults to 'info' (switch to 'debug' for more information if you are having problems)
-  # ssl (true or false) defaults to false. Send data back to getexceptional via ssl?
-  # enabled (true or false) defaults to true in production and staging environments. Wether Exceptional should be enabled or not
+module Exceptional   #:nodoc:
 
+#
+# = Config 
+#
+#
+#       api-key
+#                Exceptional API Key (Required)
+#
+#       enabled
+#                Whether to enable the Exceptional Plugin (Default = false)
+#
+#       ssl
+#                To use SSL to communicate with getexceptional.com (Default = false)
+#
+#       log-level
+#                Log Level for RAILS_ROOT/log/exceptional.log (Default 'info')
+#
+#       send-user-data
+#                Whether to publish current_user data to the Exceptional Server (Default = false)
+#
+#       adapter
+#                Exception data publish adapter (Default = 'HttpAdapter') - (see adapters section below)
+#
+#       remote_host
+#                Exceptional Server host (Default = "getexceptional.com")
+#
+#       remote_port
+#                Exceptioal Server port (Default = "80")
+#
+#       work_dir
+#                Path to directory used for temporary file creaton (File Adapter) (Default = RAILS_ROOT/tmp/exceptional)
+#
+    
 module Config
-    # Defaults for configuration variables
-    REMOTE_HOST = "getexceptional.com"
-    REMOTE_PORT = 80
-    REMOTE_SSL_PORT = 443
-    SSL = false
-    LOG_LEVEL = 'info'
-    LOG_PATH = nil
+    DEFAULT_ENABLED = false
+    DEFAULT_HOST = "getexceptional.com"
+    DEFAULT_PORT = 80
+    DEFAULT_SSL_PORT = 443
+    DEFAULT_SSL_ENABLED = false
+    DEFAULT_LOG_LEVEL = 'info'
+    DEFAULT_LOG_PATH = nil
     DEFAULT_ADAPTER_NAME = "HttpAdapter"
 
     class ConfigurationException < StandardError  #:nodoc:
     end
 
-    attr_reader :api_key
-    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key, :adapter_name, :work_dir
-
+    # Load exceptional.yml config from config_file
     def setup_config(environment, config_file, applicaton_root)
       begin
         config = YAML::load(File.open(config_file))[environment]
@@ -43,29 +68,45 @@ module Config
         raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
       end
     end
+    
+    def api_key
+      @api_key
+    end
+
+    def api_key=(key)
+      @api_key = key
+    end
 
     def application_root?
       @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../../../../..')
     end
 
     def remote_host?
-      @remote_host || REMOTE_HOST
+      @remote_host || DEFAULT_HOST
+    end
+    
+    def remote_host=(host)
+      @remote_host = host
     end
 
     def remote_port?
       @remote_port || default_port?
     end
-
-    def log_level?
-      @log_level || LOG_LEVEL
+    
+    def remote_port=(port)
+      @remote_port = port
     end
 
-    def default_port?
-      ssl_enabled? ? REMOTE_SSL_PORT : REMOTE_PORT
+    def log_level?
+      @log_level || DEFAULT_LOG_LEVEL
     end
 
     def adapter_name?
       @adapter_name || DEFAULT_ADAPTER_NAME
+    end
+    
+    def adapter_name=(adapter)
+      @adapter_name = adapter
     end
 
     def work_dir?
@@ -73,11 +114,15 @@ module Config
     end
 
     def ssl_enabled?
-      @ssl_enabled || SSL
+      @ssl_enabled || DEFAULT_SSL_ENABLED
+    end
+    
+    def ssl_enabled=(ssl)
+      @ssl_enabled = ssl
     end
 
     def enabled?
-      @enabled || false
+      @enabled || DEFAULT_ENABLED
     end
 
     def valid_api_key?
@@ -86,6 +131,12 @@ module Config
 
     def send_user_data?
       @send_user_data || false
+    end
+
+    protected
+    
+    def default_port?
+      ssl_enabled? ? DEFAULT_SSL_PORT : DEFAULT_PORT
     end
 
     def log_config_info
