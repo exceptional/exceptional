@@ -5,5 +5,9 @@ module Exceptional #:nodoc:
     TINY  = 2
  
     STRING = [MAJOR, MINOR, TINY].join('.')
+    
+    def VERSION.to_s
+      [MAJOR, MINOR, TINY].join('.')
+    end
   end
 end

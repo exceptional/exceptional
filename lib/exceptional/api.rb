@@ -1,8 +1,53 @@
 require 'json' unless defined? Rails
 
-
 module Exceptional
 
+#
+#  Exceptional was designed with Ruby on Rails in mind however, we realised during development that we could abstract things just a bit to suit any language and framework. We currently have client APIs for the following;
+#
+#      * Ruby
+#      * PHP
+#
+#  Overview
+#
+#  The data format we chose to base the API upon is JSON, we chose this for two reasons;
+#
+#      * It's faster to generate than XML. Not much, but every little helps.
+#      * Reduced weight.
+#
+#  Before sending the data, it should be compressed, again to save on outgoing bandwidth. This adds a slight overhead to the pre-processing of an exception but is worth it for the savings on data size.
+#
+#  Finally, to ensure no funky goings on. We escape the compressed data. This gives the following flow.
+#
+#     1. Catch exception
+#     2. Prepare JSON
+#     3. Compress (using Zlib compression)
+#     4. Escape
+#     5. Send
+#
+#  Required Exception Data
+#
+#  There is a minimum of data that is required in an API request for Exceptional to work properly.
+#
+#      * language (a String, e.g. "ruby")
+#      * exception_class (a String, e.g. "ReallyBadError")
+#      * exception_message (a String, e.g. "undefined method `this_method_dont_exist' for nil:NilClass")
+#      * exception_backtrace (an Array of Strings)
+#
+#  Optional Exception Data
+
+#  The following is all optional data that can be sent to Exceptional, it's used in our Rails plugin.
+#
+#      * occurred_at (a DateTime, when the exception occurred)
+#      * framework (a String, e.g. "rails")
+#      * controller_name (a String, e.g. "SomeBuggyController")
+#      * action_name (a String, e.g. "buggy_action")
+#      * application_root (a String, e.g. "/var/www/some_rails_app")
+#      * url (a String, e.g. "http://buggysite.com/something")
+#      * parameters (a Hash)
+#      * session (a Hash)
+#      * environment (a Hash)
+#
   module Api
     # parse an exception into an ExceptionData object
     def parse(exception)

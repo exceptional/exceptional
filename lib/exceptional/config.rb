@@ -1,8 +1,13 @@
 require 'yaml'
 
 module Exceptional
-  module Config
+  
+  # api-key your API-key
+  # log-level defaults to 'info' (switch to 'debug' for more information if you are having problems)
+  # ssl (true or false) defaults to false. Send data back to getexceptional via ssl?
+  # enabled (true or false) defaults to true in production and staging environments. Wether Exceptional should be enabled or not
 
+module Config
     # Defaults for configuration variables
     REMOTE_HOST = "getexceptional.com"
     REMOTE_PORT = 80

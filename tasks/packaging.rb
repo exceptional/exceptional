@@ -22,10 +22,17 @@ end
 
 
 desc 'Generate documentation'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Exceptional'
+Rake::RDocTask.new(:docs) do |rdoc|
+  rdoc.rdoc_dir = 'docs/rdoc'
+  rdoc.title    = "Exceptional - " + Exceptional::VERSION.to_s
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+desc 'Generate documentation'
+Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'docs/rdoc'
+  rdoc.title    = "Exceptional - " + Exceptional::VERSION.to_s
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README')
 end
