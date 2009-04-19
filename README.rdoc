@@ -1,30 +1,36 @@
-== Exceptional
+== Exceptional  - getexceptional.com
 
-Exceptional is an exception tracking and managing utility for Rails folks and their apps.
+Exceptional is an exception tracking and managing utility for Ruby & Rails applications
 
 This guide covers
 
-* The Exceptional Rails Plugin
-* The Exceptional Ruby Gem
-* Advanced Exceptional (Configuration, API, Adapter Framework)
+1. The Exceptional Rails Plugin
+2. The Exceptional Ruby Gem
+3. Configuration Reference
+4. Advanced Exceptional (API, Adapter Framework)
 
 == The Exceptional Rails Plugin
 
-The Exceptional plugin for Rails shares the same repository as our ruby gem, the only thing that makes a Rails plugin a plugin is the init and install ruby files. I thought this was cool, though if you feel differently let us know :)
+The Exceptional plugin for Rails shares the same source repository as the ruby gem, the only thing that makes a Rails plugin a plugin is the init and install ruby files. We think this is cool, if you feel differently let us know :)
 
-=== Installation
+==== Installation
 
-The Exceptional Rails plugin will work with any other exception management solution. Though it would be a good idea to remove them if you decide to use Exceptional to ensure the best possible performance. 
+The Exceptional Rails plugin will work alongside any other exception management solution. Though it would be a good idea to remove them if you decide to use Exceptional to ensure the best possible performance. 
 
-To get up and running you will need an account at http://getexceptional.com 
 
-1. Install Exceptional : From the root folder of your Rails application, run the following command to download and install it: 
-<tt>script/plugin install git://github.com/contrast/exceptional.git</tt>
-2. Configure Exceptional : The post install hook will create a file in your config directory, to get up and running you need to enter your API Key. Your API Key is available from your account area at http://getexceptional.com
-<tt>rake exceptional::rails_install api_key=YOUR-API-KEY</tt>
+You will need an account at http://getexceptional.com 
+
+1. Install : From the root folder of your Rails application, run the following command to download and install it: 
+	script/plugin install git://github.com/contrast/exceptional.git
+
+2. Configure :  The post install hook will create an <tt>exceptional.yml</tt> config file in your RAILS_ROOT/config directory, you need to configure your API Key. Your API Key is available from your account area at http://getexceptional.com
+	rake exceptional::rails_install api_key=YOUR-API-KEY
+
 3. Restart your application
-4. Check RAILS_ROOT/log/exceptional.log to ensure The Exceptional Plugin is successfully enabled
 
+4. Check RAILS_ROOT/log/exceptional.log to ensure the Exceptional plugin is successfully enabled
+
+By Default the exceptional plugin is only enabled for the 'Production' rails environment. If you are using any other environment then you need to set the enabled: config variable within the <tt>exceptional.yml</tt> file
 
 ==== The Magic
 
@@ -37,35 +43,36 @@ The Exceptional plugin for Rails performs some magic when a Rails application is
 
 ==== Supported Rails Server Environments
 
-    * Litespeed
-    * Mongrel
-    * Passenger
-    * Thin
-    * Webrick
-
+* Litespeed
+* Mongrel
+* Passenger
+* Thin
+* Webrick
 
 
 == Ruby Gem
-Installation
+==== Installation
 
-   1. Add github to your gem sources list
+1. Add github to your gem sources list
 
-      gem sources -a http://gems.github.com
+	gem sources -a http://gems.github.com
 
-   2. Install the Exceptional gem
+2. Install the Exceptional gem
 
-      sudo gem install contrast-exceptional
+	sudo gem install contrast-exceptional
 
-Usage
+==== Usage
 
-require 'rubygems'
-require 'exceptional'
+	require 'rubygems'
+	require 'exceptional'
 
-Exceptional.api_key = "YOUR-API-KEY-GOES-HERE"
+	Exceptional.api_key = "YOUR-API-KEY-GOES-HERE"
 
-Exceptional.rescue do
-  nil.boom!
-end
+	Exceptional.rescue do
+		nil.boom!
+	end
+
+== Configuration Reference
 
 
 == Advanced Exceptioinal 
