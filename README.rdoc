@@ -1,4 +1,4 @@
-== Exceptional  - getexceptional.com
+= Exceptional  - getexceptional.com
 
 Exceptional is an exception tracking and managing utility for Ruby & Rails applications
 
