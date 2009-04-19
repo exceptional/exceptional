@@ -8,7 +8,6 @@ This guide covers
 * The Exceptional Ruby Gem
 * Advanced Exceptional (Configuration, API, Adapter Framework)
 
-
 == The Exceptional Rails Plugin
 
 The Exceptional plugin for Rails shares the same repository as our ruby gem, the only thing that makes a Rails plugin a plugin is the init and install ruby files. I thought this was cool, though if you feel differently let us know :)
@@ -19,9 +18,9 @@ The Exceptional Rails plugin will work with any other exception management solut
 
 To get up and running you will need an account at http://getexceptional.com 
 
-1. Install Exceptional. From the root folder of your Rails application, run the following command to download and install it: 
+1. Install Exceptional : From the root folder of your Rails application, run the following command to download and install it: 
 <tt>script/plugin install git://github.com/contrast/exceptional.git</tt>
-2. Configure Exceptional. The post install hook will create a file in your config directory, to get up and running you need to enter your API Key. Your API Key is available from your account area at http://getexceptional.com
+2. Configure Exceptional : The post install hook will create a file in your config directory, to get up and running you need to enter your API Key. Your API Key is available from your account area at http://getexceptional.com
 <tt>rake exceptional::rails_install api_key=YOUR-API-KEY</tt>
 3. Restart your application
 4. Check RAILS_ROOT/log/exceptional.log to ensure The Exceptional Plugin is successfully enabled
