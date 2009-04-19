@@ -108,7 +108,7 @@ available by generating the rdoc directly from the project. Within the exception
 
 How the Exceptional Gem/Plugin publishes data to the Exceptional server is pluggable. This is implemented via Adapters, and the different adapter implementations allow for various qualities of service. 
 
-===== HttpAdapter
+==== HttpAdapter
 The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the exceptional server
 
 ==== HttpAsyncAdapter
