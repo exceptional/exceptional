@@ -64,7 +64,7 @@ module Exceptional    #:nodoc:
 
     # used with Rails, takes an exception, controller, request and parameters
     # creates an ExceptionData object
-    def handle(exception, controller, request, params)
+    def handle(exception, controller, request, params, current_user = nil)
       Exceptional.log! "Handling #{exception.message}", 'info'
       begin
         e = parse(exception)
@@ -81,7 +81,7 @@ module Exceptional    #:nodoc:
         e.parameters = sanitize_hash(params.to_hash)
 
         # Add info about current user if configured to do so        
-        add_user_data(e, controller.current_user) if(Exceptional.send_user_data? && controller.responds_to?('current_user'))
+        add_user_data(e, current_user) if(Exceptional.send_user_data? && !current_user.nil?)
 
         post(e)
       rescue Exception => exception
@@ -152,9 +152,9 @@ module Exceptional    #:nodoc:
     end
     
     def add_user_data(exception_data, user)
-      e.user_id = user.id if user.responds_to? 'id'
-      e.user_login = user.login if user.responds_to? 'login'
-      e.user_email = user.email if user.response_to? 'email'
+      exception_data.user_id = user.id.to_s if user.respond_to? 'id'
+      exception_data.user_login = user.login.to_s if user.respond_to? 'login'
+      exception_data.user_email = user.email.to_s if user.respond_to? 'email'
     end
   end
 end

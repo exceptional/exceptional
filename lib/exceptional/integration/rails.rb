@@ -16,8 +16,8 @@ if defined? ActionController
         # TODO potentially hook onto rescue_without_handler if it exists? would negate need to check handler_for_rescue every time.
         # if there's handler defined with rescue_from() do not call Exceptional
         if !(respond_to?(:handler_for_rescue) && handler_for_rescue(exception))
-          params_to_send = (respond_to? :filter_parameters) ? filter_parameters(params) : params
-          Exceptional.handle(exception, self, request, params_to_send)
+          params_to_send = (respond_to? :filter_parameters) ? filter_parameters(params) : params          
+          Exceptional.handle(exception, self, request, params_to_send, respond_to?(:current_user) ? current_user : nil)
         end
 
         rescue_action_without_exceptional exception

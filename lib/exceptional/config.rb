@@ -35,7 +35,7 @@ module Exceptional   #:nodoc:
 #
     
 module Config
-    DEFAULT_ENABLED = true
+    DEFAULT_ENABLED = false
     DEFAULT_HOST = "getexceptional.com"
     DEFAULT_PORT = 80
     DEFAULT_SSL_PORT = 443
