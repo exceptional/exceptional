@@ -54,5 +54,19 @@ describe Exceptional::Bootstrap do
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end
+    
+    it "should raise ConfigurationException if bootstrap fails" do
+      Exceptional.should_receive(:setup_config)
+      Exceptional.should_receive(:setup_log)
+      Exceptional.should_receive(:enabled?).and_return(true)
+      Exceptional.should_receive(:api_key_validate).and_return(true)
+      mock_adapter = mock(Exceptional::Adapters::HttpAdapter)
+      mock_adapter.should_receive(:bootstrap).and_return(false)
+      Exceptional.should_receive(:adapter).and_return(mock_adapter)
+      
+      STDERR.should_receive(:puts) #Should report error
+
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))      
+    end
   end
 end
