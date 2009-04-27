@@ -15,10 +15,10 @@ describe Exceptional::Utils::FileSweeper do
       mock_logger = mock(Logger)
       mock_logger.stub!(:send)
       Exceptional.should_receive(:setup_config)
-      Exceptional.should_receive(:work_dir?).twice.and_return(SWEEPER_WORK_DIR)
+      Exceptional.should_receive(:work_dir?).exactly(3).times.and_return(SWEEPER_WORK_DIR)
 
-      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
-      FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
+      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(true)
+      FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).ordered.and_return(true)
       Dir.should_not_receive(:mkdir)
 
       Exceptional::Utils::FileSweeper.new SWEEPER_CONFIG_FILE, SWEEPER_WORK_DIR, SWEEPER_APP_ROOT, mock_logger
@@ -31,7 +31,7 @@ describe Exceptional::Utils::FileSweeper do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:work_dir?).any_number_of_times.and_return(SWEEPER_WORK_DIR)
 
-      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).once.ordered.and_return(false)
+      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(false)
       #    FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).once.ordered.and_return(false)
       FileTest.should_receive(:exists?).with(File.dirname(SWEEPER_WORK_DIR)).once.ordered.and_return(true)
       Dir.should_receive(:mkdir)
@@ -60,7 +60,7 @@ describe Exceptional::Utils::FileSweeper do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:work_dir?).any_number_of_times.and_return(SWEEPER_WORK_DIR)
 
-      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
+      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(true)
       FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
       Dir.should_not_receive(:mkdir)
 
@@ -78,7 +78,7 @@ describe Exceptional::Utils::FileSweeper do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:work_dir?).any_number_of_times.and_return(SWEEPER_WORK_DIR)
 
-      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
+      FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(true)
       FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
       Dir.should_not_receive(:mkdir)
 
@@ -98,7 +98,7 @@ describe Exceptional::Utils::FileSweeper do
     Exceptional.should_receive(:setup_config)
     Exceptional.should_receive(:work_dir?).any_number_of_times.and_return(SWEEPER_WORK_DIR)
 
-    FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
+    FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(true)
     FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).once.ordered.and_return(true)
     Dir.should_not_receive(:mkdir)
 

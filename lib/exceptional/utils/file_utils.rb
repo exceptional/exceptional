@@ -15,6 +15,8 @@ module Exceptional
             Dir.mkdir(Exceptional.work_dir?)
           end
         end
+
+        FileTest.exists?(Exceptional.work_dir?) # Return that the directory exists
       end
     end
   end
