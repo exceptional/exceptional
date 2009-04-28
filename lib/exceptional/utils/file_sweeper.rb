@@ -11,7 +11,6 @@ module Exceptional
 
       include Exceptional::Utils::FileUtils
 
-      # This shouldnt need to be passed, should be figured out from the current environment somehow
       def initialize(config_file, work_dir, application_root, log)
         Exceptional.setup_config("common", config_file, application_root)
         ensure_work_directory(log)
@@ -19,7 +18,7 @@ module Exceptional
         @log = log
       end
 
-      def sweep
+      def sweep        
         @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir?}"
 
         Dir.glob("#{Exceptional.work_dir?}/*.json").each do |file|

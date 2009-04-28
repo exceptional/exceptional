@@ -110,7 +110,7 @@ module Config
     end
 
     def work_dir?
-      @work_dir || @work_dir = File.expand_path(File.join(application_root?, "/tmp/exeptional"))
+      @work_dir || @work_dir = File.expand_path(File.join(application_root?, "/log/exceptional"))
     end
 
     def ssl_enabled?

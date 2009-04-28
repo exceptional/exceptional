@@ -26,10 +26,10 @@ module Exceptional
 
             if !FileTest.directory?(rails_config_dir)
               STDERR.puts "Invalid Config Directory #{File.expand_path(rails_config_dir)}"
-              raise IOError.new "Exceptional Config File not found #{File.expand_path(config_file)}"
+              raise IOError.new "Invalid Config Directory #{File.expand_path(rails_config_dir)}"
             end
 
-            config_file = File.join(rails_config_dir, EXCEPTIONAL_CONFIG_FILE)
+            config_file = File.expand_path(File.join(rails_config_dir, EXCEPTIONAL_CONFIG_FILE))
           end
 
           if !FileTest.exists?(config_file)
@@ -45,7 +45,7 @@ module Exceptional
           if !ENV['rails_root'].nil?
             rails_root = ENV['rails_root']
           else
-            rails_root = File.join(File.dirname(__FILE__), RELATIVE_RAILS_ROOT)
+            rails_root = File.expand_path(File.join(File.dirname(__FILE__), RELATIVE_RAILS_ROOT))
           end
         end
 
@@ -53,7 +53,7 @@ module Exceptional
           if !ENV['work_dir'].nil?
             return ENV['work_dir']
           else
-            return File.join(File.dirname(__FILE__), RELATIVE_WORK_DIR_PATH)
+            return File.expand_path(File.join(File.dirname(__FILE__), RELATIVE_WORK_DIR_PATH))
           end
         end
       end
