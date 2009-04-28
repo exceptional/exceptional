@@ -170,7 +170,41 @@ describe Exceptional::Api do
       my_class = MyClass.new
       
       lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should be_kind_of(String)
+      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should == "{}"
+    end
+    
+    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash" do
+      class MyClass
+        def initialize
+          @test = self
+        end
+
+        def to_hash
+          { :test => self }
+        end
+      end
+      my_class = MyClass.new
+      
+      
+      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
+      Exceptional.send(:sanitize_hash, {'hkey' => my_class}).to_json.should == "{}"
+    end
+    
+    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash mult params" do
+      class MyClass
+        def initialize
+          @test = self
+        end
+
+        def to_hash
+          { :test => self }
+        end
+      end
+      my_class = MyClass.new
+      
+      
+      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
+      Exceptional.send(:sanitize_hash, {'hkey' => my_class, 'ruby' => 'tuesday'}).to_json.should == "{\"ruby\": \"tuesday\"}"
     end
   end
 end
