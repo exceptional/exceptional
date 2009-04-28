@@ -116,16 +116,16 @@ To use the HttpAsyncAdapter set the
 configuration variable within the <tt>exceptional.yml</tt> file
 
 ==== FileAdapter
-The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server at a specified interval by a file_sweeper rake task 
+The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server at a specified interval by a file_sweeper rake task. 
 To use the FileAdapter set the
 	adapter: FileAdapter
 configuration variable within the <tt>exceptional.yml</tt> file
 
-When an exception is passed to the plugin, the File adapter will create a JSON file representing the exception and save it to the <tt>RAILS_ROOT/log/exceptional</tt> directory
+When an exception is passed to the plugin, the FileAdapter will create a JSON file representing the exception and save it to the <tt>RAILS_ROOT/log/exceptional</tt> directory
 
 ===== File Sweeper
 
-To run the file sweeper rake task directly run (from RAILS_ROOT)
+To run the file sweeper rake task directly (from RAILS_ROOT)
 	rake -f vendor/plugins/exceptional/Rakefile exceptional:file_sweeper
 	
 To run the file sweeper from a cron job every 15 mins, you can use a crontab entry of 
