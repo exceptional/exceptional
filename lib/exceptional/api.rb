@@ -93,8 +93,7 @@ module Exceptional
 
     def sanitize_hash(hash)
       return {} if hash.nil?
-      hash.reject! { |key, val| !ensure_json_able(val) }
-      hash
+      hash.reject { |key, val| !ensure_json_able(val) }
     end
 
     def ensure_json_able(value)
