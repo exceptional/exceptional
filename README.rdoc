@@ -103,20 +103,20 @@ available by generating the rdoc directly from the project. Within the exception
 
 === Pluggable Publishing Adapters
 
-How the Exceptional Gem/Plugin publishes data to the Exceptional server is pluggable. This is implemented via Adapters, and the different adapter implementations allow for various qualities of service. 
+How the Exceptional Gem/Plugin publishes data to the getexceptional.com is pluggable. This is implemented via Adapters, and the different adapter implementations allow for various qualities of service. 
 
 ==== HttpAdapter
-The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the exceptional server.
+The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the getexceptional.com.
 The HttpAdapter is the default adapter used by the Exceptional Gem/Plugin
 
 ==== HttpAsyncAdapter
-The HttpAsyncAdapter dispatches exception data to the exceptional server in a temporary thread.
+The HttpAsyncAdapter dispatches exception data to the getexceptional.com in a temporary thread.
 To use the HttpAsyncAdapter set the
 	adapter: HttpAsyncAdapter
 configuration variable within the <tt>exceptional.yml</tt> file
 
 ==== FileAdapter
-The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server at a specified interval by a file_sweeper rake task. 
+The FileAdapter writes exception data to the filesystem as .json files, which are later published to the getexceptional.com at a specified interval by a file_sweeper rake task. 
 To use the FileAdapter set the
 	adapter: FileAdapter
 configuration variable within the <tt>exceptional.yml</tt> file
