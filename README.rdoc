@@ -109,13 +109,37 @@ available by generating the rdoc directly from the project. Within the exception
 How the Exceptional Gem/Plugin publishes data to the Exceptional server is pluggable. This is implemented via Adapters, and the different adapter implementations allow for various qualities of service. 
 
 ==== HttpAdapter
-The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the exceptional server
+The HttpAdapter is a single threaded direct HTTP dispatch of the exception data to the exceptional server.
+The HttpAdapter is the default adapter used by the Exceptional Gem/Plugin
 
 ==== HttpAsyncAdapter
-The HttpAsyncAdapter dispatches exception data to the exceptional server in a temporary thread
+The HttpAsyncAdapter dispatches exception data to the exceptional server in a temporary thread.
+To use the HttpAsyncAdapter set the
+	adapter: HttpAsyncAdapter
+configuration variable within the <tt>exceptional.yml</tt> file
 
 ==== FileAdapter
-The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server by a file_sweeper cron job
+The FileAdapter writes exception data to the filesystem as .json files, which are later published to the exception server at a specified interval by a file_sweeper rake task 
+To use the FileAdapter set the
+	adapter: FileAdapter
+configuration variable within the <tt>exceptional.yml</tt> file
+
+When an exception is passed to the plugin, the File adapter will create a JSON file representing the exception and save it to the <tt>RAILS_ROOT/log/exceptional</tt> directory
+
+===== File Sweeper
+
+To run the file sweeper rake task directly run (from RAILS_ROOT)
+	rake -f vendor/plugins/exceptional/Rakefile exceptional:file_sweeper
+	
+To run the file sweeper from a cron job every 15 mins, you can use a crontab entry of 
+	*/15 * * * * cd [FULL/PATH/TO/RAILS/ROOT]/vendor/plugins/exceptional && [FULL/PATH/TO]/rake --silent exceptional:file_sweeper
+
+You must replace the [FULL/PATH/TO] with the full path to your RAILS_ROOT and directory where rake is installed
+
+example crontab 
+	*/15 * * * * cd /home/user/apps/myapp/vendor/plugins/exceptional && /usr/local/bin/rake --silent exceptional:file_sweeper				
+
+The file sweeper will log its activity to <tt>RAILS_ROOT/log/exceptional_file_sweeper.log</tt>
 
 
 === Exceptional API
