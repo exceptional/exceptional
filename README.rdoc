@@ -48,9 +48,6 @@ Configuration Variables
 	log-level
 		Log Level for RAILS_ROOT/log/exceptional.log (Default 'info')
 	
-	send-user-data
-		Whether to publish current_user data to the Exceptional Server (Default = false)
-	
 	adapter
 		Exception data publish adapter (Default = 'HttpAdapter') - (see adapters section below) 
 		
