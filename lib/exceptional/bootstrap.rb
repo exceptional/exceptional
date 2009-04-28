@@ -12,7 +12,7 @@ module Exceptional
 
             if Exceptional.adapter.bootstrap
               require File.join('exceptional', 'integration', 'rails')
-              Exceptional.to_log "Exceptional plugin enabled #{Exceptional.adapter.name}" 
+              Exceptional.to_log("Exceptional plugin enabled #{Exceptional.adapter.name}", "debug")
             else
               Exceptional.log! "Unable to boostrap adapter #{Exceptional.adapter_name?}"
             end
