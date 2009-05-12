@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "exceptional"
-  s.version  = "0.0.5"
+  s.version  = "0.0.6"
   s.date     = "2008-11-4"
   s.summary  = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
   s.email    = "david@getexceptional.com"

@@ -1,7 +1,7 @@
 begin
   require 'echoe'
  
-  Echoe.new('exceptional', '0.0.4') do |p|
+  Echoe.new('exceptional', '0.0.6') do |p|
     p.rubyforge_name = 'exceptional'
     p.summary      = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
     p.description  = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
