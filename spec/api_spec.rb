@@ -86,7 +86,7 @@ describe Exceptional::Api do
 
   describe "handle" do
     before(:each) do
-      Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:to_stderr) # Don't print error when testing
     end
 
     it "should send exception data onto post" do
@@ -117,6 +117,33 @@ describe Exceptional::Api do
       Exceptional.send(:safe_environment, request).should == { 'non_ack' => 'value2' }
     end
 
+    it "safe_environment() should handle array type parameters" do
+      
+      request = mock(request, :env => { 
+          'string_array_var' => ['value', 'another value'], 
+          'bool_array_var' => [false, false, true],
+          'numb_array_var' => [3,2,1],
+          'nil_array_var' => [nil, nil],
+          'non_ack' => 'value2' }
+          )
+      Exceptional.send(:safe_environment, request).should == { 
+        'string_array_var' => ['value', 'another value'], 
+        'bool_array_var' => [false, false, true],
+        'numb_array_var' => [3,2,1],
+        'nil_array_var' => [nil, nil],
+        'non_ack' => 'value2' }
+
+    end
+
+    it "safe_session() should handle array type parameters" do
+      mock_session = mock("session")
+      mock_session.should_receive(:instance_variables).and_return(['var1', 'var2'])
+      mock_session.should_receive(:instance_variable_get).with('var1').and_return(['value', 'another value'])
+      mock_session.should_receive(:instance_variable_get).with('var2').and_return('value2')
+      Exceptional.send(:safe_session, mock_session).should == { 'var1' => ['value', 'another value'], 'var2' => 'value2' }
+    end
+
+
     it "safe_session() should filter all /db/, /cgi/ variables and sub @ for blank" do
       class SessionHelper
         def initialize
@@ -141,9 +168,43 @@ describe Exceptional::Api do
         end
       end
       my_class = MyClass.new
-
+      
       lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should be_kind_of(String)
+      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should == "{}"
+    end
+    
+    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash" do
+      class MyClass
+        def initialize
+          @test = self
+        end
+
+        def to_hash
+          { :test => self }
+        end
+      end
+      my_class = MyClass.new
+      
+      
+      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
+      Exceptional.send(:sanitize_hash, {'hkey' => my_class}).to_json.should == "{}"
+    end
+    
+    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash mult params" do
+      class MyClass
+        def initialize
+          @test = self
+        end
+
+        def to_hash
+          { :test => self }
+        end
+      end
+      my_class = MyClass.new
+      
+      
+      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
+      Exceptional.send(:sanitize_hash, {'hkey' => my_class, 'ruby' => 'tuesday'}).to_json.should == "{\"ruby\": \"tuesday\"}"
     end
   end
 end

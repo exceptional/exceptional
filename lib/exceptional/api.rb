@@ -49,32 +49,32 @@ module Exceptional
         Exceptional.log! exception.backtrace.join("\n"), 'debug'
       end
     end
-    
+
     # rescue any exceptions within the given block,
     # send it to exceptional,
     # then raise
     def rescue(&block)
       begin
-        block.call 
+        block.call
       rescue Exception => e
         self.catch(e)
         raise(e)
       end
-    end               
-    
+    end
+
     def catch(exception)
       exception_data = parse(exception)
       exception_data.controller_name = File.basename($0)
       post(exception_data)
     end
-    
+
     protected
 
     def safe_environment(request)
       safe_environment = request.env.dup.to_hash
       # From Rails 2.3 these objects that cause a circular reference error on .to_json need removed
       # TODO potentially remove this case, should be covered by sanitize_hash
-      safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ || k == "_" }
+      safe_environment.delete_if { |k,v| k =~ /rack/ || k =~ /action_controller/ || k == "_"}
       # needed to add a filter for the hash for "_", causing invalid xml.
       sanitize_hash(safe_environment)
     end
@@ -91,11 +91,18 @@ module Exceptional
 
     private
 
-    # This (ironic) method sanitizes a hash by removing un-json-able objects from the passed in hash.
-    #   needed as active_support's fails in some cases with a cyclical reference error.
     def sanitize_hash(hash)
       return {} if hash.nil?
-      Hash.from_xml(hash.to_xml)['hash']
+      hash.reject { |key, val| !ensure_json_able(val) }
+    end
+
+    def ensure_json_able(value)
+      begin
+        value.to_json
+        true && value.instance_values.all? { |e| ensure_json_able(e)}        
+      rescue Exception => e
+        false
+      end
     end
   end
 end
