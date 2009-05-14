@@ -15,16 +15,19 @@ describe Exceptional::Config do
       @applicaton_root = nil
     end
     
-    Exceptional.stub!(:log!) # Don't even attempt to log
-    Exceptional.stub!(:to_log)
-    
   end
 
   after(:each) do
     Exceptional.reset_state
   end
   
+  before(:each) do
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)  
+  end
+  
   describe "default configuration" do
+    
     it "should use port 80 by default if ssl not enabled" do
       Exceptional.ssl_enabled?.should be_false
       Exceptional.remote_port.should == 80
