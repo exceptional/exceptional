@@ -14,6 +14,9 @@ describe Exceptional::Config do
       @remote_host = nil
       @applicaton_root = nil
     end
+    
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    
   end
 
   after(:each) do

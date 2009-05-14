@@ -87,6 +87,7 @@ describe Exceptional::Api do
   describe "handle" do
     before(:each) do
     Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:log!) # Don't even attempt to log
     end
 
     it "should send exception data onto post" do
