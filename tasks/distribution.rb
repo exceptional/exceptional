@@ -1,5 +1,8 @@
 require 'rake/rdoctask'
 
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+require 'exceptional'
+
 task :packagegem do
   begin
     require 'echoe'
