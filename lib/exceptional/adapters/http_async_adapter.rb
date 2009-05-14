@@ -23,7 +23,7 @@ module Exceptional
             end
           }
         rescue Exception => e
-          raise HttpAsyncAdapterException.new e.message
+          raise HttpAsyncAdapterException.new(e.message)
         end
       end
 

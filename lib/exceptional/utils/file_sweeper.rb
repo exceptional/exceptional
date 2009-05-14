@@ -30,7 +30,7 @@ module Exceptional
           rescue Exception => e
             @log.send "error", "#{e.message}"
             File.rename(file, "#{file} + .error")
-            raise FileSweeperException.new e.message
+            raise FileSweeperException.new(e.message)
           end
         end
 

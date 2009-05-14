@@ -20,7 +20,7 @@ module Exceptional
         begin
           ensure_work_directory(Exceptional.log)
         rescue Exception => e
-          raise FileAdapterException.new e.message
+          raise FileAdapterException.new(e.message)
         end
       end
 
@@ -38,7 +38,7 @@ module Exceptional
           # Return fact that file now exists
           FileTest.exists?(except_file)
         rescue Exception => e
-          raise FileAdapterException.new e.message
+          raise FileAdapterException.new(e.message)
         end
       end
     end

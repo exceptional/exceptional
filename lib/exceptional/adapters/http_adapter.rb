@@ -15,7 +15,7 @@ module Exceptional
         begin
           http_call_remote(:errors, json_data)
         rescue Exception => e
-          raise HttpAdapterException.new e.message
+          raise HttpAdapterException.new(e.message)
         end
       end
     end

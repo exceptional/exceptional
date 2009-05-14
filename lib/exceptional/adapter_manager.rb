@@ -63,7 +63,7 @@ module Exceptional   #:nodoc:
         adapter_name = ADAPTER_MODULE_PREFIX + Exceptional.adapter_name?
         eval(adapter_name).new # Instantiate adapter
       rescue NameError => e
-        raise AdapterManagerException.new "Invalid Adapter Name #{Exceptional.adapter_name?}"
+        raise AdapterManagerException.new("Invalid Adapter Name #{Exceptional.adapter_name?}")
       end
     end
   end
