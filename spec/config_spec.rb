@@ -16,6 +16,7 @@ describe Exceptional::Config do
     end
     
     Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)
     
   end
 
