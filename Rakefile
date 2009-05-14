@@ -1,7 +1,45 @@
 require 'rubygems'
-
-
 require File.join(File.dirname(__FILE__), 'tasks/file_sweeper')
 require File.join(File.dirname(__FILE__), 'tasks/testing')
 require File.join(File.dirname(__FILE__), 'tasks/packaging')
 require File.join(File.dirname(__FILE__), 'tasks/rails_install')
+
+begin
+  require 'echoe'
+ 
+  Echoe.new('exceptional', '0.0.6') do |p|
+    p.rubyforge_name = 'exceptional'
+    p.summary      = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
+    p.description  = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
+    p.url          = "http://getexceptional.com/"
+    p.author       = ['David Rice']
+    p.email        = "davidjrice@gmail.com"
+    p.dependencies = ["json"]
+  end
+ 
+rescue LoadError => e
+  puts "You are missing a dependency required for meta-operations on this gem."
+  puts "#{e.to_s.capitalize}."
+end
+ 
+# add spec tasks, if you have rspec installed
+begin
+  require 'spec/rake/spectask'
+ 
+  Spec::Rake::SpecTask.new("spec") do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--color']
+  end
+  
+  task :test do
+    Rake::Task['spec'].invoke
+  end
+  
+  Spec::Rake::SpecTask.new("coverage") do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--color']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', '^spec,/gems/']
+  end
+  
+end
