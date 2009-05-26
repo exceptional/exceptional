@@ -8,6 +8,7 @@ describe Exceptional do
       Exceptional.stub!(:to_stderr) # Don't print error when testing
       Exceptional.stub!(:log!) # Don't even attempt to log
       Exceptional.stub!(:to_log)
+      Exceptional.api_key = nil
     end
 
     it "should raise a remoting exception if not api_key_validated" do

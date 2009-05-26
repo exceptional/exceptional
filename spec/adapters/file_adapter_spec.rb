@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Exceptional::Adapters::FileAdapter do
 
-  before(:all) do
+  before(:each) do
     def Exceptional.reset_adapter
       @adapter = nil
     end
