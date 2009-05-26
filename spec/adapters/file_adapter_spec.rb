@@ -16,7 +16,7 @@ describe Exceptional::Adapters::FileAdapter do
     Exceptional.reset_adapter
     Exceptional.adapter_name = "FileAdapter"
 
-  Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:to_stderr) # Don't print error when testing
   end
 
   after(:all) do

@@ -1,5 +1,5 @@
-require 'exceptional/utils/file_sweeper'
 require 'exceptional/adapters/base_adapter'
+require 'exceptional/utils/http_utils'
 
 module Exceptional
   module Adapters  #:nodoc:
