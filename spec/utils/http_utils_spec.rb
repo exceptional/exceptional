@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/../../lib/exceptional/utils/http_utils'
 
 describe Exceptional::Utils::HttpUtils do
 

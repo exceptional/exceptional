@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-
+require File.dirname(__FILE__) + '/../../lib/exceptional/utils/file_sweeper'
 
 describe Exceptional::Utils::FileSweeper do
 
