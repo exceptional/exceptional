@@ -65,7 +65,7 @@ describe Exceptional::AdapterManager do
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
-      Exceptional.catch(IOError.new).should == OK_RESPONSE_BODY
+      Exceptional.catch(IOError.new)
     end
 
     it "should raise error if network problem during sending exception" do
@@ -80,7 +80,7 @@ describe Exceptional::AdapterManager do
       mock_http.should_receive(:start).once.and_raise(IOError)
 
       #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
+      Exceptional.should_receive(:log!).exactly(3).times
 
       lambda{Exceptional.catch(IOError.new)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
@@ -100,7 +100,7 @@ describe Exceptional::AdapterManager do
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
       #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
+      Exceptional.should_receive(:log!).exactly(3).times
 
       lambda{Exceptional.catch(IOError.new)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end

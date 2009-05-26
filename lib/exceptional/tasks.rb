@@ -96,6 +96,6 @@ namespace :exceptional do
 
       class Exceptional::TestException < StandardError; end
 
-      Exceptional.catch(Exceptional::TestException.new 'Test Exception')      
+      Exceptional.catch(Exceptional::TestException.new('Test Exception'))      
     end    
 end
