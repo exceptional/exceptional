@@ -53,6 +53,7 @@ describe Exceptional::AdapterManager do
 
   end
 
+=begin
   describe "sending data " do
 
     it "should return response body if successful" do
@@ -110,4 +111,5 @@ describe Exceptional::AdapterManager do
       lambda{Exceptional.catch(IOError.new)}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
   end
+=end
 end
