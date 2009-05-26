@@ -7,6 +7,7 @@ describe Exceptional::Api do
   describe "with no configuration" do
     before(:each) do
     Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:log!) # Don't even attempt to log    
     end
 
     after(:each) do

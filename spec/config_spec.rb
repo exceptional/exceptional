@@ -16,6 +16,9 @@ describe Exceptional::Config do
       @adapter_name = nil
     end
     
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)
+    
   end
 
   after(:each) do
