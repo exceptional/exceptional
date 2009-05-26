@@ -77,4 +77,25 @@ namespace :exceptional do
     sweeper.sweep()
   end
   
+  desc "Send Test Exception to getexceptional.com"
+    task :test do
+      require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
+
+      environment = ENV['environment']
+
+      # Add Usage
+      if environment.nil?
+        STDOUT.puts " Using environment 'production'"
+        environment = 'production'
+      end
+
+      rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
+      config_file = Exceptional::Utils::RakeDirTools.get_config_file
+      
+      Exceptional.bootstrap(environment, rails_root, config_file)
+
+      class Exceptional::TestException < StandardError; end
+
+      Exceptional.catch(Exceptional::TestException.new 'Test Exception')      
+    end    
 end

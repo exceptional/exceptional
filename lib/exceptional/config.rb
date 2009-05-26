@@ -49,6 +49,7 @@ module Config
 
     # Load exceptional.yml config from config_file
     def setup_config(environment, config_file, applicaton_root)
+            
       begin
         config = YAML::load(File.open(config_file))[environment]
         @api_key = config['api-key'] unless config['api-key'].nil?

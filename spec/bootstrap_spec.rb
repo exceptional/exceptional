@@ -12,7 +12,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_config)
       Exceptional.should_receive(:setup_log)
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
 
     it "should api_key_validate if enabled" do
@@ -22,7 +22,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:api_key_validate).and_return(true)
       STDERR.should_not_receive(:puts) #Should be no errors to report
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
 
     it "should not api_key_validate if not enabled" do
@@ -33,7 +33,7 @@ describe Exceptional::Bootstrap do
       STDERR.should_not_receive(:puts) # Will silently not enable itself
 
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
 
     it "should report to STDERR if authentication fails" do
@@ -43,7 +43,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:api_key_validate).and_return(false)
       STDERR.should_receive(:puts) #Should be no errors to report
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
 
     it "should report to STDERR if error during config initialization" do
@@ -52,7 +52,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_not_receive(:api_key_validate).and_return(false)
       STDERR.should_receive(:puts) #Should be no errors to report
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
     
     it "should raise ConfigurationException if bootstrap fails" do
@@ -66,7 +66,7 @@ describe Exceptional::Bootstrap do
       
       STDERR.should_receive(:puts) #Should report error
 
-      Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))      
+      Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
   end
 end

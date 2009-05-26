@@ -1,9 +1,9 @@
 module Exceptional
   module Bootstrap #:nodoc:  
 
-    def bootstrap(environment, application_root)
+    def bootstrap(environment, application_root, config_file)
       begin
-        Exceptional.setup_config(environment, File.join(application_root,"config", "exceptional.yml"), application_root)
+        Exceptional.setup_config(environment, config_file, application_root)
         Exceptional.setup_log(File.join(application_root, "log"), Exceptional.log_level?)
 
         if Exceptional.enabled?
@@ -22,6 +22,7 @@ module Exceptional
           end
         end
       rescue Exception => e
+        
         # Should these be writing to Exceptional.log! ?
         Exceptional.log! "Exceptional Plugin disabled. #{e.message}"
       end

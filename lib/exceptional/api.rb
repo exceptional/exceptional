@@ -83,7 +83,9 @@ module Exceptional    #:nodoc:
         # Add info about current user if configured to do so        
         add_user_data(e, current_user) if(Exceptional.send_user_data? && !current_user.nil?)
 
-        post(e)
+        post(e)      
+        Exceptional.log! "#{exception} sent to #{Exceptional.remote_host}", 'info'      
+        
       rescue Exception => exception
         Exceptional.log! "Error preparing exception data."
         Exceptional.log! exception.message
@@ -104,9 +106,12 @@ module Exceptional    #:nodoc:
     end
 
     def catch(exception)
+      Exceptional.log! "Handling #{exception.message}", 'info'
       exception_data = parse(exception)
       exception_data.controller_name = File.basename($0)
       post(exception_data)
+      
+      Exceptional.log! "#{exception} sent to #{Exceptional.remote_host?}", 'info'      
     end
 
     protected
