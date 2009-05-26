@@ -6,6 +6,8 @@ describe Exceptional do
   describe "with no configuration" do
     before(:each) do
       Exceptional.stub!(:to_stderr) # Don't print error when testing
+      Exceptional.stub!(:log!) # Don't even attempt to log
+      Exceptional.stub!(:to_log)
     end
 
     it "should raise a remoting exception if not api_key_validated" do

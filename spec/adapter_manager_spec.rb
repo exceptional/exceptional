@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::AdapterManager do
 
+  before(:each) do
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)
+  end
+
   after(:each) do
     def Exceptional.reset_state
       @adapter = nil

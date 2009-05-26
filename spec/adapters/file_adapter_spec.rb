@@ -7,6 +7,9 @@ describe Exceptional::Adapters::FileAdapter do
     def Exceptional.reset_adapter
       @adapter = nil
     end
+    
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)
   end
 
   before(:each) do
