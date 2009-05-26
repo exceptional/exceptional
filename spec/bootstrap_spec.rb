@@ -4,8 +4,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Exceptional::Bootstrap do
 
   before(:each) do
- #   Exceptional.stub!(:log!) # Don't even attempt to log
-#    Exceptional.stub!(:to_log)
+    Exceptional.stub!(:log!) # Don't even attempt to log
+   Exceptional.stub!(:to_log)
   end  
 
   describe "setup" do
@@ -45,7 +45,6 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_log)
       Exceptional.should_receive(:enabled?).and_return(true)
       Exceptional.should_receive(:api_key_validate).and_return(false)
-      STDERR.should_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
@@ -54,7 +53,7 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:setup_config).and_raise(Exceptional::Config::ConfigurationException)
       Exceptional.should_not_receive(:setup_log)
       Exceptional.should_not_receive(:api_key_validate).and_return(false)
-      STDERR.should_receive(:puts) #Should be no errors to report
+#      STDERR.should_receive(:puts) #Should be no errors to report
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
@@ -68,7 +67,7 @@ describe Exceptional::Bootstrap do
       mock_adapter.should_receive(:bootstrap).and_return(false)
       Exceptional.should_receive(:adapter).and_return(mock_adapter)
       
-      STDERR.should_receive(:puts) #Should report error
+#      STDERR.should_receive(:puts) #Should report error
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.join(File.dirname(__FILE__),"config", "exceptional.yml"), File.dirname(__FILE__))
     end
