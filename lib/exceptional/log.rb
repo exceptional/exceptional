@@ -18,6 +18,7 @@ module Exceptional
         allowed_log_levels = ['debug', 'info', 'warn', 'error', 'fatal']
         if log_level && allowed_log_levels.include?(log_level)
           log.level = eval("Logger::#{log_level.upcase}")
+          log.formatter = Logger::Formatter.new #Defaut Formatter will add timestamps to logs
         end
 
         @log = log
