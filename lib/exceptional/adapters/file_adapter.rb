@@ -18,7 +18,7 @@ module Exceptional
       #Override
       def bootstrap
         begin
-          ensure_work_directory(Exceptional.log)
+          ensure_directory(Exceptional.work_dir?, Exceptional.log)
         rescue Exception => e
           raise FileAdapterException.new(e.message)
         end

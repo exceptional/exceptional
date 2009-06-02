@@ -8,7 +8,6 @@ module Exceptional
     def setup_log(log_dir, log_level = Logger::INFO)
       begin
         Dir.mkdir(log_dir) unless File.directory?(log_dir)
-
         
         log_path = File.join(log_dir, "/exceptional.log")
         log = Logger.new log_path

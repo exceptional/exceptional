@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'ftools'
 
 
 describe Exceptional::Adapters::FileAdapter do
@@ -62,6 +63,6 @@ describe Exceptional::Adapters::FileAdapter do
       FileTest.should_receive(:exists?).twice.and_return(false)
 
       lambda{adapter.bootstrap}.should raise_error(Exceptional::Adapters::FileAdapterException)
-    end
+    end    
   end
 end

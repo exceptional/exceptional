@@ -13,7 +13,7 @@ module Exceptional
 
       def initialize(config_file, work_dir, application_root, log)
         Exceptional.setup_config("common", config_file, application_root)
-        ensure_work_directory(log)
+        ensure_directory(Exceptional.work_dir?, log)
         @adapter = Exceptional::Adapters::HttpAdapter.new
         @log = log
       end

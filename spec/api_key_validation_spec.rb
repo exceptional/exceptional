@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
+require 'date'
 
 describe Exceptional::APIKeyValidation do
   
@@ -13,6 +14,7 @@ describe Exceptional::APIKeyValidation do
       @remote_port = nil
       @remote_host = nil
       @applicaton_root = nil
+      @api_key_validated = false
     end
 
     def Exceptional.reset_authentication
@@ -26,6 +28,18 @@ describe Exceptional::APIKeyValidation do
   end
 
   describe "authentication" do
+
+    it "should be api_key_validated? if API authentication successful" do 
+      Exceptional.api_key = TEST_API_KEY
+
+      Exceptional.api_key_validated?.should be_false
+      Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("true")
+      Exceptional.should_receive(:create_auth_file).and_return(true)
+      
+      Exceptional.api_key_validate.should be_true
+      Exceptional.api_key_validated?.should be_true
+      
+    end
 
     it "should not be api_key_validated if API authentication unsuccessful" do
       Exceptional.api_key = TEST_API_KEY
@@ -44,20 +58,6 @@ describe Exceptional::APIKeyValidation do
 
       Exceptional.api_key_validate.should be_false
       Exceptional.api_key_validated?.should be_false
-    end
-
-    it "should not re-api_key_validate subsequently if 1 successful " do
-      Exceptional.api_key = TEST_API_KEY
-
-      Exceptional.api_key_validated?.should be_false
-      Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("true")
-      # If authentication is successful, api_key_validate called only once
-
-      Exceptional.api_key_validate.should be_true
-      Exceptional.api_key_validated?.should be_true
-
-      Exceptional.api_key_validate.should be_true
-      Exceptional.api_key_validated?.should be_true
     end
 
     it "with no API Key set throws Configuration Exception" do

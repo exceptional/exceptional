@@ -5,19 +5,19 @@ module Exceptional
       class FileUtilsException < StandardError    #:nodoc:
       end
 
-      def ensure_work_directory (log)
-        if ! (FileTest.exists?(Exceptional.work_dir?) && FileTest.directory?(Exceptional.work_dir?))
+      def ensure_directory(dir, log)
+         if ! (FileTest.exists?(dir) && FileTest.directory?(dir))
 
-          if !FileTest.exists?(File.dirname(Exceptional.work_dir?)) #Parent dir has to exist
-            raise FileUtilsException.new("Invalid Directory - #{File.expand_path(Exceptional.work_dir?)}")
-          else
-            log.send('info', "Creating Directory #{File.expand_path(Exceptional.work_dir?)}")
-            Dir.mkdir(Exceptional.work_dir?)
+            if !FileTest.exists?(File.dirname(dir)) #Parent dir has to exist
+              raise FileUtilsException.new("Invalid Directory - #{File.expand_path(dir)}")
+            else
+              log.send("Creating Directory #{File.expand_path(dir)}")
+              Dir.mkdir(dir)
+            end
           end
-        end
 
-        FileTest.exists?(Exceptional.work_dir?) # Return that the directory exists
-      end
+          FileTest.exists?(dir) # Return that the directory exists        
+      end      
     end
   end
 end

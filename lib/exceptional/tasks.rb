@@ -71,6 +71,7 @@ namespace :exceptional do
 
     log_path = File.join(log_dir, "/exceptional_file_sweeper.log")
     log = Logger.new log_path
+    log.formatter = Logger::Formatter.new
 
     sweeper = Exceptional::Utils::FileSweeper.new(config_file, work_dir, rails_root, log)
 

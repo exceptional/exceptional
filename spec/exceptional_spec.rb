@@ -19,7 +19,7 @@ describe Exceptional do
       :to_hash => { :message => "Something bad has happened" })
 
       Exceptional.api_key.should == nil
-      Exceptional.should_receive(:api_key_validated?).once.and_return(false)
+      Exceptional.should_receive(:api_key_validated?).twice.and_return(false)
 
       lambda { Exceptional.post_exception(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
     end

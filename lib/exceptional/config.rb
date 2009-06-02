@@ -60,6 +60,7 @@ module Config
         @remote_host = config['remote-host'] unless config['remote-host'].nil?
         @adapter_name = config['adapter'] unless config['adapter'].nil?
         @work_dir = config['work_dir'] unless config['work_dir'].nil?
+        @tmp_dir = config['tmp_dir'] unless config['tmp_dir'].nil?        
         @send_user_data = config['send-user-data'] unless config['send-user-data'].nil?
 
         @applicaton_root = applicaton_root
@@ -114,6 +115,10 @@ module Config
       @work_dir || @work_dir = File.expand_path(File.join(application_root?, "/log/exceptional"))
     end
 
+    def tmp_dir
+      @tmp_dir || @tmp_dir = File.expand_path(File.join(application_root?, "/tmp/exceptional"))
+    end
+    
     def ssl_enabled?
       @ssl_enabled || DEFAULT_SSL_ENABLED
     end

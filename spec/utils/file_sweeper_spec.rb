@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../../lib/exceptional/utils/file_sweeper'
 describe Exceptional::Utils::FileSweeper do
 
   SWEEPER_CONFIG_FILE = "config.yml"
-  SWEEPER_WORK_DIR = "tmp/work_dir"
+  SWEEPER_WORK_DIR = "log/work_dir"
   SWEEPER_APP_ROOT = "app_root"
   SWEEPER_LOG = "sweeper_log"
 
@@ -15,7 +15,7 @@ describe Exceptional::Utils::FileSweeper do
       mock_logger = mock(Logger)
       mock_logger.stub!(:send)
       Exceptional.should_receive(:setup_config)
-      Exceptional.should_receive(:work_dir?).exactly(3).times.and_return(SWEEPER_WORK_DIR)
+      Exceptional.should_receive(:work_dir?).once.and_return(SWEEPER_WORK_DIR)
 
       FileTest.should_receive(:exists?).with(SWEEPER_WORK_DIR).twice.ordered.and_return(true)
       FileTest.should_receive(:directory?).with(SWEEPER_WORK_DIR).ordered.and_return(true)
