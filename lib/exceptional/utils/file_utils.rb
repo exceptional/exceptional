@@ -11,7 +11,6 @@ module Exceptional
             if !FileTest.exists?(File.dirname(dir)) #Parent dir has to exist
               raise FileUtilsException.new("Invalid Directory - #{File.expand_path(dir)}")
             else
-              log.send("Creating Directory #{File.expand_path(dir)}")
               Dir.mkdir(dir)
             end
           end

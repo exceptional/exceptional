@@ -22,18 +22,18 @@ module Exceptional
       end
 
       begin
-        Exceptional.to_log 'debug', "Authenticating for key #{Exceptional.api_key}"
+        Exceptional.to_log "Authenticating for key #{Exceptional.api_key}"
         # TODO No data required to api_key_validate, send a nil string? hacky
         valid = (http_call_remote(:authenticate, "") =~ /true/) ? true : false
         
-        Exceptional.to_log 'debug', "Authentication Successful #{valid}"
+        Exceptional.to_log "Authentication Successful #{valid}"
         if valid
           @api_key_validated = create_auth_file
         else 
           @api_key_validated = false
         end
       rescue Exception => e
-        Exceptional.log! 'error', "Error authenticaing Exceptional #{e.message}"
+        Exceptional.log! "Error authenticaing Exceptional #{e.message} #{e.backtrace}"
         @api_key_validated = false
       end
       
@@ -48,16 +48,17 @@ module Exceptional
     private 
     
     def valid_auth_file
-      Exceptional.to_log 'debug', "Checking for Valid Auth File #{File.expand_path(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME))}"
+      Exceptional.to_log "Checking for Valid Auth File #{File.expand_path(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME))}"
       
       if FileTest.exists?(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME))
         auth_file = File.open(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME))
-        Exceptional.to_log 'debug', "Auth file found #{auth_file.mtime}"
+        Exceptional.to_log "Auth file found #{auth_file.mtime}"
           
         # If the auth file is more than 1 day old then re-authenticate
-        ((Date.today - auth_file.mtime) > 1) ? false: true
+        (Date.today.to_time > auth_file.mtime) ? false: true
+        
       else
-        Exceptional.to_log 'debug', "No Auth File found"  
+        Exceptional.to_log "No Auth File found", 'debug'
         #The auth-file does not exist so authenticate
           false          
       end
@@ -65,21 +66,18 @@ module Exceptional
     
     def create_auth_file
       begin
-        ensure_tmp_directory(Exceptional.log)      
-      
-        auth_file = File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME)
+        ensure_directory(Exceptional.tmp_dir, Exceptional.log)      
 
-        File.open(auth_file, 'w') {|f|
+        File.open(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME), 'w') {|f|
           f.write(Exceptional.api_key)
         }
       
-        Exceptional.to_log 'debug', "Created Auth File #{File.expand_path(auth_file)}"
-        auth_file.close        
-      
+        Exceptional.to_log "Created Auth File #{File.expand_path(File.join(Exceptional.tmp_dir, AUTHENTICATED_FILE_NAME))}"
+
         return true
       end
     rescue Exception => e
-      Exceptional.log! 'error', "Error creating auth file #{File.expand_path(auth_file)} #{e.message}"      
+      Exceptional.log! "Errror creating auth file #{e.message} #{e.backtrace}"
       return false
     end
   end
