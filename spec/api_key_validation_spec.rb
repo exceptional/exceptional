@@ -33,8 +33,9 @@ describe Exceptional::APIKeyValidation do
       Exceptional.api_key = TEST_API_KEY
 
       Exceptional.api_key_validated?.should be_false
+      
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("true")
-      Exceptional.should_receive(:create_auth_file).and_return(true)
+      Exceptional.should_receive(:create_auth_file).once.and_return(true)
       
       Exceptional.api_key_validate.should be_true
       Exceptional.api_key_validated?.should be_true
@@ -46,6 +47,7 @@ describe Exceptional::APIKeyValidation do
 
       Exceptional.api_key_validated?.should be_false
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("false")
+      Exceptional.should_not_receive(:create_auth_file)
       Exceptional.api_key_validate.should be_false
       Exceptional.api_key_validated?.should be_false
     end
@@ -55,7 +57,7 @@ describe Exceptional::APIKeyValidation do
 
       Exceptional.api_key_validated?.should be_false
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_raise(IOError)
-
+      Exceptional.should_not_receive(:create_auth_file)
       Exceptional.api_key_validate.should be_false
       Exceptional.api_key_validated?.should be_false
     end
