@@ -13,7 +13,9 @@ describe Exceptional::Adapters::HttpAsyncAdapter do
     Exceptional.reset_adapter
     Exceptional.adapter_name = "HttpAsyncAdapter"
 
-  Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:to_stderr) # Don't print error when testing
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)    
   end
 
   after(:all) do
