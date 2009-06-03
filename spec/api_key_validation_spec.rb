@@ -19,7 +19,12 @@ describe Exceptional::APIKeyValidation do
 
     def Exceptional.reset_authentication
       @api_key_validated = false
-    end
+    end    
+  end
+  
+  before(:each) do
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)    
   end
 
   after(:each) do
