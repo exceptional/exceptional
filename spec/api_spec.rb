@@ -6,8 +6,8 @@ describe Exceptional::Api do
 
   describe "with no configuration" do
     before(:each) do
-    Exceptional.stub!(:to_stderr) # Don't print error when testing
-    Exceptional.stub!(:log!) # Don't even attempt to log    
+      Exceptional.stub!(:to_stderr) # Don't print error when testing
+      Exceptional.stub!(:log!) # Don't even attempt to log    
     end
 
     after(:each) do
@@ -52,7 +52,7 @@ describe Exceptional::Api do
 
     it "should raise a license exception if api key is not set" do
       Exceptional.api_key.should == nil
-      lambda { Exceptional.catch(IOError.new) }.should raise_error(Exceptional::Config::ConfigurationException)
+      lambda { Exceptional.catch(NameError.new) }.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
 
