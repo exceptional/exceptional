@@ -28,7 +28,6 @@ module Exceptional
 
     def log!(msg, level = 'info')
       to_log msg, level
-      to_stderr msg
     end
 
     def to_stderr(msg)

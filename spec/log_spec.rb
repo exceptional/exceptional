@@ -6,7 +6,6 @@ describe Exceptional::Log do
 
   it "uninitialized should only log to STDERR" do
     
-    STDERR.should_receive(:puts)
     Logger.should_not_receive(:send)
     Exceptional.log! TEST_LOG_MESSAGE
   end
@@ -21,8 +20,6 @@ describe Exceptional::Log do
     Exceptional.setup_log File.dirname(File.join(File.dirname(__FILE__), ".."))
     
     Exceptional.log.should_receive(:send).with("info", TEST_LOG_MESSAGE)
-    STDERR.should_receive(:puts)
-
     Exceptional.log! TEST_LOG_MESSAGE
   end
 end
