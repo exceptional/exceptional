@@ -84,8 +84,7 @@ module Exceptional    #:nodoc:
         add_user_data(e, current_user) if(Exceptional.send_user_data? && !current_user.nil?)
 
         post(e)      
-        Exceptional.log! "#{exception} sent to #{Exceptional.remote_host}", 'info'      
-        
+        Exceptional.log! "Exception #{exception} sent to #{Exceptional.remote_host?}", 'debug'              
       rescue Exception => exception
         Exceptional.log! "Error preparing exception data."
         Exceptional.log! exception.message
