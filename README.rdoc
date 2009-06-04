@@ -24,11 +24,14 @@ You will need an account at http://getexceptional.com
 	script/plugin install git://github.com/contrast/exceptional.git
 
 2. Configure :  The post install hook will create an <tt>exceptional.yml</tt> config file in your RAILS_ROOT/config directory, you need to configure your API Key. Your API Key is available from your account area at http://getexceptional.com
-	rake -f vendor/plugins/exceptional/Rakefile exceptional::rails_install api_key=YOUR-API-KEY
+	rake exceptional::rails_install api_key=YOUR-API-KEY
+	
+3. Test: You can test your exceptional plugin is working properly with 
+	rake exceptional::test
 
 3. Restart your application
 
-4. Check RAILS_ROOT/log/exceptional.log to ensure the Exceptional plugin is successfully enabled
+4. Check RAILS_ROOT/log/exceptional.log to ensure the Exceptional plugin is working error free
 
 ==== Configuration
 
