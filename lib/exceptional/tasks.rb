@@ -86,8 +86,8 @@ namespace :exceptional do
 
       # Add Usage
       if environment.nil?
-        STDOUT.puts " Using environment 'production'"
-        environment = 'production'
+        STDOUT.puts " Using environment 'development'"
+        environment = 'development'
       end
 
       rails_root = Exceptional::Utils::RakeDirTools.get_rails_root

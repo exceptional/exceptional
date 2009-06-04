@@ -52,7 +52,8 @@ module Exceptional
         Exceptional.log! "Auth file found with timestamp #{auth_file.mtime}", 'debug'
           
         # If the auth file is more than 1 day old then re-authenticate
-        if ((DateTime.now - auth_file.mtime).to_i > 1)
+        
+        if ((Time.now - auth_file.mtime).to_i > 60*60*24)
           Exceptional.log! "Auth file greater than 1 day old fail", 'debug'
           return false
         else
