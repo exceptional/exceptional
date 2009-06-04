@@ -1,7 +1,7 @@
 namespace :exceptional do
   # require File.join(File.dirname(__FILE__), '../lib/exceptional')
 
-  EXCEPTIONAL_CONFIG_FILE = "exceptional.yml"
+  EXCEPTIONAL_CONFIG_FILE = "exceptional.yml" unless defined? EXCEPTIONAL_CONFIG_FILE
 
   desc "Install Exceptional Plugin"
   task :rails_install do
@@ -18,41 +18,28 @@ namespace :exceptional do
     end
 
     rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
+    config_file = Exceptional::Utils::RakeDirTools.get_config_file
 
-    exceptional_config_template = File.join(File.dirname(__FILE__), '../', EXCEPTIONAL_CONFIG_FILE)
+    s = 'PASTE_YOUR_API_KEY_HERE'
+    r = key
 
-    config_dir = Exceptional::Utils::RakeDirTools.get_config_dir
+    lines = []
+    File.open(config_file, "r"){|f| lines = f.readlines }
+    lines = lines.inject([]){|l, line| l << line.gsub(s, r)}
+    File.open(config_file, "w"){|f| f.write(lines) }
 
-    if File.copy(exceptional_config_template, config_dir, true)
-      new_config_file = File.join(config_dir, EXCEPTIONAL_CONFIG_FILE)
+    Exceptional.setup_config("development", config_file, rails_root)
 
-      s = 'PASTE_YOUR_API_KEY_HERE'
-      r = key
-
-      lines = []
-      File.open(new_config_file, "r"){|f| lines = f.readlines }
-      lines = lines.inject([]){|l, line| l << line.gsub(s, r)}
-      File.open(new_config_file, "w"){|f| f.write(lines) }
-
-
-      Exceptional.setup_config("test", new_config_file, rails_root)
-
-      if !Exceptional.api_key_validate
-        STDERR.puts "Error Authenticating API-Key"
-        STDERR.puts " *** Exceptional Installation Failed "
-        return
-      end
-
-    else
-      STDERR.puts "Error copying config file"
-      return
+    if !Exceptional.api_key_validate
+      STDERR.puts "Error Authenticating API-Key"
+      STDERR.puts "Exceptional Installation Failed"      
+    else 
+      STDOUT.puts ""
+      STDOUT.puts " ----- Exceptional Installation Successful ---- "
+      STDOUT.puts "Config File :  #{File.expand_path(config_file)}"
+      STDOUT.puts "Key : #{key}"
+      STDOUT.puts ""      
     end
-
-    puts ""
-    puts " ----- Exceptional Installation Successful ---- "
-    puts "Config File :  #{File.expand_path(new_config_file)}"
-    puts "Key : #{key}"
-    puts ""
   end
 
   desc "Directory Sweeper for the File System Adapter"
@@ -67,9 +54,8 @@ namespace :exceptional do
     rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
 
     log_dir = File.join(rails_root, "log")
-    Dir.mkdir(log_dir) unless File.directory?(log_dir)
-
     log_path = File.join(log_dir, "/exceptional_file_sweeper.log")
+    
     log = Logger.new log_path
     log.formatter = Logger::Formatter.new
 
@@ -77,26 +63,37 @@ namespace :exceptional do
 
     sweeper.sweep()
   end
-  
+
   desc "Send Test Exception to getexceptional.com"
-    task :test do
-      require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
 
-      environment = ENV['environment']
+  task :test do
+    require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
 
-      # Add Usage
-      if environment.nil?
-        STDOUT.puts " Using environment 'development'"
-        environment = 'development'
-      end
+    environment = ENV['environment']
 
-      rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
-      config_file = Exceptional::Utils::RakeDirTools.get_config_file
-      
-      Exceptional.bootstrap(environment, rails_root, config_file)
+    if environment.nil?
+      environment = 'development'
+    end
+
+    STDOUT.puts "Using environment #{environment}"
+
+    rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
+    config_file = Exceptional::Utils::RakeDirTools.get_config_file
+
+    Exceptional.bootstrap(environment, rails_root, config_file)
+
+    if !Exceptional.api_key_validate
+      STDERR.puts "Error Authenticating Exceptional API-Key"
+    else
 
       class Exceptional::TestException < StandardError; end
 
-      Exceptional.catch(Exceptional::TestException.new('Test Exception'))      
-    end    
+      if Exceptional.catch(Exceptional::TestException.new('Test Exception'))
+        STDOUT.puts "Sentinding test exception successful [ #{environment} ]"
+      else
+        STDERR.puts "Sentinding test exception successful [ #{environment} ]"
+      end
+    end
+
+  end
 end

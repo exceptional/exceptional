@@ -110,8 +110,6 @@ module Exceptional    #:nodoc:
       exception_data = parse(exception)
       exception_data.controller_name = File.basename($0)
       post(exception_data)
-      
-      Exceptional.log! "#{exception} sent to #{Exceptional.remote_host?}", 'info'      
     end
 
     protected

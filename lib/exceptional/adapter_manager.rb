@@ -45,17 +45,18 @@ module Exceptional   #:nodoc:
     end
 
     def post_exception(data)
-      Exceptional.api_key_validate if !Exceptional.api_key_validated?
-            
-      adapter.publish_exception(data)
-    end
 
-    protected
+      # Only publish if authentication is successful 
+      if Exceptional.api_key_validate
+        adapter.publish_exception(data)
+      end
+      
+    end
 
     def adapter
       @adapter || @adapter = load_adapter
     end
-
+        
     private
 
     def load_adapter

@@ -7,6 +7,7 @@ describe Exceptional::Adapters::FileAdapter do
   before(:each) do
     def Exceptional.reset_adapter
       @adapter = nil
+      @api_key_validated = nil
     end
     
     Exceptional.stub!(:log!) # Don't even attempt to log
