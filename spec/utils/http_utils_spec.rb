@@ -20,7 +20,7 @@ describe Exceptional::Utils::HttpUtils do
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
 
-      http_call_remote(:message, "data").should == OK_RESPONSE_BODY
+      http_call_remote(Exceptional.remote_host?, Exceptional.remote_port?, Exceptional.api_key, Exceptional.ssl_enabled?, :message, "data", Exceptional.log).should == OK_RESPONSE_BODY
     end
 
     it "should raise error if network problem during sending exception" do
@@ -31,11 +31,10 @@ describe Exceptional::Utils::HttpUtils do
       mock_http_response= mock(Net::HTTPSuccess)
 
       mock_http.should_receive(:start).once.and_raise(IOError)
+      mock_log = mock(Logger)
+      mock_log.should_receive(:send).twice
 
-      #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
-
-      lambda{http_call_remote(:message, "data")}.should raise_error(IOError)
+      lambda{http_call_remote(Exceptional.remote_host?, Exceptional.remote_port?, Exceptional.api_key, Exceptional.ssl_enabled?, :message, "data", mock_log)}.should raise_error(IOError)
     end
 
     it "should raise Exception if sending exception unsuccessful" do
@@ -49,11 +48,10 @@ describe Exceptional::Utils::HttpUtils do
       mock_http_response.should_receive(:message).once.and_return("Internal Server Error")
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
-
-      #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
-
-      lambda{http_call_remote(:message, "data")}.should raise_error(Exceptional::Utils::HttpUtils::HttpUtilsException)
+      mock_log = mock(Logger)
+      mock_log.should_receive(:send).twice
+      
+      lambda{http_call_remote(Exceptional.remote_host?, Exceptional.remote_port?, Exceptional.api_key, Exceptional.ssl_enabled?, :message, "data", mock_log)}.should raise_error(Exceptional::Utils::HttpUtils::HttpUtilsException)
     end
   end
 end

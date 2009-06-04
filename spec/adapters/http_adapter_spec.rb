@@ -34,9 +34,6 @@ describe Exceptional::Adapters::HttpAdapter do
 
       mock_http.should_receive(:start).once.and_raise(IOError)
 
-      #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
-
       lambda{http_adapter.publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end
 
@@ -53,9 +50,6 @@ describe Exceptional::Adapters::HttpAdapter do
       mock_http_response.should_receive(:message).once.and_return("Internal Server Error")
 
       mock_http.should_receive(:start).once.and_return(mock_http_response)
-
-      #surpress the logging of the exception
-      Exceptional.should_receive(:log!).twice
 
       lambda{http_adapter.publish_exception("data")}.should raise_error(Exceptional::Adapters::HttpAdapterException)
     end

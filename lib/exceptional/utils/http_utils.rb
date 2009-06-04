@@ -12,11 +12,11 @@ module Exceptional
       PROTOCOL_VERSION = 3 unless defined?(PROTOCOL_VERSION)
       # TODO should retry if a http connection failed
 
-      def http_call_remote(method, data)
+      def http_call_remote(host, port, api_key, use_ssl, method, data, log)
         begin
-          http = Net::HTTP.new(Exceptional.remote_host?, Exceptional.remote_port?)
-          http.use_ssl = true if Exceptional.ssl_enabled?
-          uri = "/#{method.to_s}?&api_key=#{Exceptional.api_key}&protocol_version=#{PROTOCOL_VERSION}"
+          http = Net::HTTP.new(host, port)
+          http.use_ssl = true if use_ssl
+          uri = "/#{method.to_s}?&api_key=#{api_key}&protocol_version=#{PROTOCOL_VERSION}"
           headers = method.to_s == 'errors' ? { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' } : {}
 
           compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))
@@ -31,8 +31,8 @@ module Exceptional
           end
 
         rescue Exception => e
-          Exceptional.log! "Error contacting Exceptional: #{e}", 'info'
-          Exceptional.log! e.backtrace.join("\n"), 'debug'
+          log.send("Error contacting Exceptional: #{e}", 'info')
+          log.send(e.backtrace.join("\n"), 'debug')
           raise e
         end
       end
