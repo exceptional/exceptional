@@ -7,6 +7,7 @@ namespace :exceptional do
   task :rails_install do
     require 'ftools'
     require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
+    require File.join(File.dirname(__FILE__), '..', 'exceptional')    
 
     key = ENV['api_key']
 
@@ -68,30 +69,33 @@ namespace :exceptional do
 
   task :test do
     require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
-
+    require File.join(File.dirname(__FILE__), '..', 'exceptional')
+            
     environment = ENV['environment']
 
     if environment.nil?
-      environment = 'development'
+      environment = 'production'
     end
 
-    STDOUT.puts "Using environment #{environment}"
-
+    STDOUT.puts "Environment '#{environment}'"
     rails_root = Exceptional::Utils::RakeDirTools.get_rails_root
+    STDOUT.puts "RAILS_ROOT #{rails_root}"  
+    
     config_file = Exceptional::Utils::RakeDirTools.get_config_file
-
+    STDOUT.puts "Exceptional config_file #{config_file}"    
+        
     Exceptional.bootstrap(environment, rails_root, config_file)
 
     if !Exceptional.api_key_validate
-      STDERR.puts "Error Authenticating Exceptional API-Key"
+      STDERR.puts "Error Authenticating Exceptional API-Key #{Exceptional.api_key}"
     else
 
       class Exceptional::TestException < StandardError; end
 
       if Exceptional.catch(Exceptional::TestException.new('Test Exception'))
-        STDOUT.puts "Sentinding test exception successful [ #{environment} ]"
+        STDOUT.puts "Sending test exception successful [ #{environment} ]"
       else
-        STDERR.puts "Sentinding test exception successful [ #{environment} ]"
+        STDERR.puts "Sending test exception successful [ #{environment} ]"
       end
     end
 

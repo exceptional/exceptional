@@ -5,15 +5,15 @@ module Exceptional
       class << self
 
         EXCEPTIONAL_CONFIG_FILE = "exceptional.yml" if !defined? EXCEPTIONAL_CONFIG_FILE
-        RELATIVE_RAILS_ROOT = "../../../../../../" if !defined? RELATIVE_RAILS_ROOT
-        RELATIVE_RAILS_CONFIG_PATH = RELATIVE_RAILS_ROOT + "config" if !defined? RELATIVE_RAILS_CONFIG_PATH
-        RELATIVE_WORK_DIR_PATH = RELATIVE_RAILS_ROOT + "tmp/exceptional" if !defined? RELATIVE_WORK_DIR_PATH
+        RELATIVE_RAILS_ROOT = File.dirname(__FILE__) if !defined? RELATIVE_RAILS_ROOT
+        RELATIVE_RAILS_CONFIG_PATH = File.join(RELATIVE_RAILS_ROOT, "config") if !defined? RELATIVE_RAILS_CONFIG_PATH
+        RELATIVE_WORK_DIR_PATH = File.join(RELATIVE_RAILS_ROOT, 'tmp', 'exceptional') if !defined? RELATIVE_WORK_DIR_PATH
 
         def get_config_dir
           if !ENV['config_dir'].nil?
             return ENV['config_dir']
           else
-            return File.join(File.dirname(__FILE__), RELATIVE_RAILS_CONFIG_PATH)
+            return File.join(RELATIVE_RAILS_CONFIG_PATH)
           end
         end
 
@@ -43,9 +43,9 @@ module Exceptional
         def get_rails_root
           # The application root
           if !ENV['rails_root'].nil?
-            rails_root = ENV['rails_root']
+            ENV['rails_root']
           else
-            rails_root = File.expand_path(File.join(File.dirname(__FILE__), RELATIVE_RAILS_ROOT))
+            File.expand_path(RELATIVE_RAILS_ROOT)
           end
         end
 
@@ -53,7 +53,7 @@ module Exceptional
           if !ENV['work_dir'].nil?
             return ENV['work_dir']
           else
-            return File.expand_path(File.join(File.dirname(__FILE__), RELATIVE_WORK_DIR_PATH))
+            return File.expand_path(RELATIVE_WORK_DIR_PATH)
           end
         end
       end
