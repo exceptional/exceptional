@@ -129,7 +129,7 @@ When an exception is passed to the plugin, the FileAdapter will create a JSON fi
 ===== File Sweeper
 
 To run the file sweeper rake task directly (from RAILS_ROOT)
-	rake -f vendor/plugins/exceptional/Rakefile exceptional:file_sweeper
+	rake exceptional:file_sweeper
 	
 To run the file sweeper from a cron job every 15 mins, you can use a crontab entry of 
 	*/15 * * * * cd [FULL/PATH/TO/RAILS/ROOT]/vendor/plugins/exceptional && [FULL/PATH/TO]/rake --silent exceptional:file_sweeper
