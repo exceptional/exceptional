@@ -8,6 +8,7 @@ namespace :exceptional do
     require 'ftools'
     require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
     require File.join(File.dirname(__FILE__), '..', 'exceptional')    
+    require 'json'
 
     key = ENV['api_key']
 
@@ -49,6 +50,7 @@ namespace :exceptional do
     require 'logger'
     require File.join(File.dirname(__FILE__), '/utils/file_sweeper')
     require File.join(File.dirname(__FILE__), '/utils/rake_dir_tools')
+    require File.join(File.dirname(__FILE__), '..', 'exceptional')    
 
     config_file = Exceptional::Utils::RakeDirTools.get_config_file
     work_dir = Exceptional::Utils::RakeDirTools.get_work_dir

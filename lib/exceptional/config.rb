@@ -79,11 +79,11 @@ module Config
       @api_key = key
     end
 
-    def application_root?
+    def application_root
       @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../../../../..')
     end
 
-    def remote_host?
+    def remote_host
       @remote_host || DEFAULT_HOST
     end
     
@@ -91,19 +91,19 @@ module Config
       @remote_host = host
     end
 
-    def remote_port?
-      @remote_port || default_port?
+    def remote_port
+      @remote_port || default_port
     end
     
     def remote_port=(port)
       @remote_port = port
     end
 
-    def log_level?
+    def log_level
       @log_level || DEFAULT_LOG_LEVEL
     end
 
-    def adapter_name?
+    def adapter_name
       @adapter_name || DEFAULT_ADAPTER_NAME
     end
     
@@ -111,12 +111,12 @@ module Config
       @adapter_name = adapter
     end
 
-    def work_dir?
-      @work_dir || @work_dir = File.expand_path(File.join(application_root?, "/log/exceptional"))
+    def work_dir
+      @work_dir || @work_dir = File.expand_path(File.join(application_root, "/log/exceptional"))
     end
 
     def tmp_dir
-      @tmp_dir || @tmp_dir = File.expand_path(File.join(application_root?, "/tmp/exceptional"))
+      @tmp_dir || @tmp_dir = File.expand_path(File.join(application_root, "/tmp/exceptional"))
     end
     
     def ssl_enabled?
@@ -141,14 +141,14 @@ module Config
 
     protected
     
-    def default_port?
+    def default_port
       ssl_enabled? ? DEFAULT_SSL_PORT : DEFAULT_PORT
     end
 
     def log_config_info
       Exceptional.to_log("API Key: #{api_key}", 'debug')
-      Exceptional.to_log("Remote Host: #{remote_host?}:#{remote_port?}", 'debug')
-      Exceptional.to_log("Log level: #{log_level?}", 'debug')
+      Exceptional.to_log("Remote Host: #{remote_host}:#{remote_port}", 'debug')
+      Exceptional.to_log("Log level: #{log_level}", 'debug')
     end
   end
 end

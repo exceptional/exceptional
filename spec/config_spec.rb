@@ -34,21 +34,21 @@ describe Exceptional::Config do
     
     it "should use port 80 by default if ssl not enabled" do
       Exceptional.ssl_enabled?.should be_false
-      Exceptional.remote_port?.should == 80
+      Exceptional.remote_port.should == 80
     end
 
     it "should use port 443 if ssl enabled" do
       Exceptional.ssl_enabled= true
-      Exceptional.remote_port?.should == 443
+      Exceptional.remote_port.should == 443
       Exceptional.ssl_enabled= false
     end
 
     it "should use log level of info by default" do
-      Exceptional.log_level?.should == "info"
+      Exceptional.log_level.should == "info"
     end
 
     it "should use HttpAdapter by default" do
-      Exceptional.adapter_name?.should == "HttpAdapter"
+      Exceptional.adapter_name.should == "HttpAdapter"
     end
     
     it "should not be enabled by default" do
@@ -56,16 +56,16 @@ describe Exceptional::Config do
     end
 
     it "should overwrite default host" do
-      Exceptional.remote_host?.should == "getexceptional.com"
+      Exceptional.remote_host.should == "getexceptional.com"
       Exceptional.remote_host = "localhost"
-      Exceptional.remote_host?.should == "localhost"
+      Exceptional.remote_host.should == "localhost"
     end
 
     it "should overwrite default port" do
-      Exceptional.remote_port?.should == 80
+      Exceptional.remote_port.should == 80
 
       Exceptional.remote_port = 3000
-      Exceptional.remote_port?.should == 3000
+      Exceptional.remote_port.should == 3000
       Exceptional.remote_port = nil
     end
     

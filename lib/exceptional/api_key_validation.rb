@@ -24,7 +24,7 @@ module Exceptional
       begin
         Exceptional.log! "Authenticating for key #{Exceptional.api_key}", 'debug'
         
-        if (http_call_remote(Exceptional.remote_host?, Exceptional.remote_port?, Exceptional.api_key, Exceptional.ssl_enabled?, :authenticate, "", Exceptional.log) =~ /true/)
+        if (http_call_remote(Exceptional.remote_host, Exceptional.remote_port, Exceptional.api_key, Exceptional.ssl_enabled?, :authenticate, "", Exceptional.log) =~ /true/)
           Exceptional.log! "Authentication successful", 'debug'
           @api_key_validated = create_auth_file
         else 

@@ -18,7 +18,7 @@ module Exceptional
       #Override
       def bootstrap
         begin
-          ensure_directory(Exceptional.work_dir?, Exceptional.log)
+          ensure_directory(Exceptional.work_dir, Exceptional.log)
         rescue Exception => e
           raise FileAdapterException.new(e.message)
         end
@@ -28,7 +28,7 @@ module Exceptional
         begin
           file_name = "#{EXCEPTIONAL_FILE_PREFIX}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.json"
 
-          except_file = File.join(Exceptional.work_dir?, file_name)
+          except_file = File.join(Exceptional.work_dir, file_name)
           Exceptional.log! "Creating Exception file #{except_file}"
 
           File.open(except_file, 'w') {|f|

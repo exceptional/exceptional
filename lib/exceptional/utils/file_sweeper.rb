@@ -1,5 +1,7 @@
 require 'ftools'
 require File.dirname(__FILE__) + '/file_utils'
+require 'json'
+
 
 module Exceptional
   module Utils  #:nodoc:
@@ -13,15 +15,15 @@ module Exceptional
 
       def initialize(config_file, work_dir, application_root, log)
         Exceptional.setup_config("common", config_file, application_root)
-        ensure_directory(Exceptional.work_dir?, log)
+        ensure_directory(Exceptional.work_dir, log)
         @adapter = Exceptional::Adapters::HttpAdapter.new
         @log = log
       end
 
       def sweep        
-        @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir?}"
+        @log.send "info", "FileAdapter Sweep Starting #{Exceptional.work_dir}"
 
-        Dir.glob("#{Exceptional.work_dir?}/*.json").each do |file|
+        Dir.glob("#{Exceptional.work_dir}/*.json").each do |file|
           begin
             @log.send "info", "File Adapter Sweep - Found #{file}"
             json_data = read_data(file)
@@ -29,7 +31,7 @@ module Exceptional
             File.delete(file)
           rescue Exception => e
             @log.send "error", "#{e.message}"
-            File.rename(file, "#{file} + .error")
+            File.rename(file, "#{file}.error")
             raise FileSweeperException.new(e.message)
           end
         end

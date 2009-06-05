@@ -18,7 +18,7 @@ describe Exceptional::AdapterManager do
 
   describe "instantiating valid adapter" do
     it "should instantiate HTTPAdapter adapter" do
-      Exceptional.should_receive(:adapter_name?).once.and_return("HttpAdapter")
+      Exceptional.should_receive(:adapter_name).once.and_return("HttpAdapter")
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
       adapter_mock = mock(Exceptional::Adapters::HttpAdapter)
       adapter_mock.should_receive(:publish_exception)
@@ -27,7 +27,7 @@ describe Exceptional::AdapterManager do
     end
 
     it "should instantiate FileAdapter adapter" do
-      Exceptional.should_receive(:adapter_name?).once.and_return("FileAdapter")
+      Exceptional.should_receive(:adapter_name).once.and_return("FileAdapter")
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
       adapter_mock = mock(Exceptional::Adapters::FileAdapter)
       adapter_mock.should_receive(:publish_exception)
@@ -37,7 +37,7 @@ describe Exceptional::AdapterManager do
     end
 
     it "should instantiate HttpAsyncAdapter adapter" do
-      Exceptional.should_receive(:adapter_name?).once.and_return("HttpAsyncAdapter")
+      Exceptional.should_receive(:adapter_name).once.and_return("HttpAsyncAdapter")
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
       adapter_mock = mock(Exceptional::Adapters::HttpAsyncAdapter)
       adapter_mock.should_receive(:publish_exception)
@@ -46,7 +46,7 @@ describe Exceptional::AdapterManager do
     end
 
     it "should raise Config error if invalid adapter configured" do
-      Exceptional.should_receive(:adapter_name?).twice.and_return("InvalidAdapterName")
+      Exceptional.should_receive(:adapter_name).twice.and_return("InvalidAdapterName")
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)      
       lambda {Exceptional.post_exception(nil)}.should raise_error(Exceptional::AdapterManager::AdapterManagerException)
     end

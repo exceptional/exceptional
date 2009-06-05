@@ -72,7 +72,7 @@ module Exceptional    #:nodoc:
         e.framework = "rails"
         e.controller_name = controller.controller_name
         e.action_name = controller.action_name
-        e.application_root = Exceptional.application_root?
+        e.application_root = Exceptional.application_root
         e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
         e.environment = request.env.to_hash
         e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
@@ -84,7 +84,7 @@ module Exceptional    #:nodoc:
         add_user_data(e, current_user) if(Exceptional.send_user_data? && !current_user.nil?)
 
         post(e)      
-        Exceptional.log! "Exception #{exception} sent to #{Exceptional.remote_host?}", 'debug'              
+        Exceptional.log! "Exception #{exception} sent to #{Exceptional.remote_host}", 'debug'              
       rescue Exception => exception
         Exceptional.log! "Error preparing exception data."
         Exceptional.log! exception.message

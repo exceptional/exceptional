@@ -4,7 +4,7 @@ module Exceptional
     def bootstrap(environment, application_root, config_file)
       begin
         Exceptional.setup_config(environment, config_file, application_root)
-        Exceptional.setup_log(File.join(application_root, "log"), Exceptional.log_level?)
+        Exceptional.setup_log(File.join(application_root, "log"), Exceptional.log_level)
 
         if Exceptional.enabled?
           
@@ -14,7 +14,7 @@ module Exceptional
               require File.join('exceptional', 'integration', 'rails')
               Exceptional.to_log("Exceptional plugin enabled #{Exceptional.adapter.name}", "debug")
             else
-              Exceptional.log! "Unable to boostrap adapter #{Exceptional.adapter_name?}"
+              Exceptional.log! "Unable to boostrap adapter #{Exceptional.adapter_name}"
             end
 
           else

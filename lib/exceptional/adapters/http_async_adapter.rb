@@ -17,7 +17,7 @@ module Exceptional
           # Temporarily create a Thread just for this send
           Thread.new {
             begin
-              http_call_remote(:errors, json_data)
+              http_call_remote(Exceptional.remote_host, Exceptional.remote_port, Exceptional.api_key, Exceptional.ssl_enabled?, :errors, json_data, Exceptional.log)
             rescue Exception => e
               Exceptional.log! e.message
             end
