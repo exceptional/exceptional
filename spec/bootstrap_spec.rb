@@ -3,11 +3,6 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::Bootstrap do
 
-  before(:each) do
-    Exceptional.stub!(:log!) # Don't even attempt to log
-   Exceptional.stub!(:to_log)
-  end  
-
   describe "setup" do
 
     TEST_ENVIRONMENT= "development"

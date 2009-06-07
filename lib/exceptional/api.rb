@@ -68,6 +68,7 @@ module Exceptional    #:nodoc:
       Exceptional.log! "Handling #{exception.message}", 'info'
       begin
         e = parse(exception)
+        
         # Additional data for Rails Exceptions
         e.framework = "rails"
         e.controller_name = controller.controller_name
@@ -84,11 +85,11 @@ module Exceptional    #:nodoc:
         add_user_data(e, current_user) if(Exceptional.send_user_data? && !current_user.nil?)
 
         post(e)      
-        Exceptional.log! "Exception #{exception} sent to #{Exceptional.remote_host}", 'debug'              
+        Exceptional.log! "Exceptional finished handling #{exception}", 'debug'              
       rescue Exception => exception
-        Exceptional.log! "Error preparing exception data."
-        Exceptional.log! exception.message
-        Exceptional.log! exception.backtrace.join("\n"), 'debug'
+        Exceptional.log! "Error preparing exception data.", 'error'
+        Exceptional.log! exception.message, 'error'
+        Exceptional.to_log exception.backtrace.join("\n"), 'error'
       end
     end
 
@@ -106,9 +107,15 @@ module Exceptional    #:nodoc:
 
     def catch(exception)
       Exceptional.log! "Handling #{exception.message}", 'info'
-      exception_data = parse(exception)
-      exception_data.controller_name = File.basename($0)
-      post(exception_data)
+      begin
+        exception_data = parse(exception)
+        exception_data.controller_name = File.basename($0)
+        post(exception_data)
+      rescue Exception => exception
+        Exceptional.log! "Error preparing exception data.", 'error'
+        Exceptional.log! exception.message, 'error'
+        Exceptional.to_log exception.backtrace.join("\n"), 'error'
+      end
     end
 
     protected

@@ -29,18 +29,16 @@ describe Exceptional::Adapters::HttpAsyncAdapter do
     it "should return response body if successful" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.api_key_validated?.should be_false
-
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
       Thread.should_receive(:new).once
+           
       Exceptional.post_exception("data")
     end
 
     it "should raise error of error instantiating thread" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.api_key_validated?.should be_false
 
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 

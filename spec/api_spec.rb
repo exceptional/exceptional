@@ -3,16 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::Api do
 
-
   describe "with no configuration" do
-    before(:each) do
-      Exceptional.stub!(:to_stderr) # Don't print error when testing
-      Exceptional.stub!(:log!) # Don't even attempt to log    
-    end
-
-    after(:each) do
-      Exceptional.api_key= nil
-    end
 
     it "should connect to getexceptional.com by default" do
       Exceptional.remote_host.should == "getexceptional.com"
@@ -30,8 +21,6 @@ describe Exceptional::Api do
       exception_data.exception_message.should == exception.message
       exception_data.exception_backtrace.should == exception.backtrace
       exception_data.exception_class.should == exception.class.to_s
-
-
     end
 
     it "should catch exception" do

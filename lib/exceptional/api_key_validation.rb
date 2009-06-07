@@ -9,6 +9,8 @@ module Exceptional
     include Exceptional::Utils::FileUtils
     
     AUTHENTICATED_FILE_NAME = '.exceptional-authenticated'
+    ONE_DAY = 60*60*24
+    
     # authenticate with getexceptional.com
     # returns true if the configured api_key is registered and can send data
     # otherwise false
@@ -38,7 +40,7 @@ module Exceptional
     end
 
     def api_key_validated?
-      @api_key_validated || valid_auth_file
+      @api_key_validated ||= valid_auth_file
     end
         
     private 
@@ -53,7 +55,7 @@ module Exceptional
           
         # If the auth file is more than 1 day old then re-authenticate
         
-        if ((Time.now - auth_file.mtime).to_i > 60*60*24)
+        if ((Time.now - auth_file.mtime).to_i > ONE_DAY)
           Exceptional.log! "Auth file greater than 1 day old fail", 'debug'
           return false
         else

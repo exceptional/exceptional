@@ -35,9 +35,7 @@ module Exceptional   #:nodoc:
    #
    #
 
-
   module AdapterManager
-
  
     ADAPTER_MODULE_PREFIX = "Exceptional::Adapters::"
 
@@ -45,12 +43,10 @@ module Exceptional   #:nodoc:
     end
 
     def post_exception(data)
-
       # Only publish if authentication is successful 
       if Exceptional.api_key_validate
         adapter.publish_exception(data)
-      end
-      
+      end      
     end
 
     def adapter

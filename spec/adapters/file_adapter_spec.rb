@@ -5,23 +5,20 @@ require 'ftools'
 describe Exceptional::Adapters::FileAdapter do
 
   before(:each) do
+
+    Exceptional.adapter_name = "FileAdapter"
+    
+    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:to_log)
+    Exceptional.stub!(:to_stderr) # Don't print error when testing
+  end
+
+  after(:each) do
     def Exceptional.reset_adapter
       @adapter = nil
       @api_key_validated = nil
     end
     
-    Exceptional.stub!(:log!) # Don't even attempt to log
-    Exceptional.stub!(:to_log)
-  end
-
-  before(:each) do
-    Exceptional.reset_adapter
-    Exceptional.adapter_name = "FileAdapter"
-
-    Exceptional.stub!(:to_stderr) # Don't print error when testing
-  end
-
-  after(:all) do
     Exceptional.reset_adapter
   end
 
@@ -32,9 +29,8 @@ describe Exceptional::Adapters::FileAdapter do
     it "should return response body if successful" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.api_key_validated?.should be_false
-
-      Exceptional.should_receive(:api_key_validated?).once.and_return(true)
+      
+      Exceptional.should_receive(:api_key_validate).once.and_return(true)
 
       File.should_receive(:open).once
       FileTest.should_receive(:exists?).and_return(true)
@@ -45,8 +41,6 @@ describe Exceptional::Adapters::FileAdapter do
     it "should raise error if sending is unsuccessful" do
 
       Exceptional.api_key = TEST_API_KEY
-      Exceptional.api_key_validated?.should be_false
-
       Exceptional.should_receive(:api_key_validated?).once.and_return(true)
 
       File.should_receive(:open).once.and_raise(IOError)

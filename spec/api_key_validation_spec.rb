@@ -5,22 +5,6 @@ describe Exceptional::APIKeyValidation do
   
   TEST_API_KEY = "TEST_API_KEY" unless defined?(TEST_API_KEY)
 
-  before(:all) do
-    def Exceptional.reset_state
-      @api_key = nil
-      @api_key_validated = nil
-    end
-  end
-  
-  before(:each) do
-    Exceptional.stub!(:log!) # Don't even attempt to log
-    Exceptional.stub!(:to_log)    
-  end
-
-  after(:each) do
-    Exceptional.reset_state
-  end
-
   describe "authentication" do
     
     it "should check for valid auth file if not authenticated yet" do
@@ -37,6 +21,7 @@ describe Exceptional::APIKeyValidation do
     it "should be api_key_validated if API authentication successful" do 
       Exceptional.api_key = TEST_API_KEY
 
+      Exceptional.should_receive(:valid_auth_file).twice.and_return(false)
       Exceptional.api_key_validated?.should be_false
       
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("true")
@@ -51,6 +36,7 @@ describe Exceptional::APIKeyValidation do
     it "should not be api_key_validated if API authentication unsuccessful" do
       Exceptional.api_key = TEST_API_KEY
 
+      Exceptional.should_receive(:valid_auth_file).exactly(3).times.and_return(false)
       Exceptional.api_key_validated?.should be_false
       
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_return("false")
@@ -63,6 +49,7 @@ describe Exceptional::APIKeyValidation do
     it "should not be api_key_validated if error during API api_key_validate" do
       Exceptional.api_key = TEST_API_KEY
 
+      Exceptional.should_receive(:valid_auth_file).exactly(3).times.and_return(false)
       Exceptional.api_key_validated?.should be_false
       Exceptional.should_receive(:http_call_remote, {:method => "api_key_validate", :data => ""}).once.and_raise(IOError)
       Exceptional.should_not_receive(:create_auth_file)
@@ -70,8 +57,9 @@ describe Exceptional::APIKeyValidation do
       Exceptional.api_key_validate.should be_false
       Exceptional.api_key_validated?.should be_false
     end
-
+    
     it "with no API Key set throws Configuration Exception" do
+      Exceptional.should_receive(:valid_auth_file).twice.and_return(false)
       Exceptional.api_key_validated?.should be_false
 
       lambda {Exceptional.api_key_validate}.should raise_error(Exceptional::Config::ConfigurationException)
@@ -106,6 +94,21 @@ describe Exceptional::APIKeyValidation do
       
       Exceptional.api_key_validated?.should be_false
     end
+    
+    it "show not re-check auth file if validation successful" do
+      Exceptional.should_receive(:tmp_dir).once.and_return("tmp/dir")
+      FileTest.should_receive(:exists?).with("tmp/dir/.exceptional-authenticated").once.and_return(true)
+      mock_file = mock(File)
+      mock_file.should_receive(:mtime).twice.and_return(DateTime.now)
+      File.should_receive(:open).with("tmp/dir/.exceptional-authenticated").once.and_return(mock_file)
+      
+      Exceptional.api_key_validated?.should be_true
+      
+      
+      Exceptional.api_key_validated?.should be_true      
+    end
+    
+    
   end
   
   describe "create auth file" do

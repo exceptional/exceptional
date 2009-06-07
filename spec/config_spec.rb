@@ -3,33 +3,6 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::Config do
   
-  before(:all) do
-
-    def Exceptional.reset_state
-      @api_key = nil
-      @ssl_enabled = nil
-      @log_level = nil
-      @enabled = nil
-      @remote_port = nil
-      @remote_host = nil
-      @applicaton_root = nil
-      @adapter_name = nil
-    end
-    
-    Exceptional.stub!(:log!) # Don't even attempt to log
-    Exceptional.stub!(:to_log)
-    
-  end
-
-  after(:each) do
-    Exceptional.reset_state
-  end
-  
-  before(:each) do
-    Exceptional.stub!(:log!) # Don't even attempt to log
-    Exceptional.stub!(:to_log)  
-  end
-  
   describe "default configuration" do
     
     it "should use port 80 by default if ssl not enabled" do

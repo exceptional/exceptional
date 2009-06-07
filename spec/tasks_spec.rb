@@ -8,24 +8,15 @@ describe "tasks" do
     @rake = Rake::Application.new
     Rake.application = @rake
     load File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'tasks.rb')
-
-  Exceptional.stub!(:to_stderr) # Don't print error when testing
-    Exceptional.stub!(:log!) # Don't even attempt to log
+    Exceptional.stub!(:log!)
     Exceptional.stub!(:to_log)
+    Exceptional.stub!(:to_stderr)        
     STDOUT.stub!(:puts)
     STDERR.stub!(:puts)
-
-    def Exceptional.reset_adapter
-      @adapter = nil
-      @api_key_validated = nil
-    end
-
-    Exceptional.reset_adapter
   end
 
   after(:each) do
     Rake.application = nil
-    Exceptional.reset_adapter
   end
 
   describe "exceptional:test" do

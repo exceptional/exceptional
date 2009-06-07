@@ -80,7 +80,7 @@ module Config
     end
 
     def application_root
-      @applicaton_root || @applicaton_root = (File.dirname(__FILE__) + '/../../../../..')
+      @applicaton_root ||= (File.dirname(__FILE__) + '/../../../../..')
     end
 
     def remote_host
@@ -92,7 +92,7 @@ module Config
     end
 
     def remote_port
-      @remote_port || default_port
+      @remote_port ||= default_port
     end
     
     def remote_port=(port)
@@ -100,11 +100,11 @@ module Config
     end
 
     def log_level
-      @log_level || DEFAULT_LOG_LEVEL
+      @log_level ||= DEFAULT_LOG_LEVEL
     end
 
     def adapter_name
-      @adapter_name || DEFAULT_ADAPTER_NAME
+      @adapter_name ||= DEFAULT_ADAPTER_NAME
     end
     
     def adapter_name=(adapter)
@@ -112,11 +112,11 @@ module Config
     end
 
     def work_dir
-      @work_dir || @work_dir = File.expand_path(File.join(application_root, "/log/exceptional"))
+      @work_dir ||= File.expand_path(File.join(application_root, "/log/exceptional"))
     end
 
     def tmp_dir
-      @tmp_dir || @tmp_dir = File.expand_path(File.join(application_root, "/tmp/exceptional"))
+      @tmp_dir ||= File.expand_path(File.join(application_root, "/tmp/exceptional"))
     end
     
     def ssl_enabled?
