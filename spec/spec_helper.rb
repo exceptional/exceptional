@@ -12,8 +12,6 @@ end
 
 require File.dirname(__FILE__) + '/../lib/exceptional'
 
-
-
 Spec::Runner.configure do |config|
 
   #Runcoderun.com requires no output from any tests so stubbing
