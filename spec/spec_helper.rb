@@ -15,7 +15,7 @@ require File.dirname(__FILE__) + '/../lib/exceptional'
 Spec::Runner.configure do |config|
 
   #Runcoderun.com requires no output from any tests so stubbing
-  config.before(:all) {
+  config.before(:each) {
     Exceptional.stub!(:log!)
     Exceptional.stub!(:to_log)
     Exceptional.stub!(:to_stderr)        

@@ -26,7 +26,7 @@ module Exceptional
 
             if !FileTest.directory?(rails_config_dir)
               STDERR.puts "Invalid Config Directory #{File.expand_path(rails_config_dir)}"
-              raise IOError.new "Invalid Config Directory #{File.expand_path(rails_config_dir)}"
+              raise IOError.new ("Invalid Config Directory #{File.expand_path(rails_config_dir)}")
             end
 
             config_file = File.expand_path(File.join(rails_config_dir, EXCEPTIONAL_CONFIG_FILE))
@@ -34,7 +34,7 @@ module Exceptional
 
           if !FileTest.exists?(config_file)
             STDERR.puts "Exceptional Config File not found #{File.expand_path(config_file)}"
-            raise IOError.new "Exceptional Config File not found #{File.expand_path(config_file)}"
+            raise IOError.new ("Exceptional Config File not found #{File.expand_path(config_file)}")
           end
 
           return config_file
