@@ -19,7 +19,7 @@ describe Exceptional::Log do
 
     Exceptional.setup_log File.dirname(File.join(File.dirname(__FILE__), ".."))
     
-    Exceptional.log.should_receive(:send).with("info", TEST_LOG_MESSAGE)
+    Exceptional.log.should_not_receive(:send).with("info", TEST_LOG_MESSAGE)
     Exceptional.log! TEST_LOG_MESSAGE
   end
 end
