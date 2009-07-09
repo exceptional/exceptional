@@ -3,11 +3,11 @@ Gem::Specification.new do |s|
   s.version  = "0.0.6"
   s.date     = "2008-11-4"
   s.summary  = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
-  s.email    = "david@getexceptional.com"
+  s.email    = "hello@contrast.ie"
   s.homepage = "http://github.com/contrast/exceptional"
   s.description = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
   s.has_rdoc = true
-  s.authors  = ["David Rice", "Paul Campbell"]
+  s.authors  = ["Contrast"]
   s.files    = ["History.txt", 
 		"Manifest", 
 		"README", 
