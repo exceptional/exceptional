@@ -6,7 +6,7 @@ begin
     p.summary      = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
     p.description  = "Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)"
     p.url          = "http://getexceptional.com/"
-    p.author       = ['Contrast']
+    p.author       = ["Contrast"]
     p.email        = "hello@contrast.ie"
     p.dependencies = ["json"]
   end
