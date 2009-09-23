@@ -1,11 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-
 describe Exceptional::Bootstrap do
-
-
   describe "setup" do
-
     TEST_ENVIRONMENT= "development"
 
     it "should initialize the config and log" do
@@ -31,7 +27,6 @@ describe Exceptional::Bootstrap do
       Exceptional.should_receive(:enabled?).and_return(false)
       Exceptional.should_not_receive(:authenticate)
       STDERR.should_not_receive(:puts) # Will silently not enable itself
-
 
       Exceptional.bootstrap(TEST_ENVIRONMENT, File.dirname(__FILE__))
     end

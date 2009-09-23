@@ -1,14 +1,11 @@
 if defined? ActiveSupport
-  
-  # Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard... (TODO: could be cleaner!)
+  # Hack to force Rails version prior to 2.0 to use quoted JSON as per the JSON standard...
   if (defined?(ActiveSupport::JSON) && ActiveSupport::JSON.respond_to?(:unquote_hash_key_identifiers))
     ActiveSupport::JSON.unquote_hash_key_identifiers = false 
   end
-
 end
 
 if defined? ActionController
-
   module ActionController
     class Base
     
@@ -28,5 +25,4 @@ if defined? ActionController
       protected :rescue_action
     end
   end
-
 end

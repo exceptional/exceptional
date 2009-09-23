@@ -1,9 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::ExceptionData do
-  
   describe "with valid base data" do
-    
     before(:each) do
       @exception_data = Exceptional::ExceptionData.new
       @exception_data.exception_class = "Error"
@@ -28,7 +26,5 @@ describe Exceptional::ExceptionData do
     it "should convert to json" do
       @exception_data.to_json.class.should == String
     end
-    
   end
-  
 end

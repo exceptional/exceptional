@@ -1,10 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-
 describe Exceptional::Config do
-  
   before(:all) do
-
     def Exceptional.reset_state
       @api_key = nil
       @ssl_enabled = nil
@@ -14,7 +11,6 @@ describe Exceptional::Config do
       @remote_host = nil
       @applicaton_root = nil
     end
-    
   end
 
   after(:each) do
@@ -27,7 +23,6 @@ describe Exceptional::Config do
   end
   
   describe "default configuration" do
-    
     it "should use port 80 by default if ssl not enabled" do
       Exceptional.ssl_enabled?.should be_false
       Exceptional.remote_port.should == 80
@@ -67,7 +62,6 @@ describe Exceptional::Config do
   end
 
   describe "load config" do
-
     it "error during config file loading raises configuration exception" do
       File.should_receive(:open).once.and_raise(IOError)
       

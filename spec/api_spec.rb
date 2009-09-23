@@ -1,12 +1,9 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-
 describe Exceptional::Api do
-
-
   describe "with no configuration" do
     before(:each) do
-    Exceptional.stub!(:to_stderr) # Don't print error when testing
+      Exceptional.stub!(:to_stderr) # Don't print error when testing
     end
 
     after(:each) do
@@ -23,37 +20,33 @@ describe Exceptional::Api do
 
     it "should parse exception into exception data object" do
       exception = mock(Exception, :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
+                       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
       exception_data = Exceptional.parse(exception)
       exception_data.kind_of?(Exceptional::ExceptionData).should be_true
       exception_data.exception_message.should == exception.message
       exception_data.exception_backtrace.should == exception.backtrace
       exception_data.exception_class.should == exception.class.to_s
-
-
     end
 
     it "should post exception" do
-
       exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception, :to_hash => { :message => "Something bad has happened" })
+                            :message => "Something bad has happened",
+                            :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
+                            :class => Exception, :to_hash => { :message => "Something bad has happened" })
       Exceptional.api_key = "TEST_API_KEY"
       Exceptional.should_receive(:authenticate).once.and_return(true)
       Exceptional.should_receive(:call_remote, :with => [:errors, exception_data]).once
       Exceptional.post(exception_data)
-
     end
 
     it "should catch exception" do
       exception = mock(Exception, :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
+                       :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
 
       exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception, :to_hash => { :message => "Something bad has happened" })
+                            :message => "Something bad has happened",
+                            :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
+                            :class => Exception, :to_hash => { :message => "Something bad has happened" })
       exception_data.should_receive(:controller_name=).with(File.basename($0))
 
       Exceptional.should_receive(:parse, :with => [exception]).and_return(exception_data)
@@ -64,35 +57,33 @@ describe Exceptional::Api do
 
     it "should raise a license exception if api key is not set" do
       exception_data = mock(Exceptional::ExceptionData,
-      :message => "Something bad has happened",
-      :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
-      :class => Exception,
-      :to_hash => { :message => "Something bad has happened" })
+                            :message => "Something bad has happened",
+                            :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"],
+                            :class => Exception,
+                            :to_hash => { :message => "Something bad has happened" })
       Exceptional.api_key.should == nil
       lambda { Exceptional.post(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
 
   describe "rescue" do
-
     it "should send exception data onto catch" do
       Exceptional.should_receive(:catch)
       lambda{ Exceptional.rescue do
         raise IOError
       end}.should raise_error(IOError)
-
     end
   end
 
   describe "handle" do
     before(:each) do
-    Exceptional.stub!(:to_stderr) # Don't print error when testing
-    Exceptional.stub!(:log!) # Don't even attempt to log
+      Exceptional.stub!(:to_stderr) # Don't print error when testing
+      Exceptional.stub!(:log!) # Don't even attempt to log
     end
 
     it "should send exception data onto post" do
       exception = mock(Exception, :message => "Something bad has happened",
-      :backtrace => "/app/controllers/buggy_controller.rb:29:in `index'")
+                       :backtrace => "/app/controllers/buggy_controller.rb:29:in `index'")
 
       controller = mock("controller", :controller_name => "Test Controller Name", :action_name => "Test Action Name")
 
@@ -119,20 +110,20 @@ describe Exceptional::Api do
     end
 
     it "safe_environment() should handle array type parameters" do
-      
-      request = mock(request, :env => { 
-          'string_array_var' => ['value', 'another value'], 
-          'bool_array_var' => [false, false, true],
-          'numb_array_var' => [3,2,1],
-          'nil_array_var' => [nil, nil],
-          'non_ack' => 'value2' }
-          )
-      Exceptional.send(:safe_environment, request).should == { 
-        'string_array_var' => ['value', 'another value'], 
-        'bool_array_var' => [false, false, true],
-        'numb_array_var' => [3,2,1],
-        'nil_array_var' => [nil, nil],
-        'non_ack' => 'value2' }
+
+      request = mock(request, :env => {
+              'string_array_var' => ['value', 'another value'],
+              'bool_array_var' => [false, false, true],
+              'numb_array_var' => [3, 2, 1],
+              'nil_array_var' => [nil, nil],
+              'non_ack' => 'value2' }
+      )
+      Exceptional.send(:safe_environment, request).should == {
+              'string_array_var' => ['value', 'another value'],
+              'bool_array_var' => [false, false, true],
+              'numb_array_var' => [3, 2, 1],
+              'nil_array_var' => [nil, nil],
+              'non_ack' => 'value2' }
 
     end
 
@@ -143,7 +134,6 @@ describe Exceptional::Api do
       mock_session.should_receive(:instance_variable_get).with('var2').and_return('value2')
       Exceptional.send(:safe_session, mock_session).should == { 'var1' => ['value', 'another value'], 'var2' => 'value2' }
     end
-
 
     it "safe_session() should filter all /db/, /cgi/ variables and sub @ for blank" do
       class SessionHelper
@@ -158,54 +148,35 @@ describe Exceptional::Api do
       Exceptional.send(:safe_session, session).should == { 'some_var' => 1 }
     end
 
+    class ClassWithCircularReferenceToHash
+      def initialize
+        @test = self
+      end
+
+      def to_hash
+        { :test => self }
+      end
+    end
+
     it "sanitize_hash() should sanitize cyclic problem for to_json" do
-      class MyClass
-        def initialize
-          @test = self
-        end
+      circular = ClassWithCircularReferenceToHash.new
 
-        def to_hash
-          { :test => self }
-        end
-      end
-      my_class = MyClass.new
-      
-      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, my_class.to_hash).to_json.should == "{}"
+      lambda { circular.to_json }.should raise_error
+      Exceptional.send(:sanitize_hash, circular.to_hash).to_json.should == "{}"
     end
-    
+
     it "sanitize_hash() should sanitize cyclic problem for to_json passing hash" do
-      class MyClass
-        def initialize
-          @test = self
-        end
+      circular = ClassWithCircularReferenceToHash.new
 
-        def to_hash
-          { :test => self }
-        end
-      end
-      my_class = MyClass.new
-      
-      
-      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, {'hkey' => my_class}).to_json.should == "{}"
+      lambda { circular.to_json }.should raise_error
+      Exceptional.send(:sanitize_hash, {'hkey' => circular}).to_json.should == "{}"
     end
-    
-    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash mult params" do
-      class MyClass
-        def initialize
-          @test = self
-        end
 
-        def to_hash
-          { :test => self }
-        end
-      end
-      my_class = MyClass.new
-      
-      
-      lambda { my_class.to_json }.should raise_error(ActiveSupport::JSON::CircularReferenceError)
-      Exceptional.send(:sanitize_hash, {'hkey' => my_class, 'ruby' => 'tuesday'}).to_json.should == "{\"ruby\": \"tuesday\"}"
+    it "sanitize_hash() should sanitize cyclic problem for to_json passing hash mult params" do
+      circular = ClassWithCircularReferenceToHash.new
+
+      lambda { circular.to_json }.should raise_error
+      Exceptional.send(:sanitize_hash, {'hkey' => circular, 'ruby' => 'tuesday'}).should == {'ruby' => 'tuesday'}
     end
   end
 end

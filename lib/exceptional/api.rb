@@ -1,8 +1,6 @@
 require 'json' unless defined? Rails
 
-
 module Exceptional
-
   module Api
     # parse an exception into an ExceptionData object
     def parse(exception)

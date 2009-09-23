@@ -5,14 +5,12 @@ describe Exceptional::Log do
   TEST_LOG_MESSAGE = "Test-log-message"
 
   it "uninitialized should only log to STDERR" do
-    
     STDERR.should_receive(:puts)
     Logger.should_not_receive(:send)
     Exceptional.log! TEST_LOG_MESSAGE
   end
 
   it "initialized should log to both STDERR and log file" do
-    
     mock_log = mock("log")
     mock_log.should_receive(:level=)
     

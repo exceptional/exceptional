@@ -27,7 +27,6 @@ describe Exceptional::Remote do
   end
 
   describe "authentication" do
-
     it "should not be authenticated if API authentication unsuccessful" do
       Exceptional.api_key = TEST_API_KEY
 
@@ -69,9 +68,7 @@ describe Exceptional::Remote do
   end
 
   describe "sending data " do
-
     it "should return response body if successful" do
-
       OK_RESPONSE_BODY = "OK-RESP-BODY"
       
       Exceptional.api_key = TEST_API_KEY
@@ -92,7 +89,6 @@ describe Exceptional::Remote do
     end
     
     it "should raise error if network problem during sending exception" do
-
       Exceptional.api_key = TEST_API_KEY
       Exceptional.authenticated?.should be_false
 
@@ -112,7 +108,6 @@ describe Exceptional::Remote do
     end
 
     it "should raise Exception if sending exception unsuccessful" do
-
       Exceptional.api_key = TEST_API_KEY
       Exceptional.authenticated?.should be_false
 

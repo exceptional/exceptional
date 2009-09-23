@@ -1,8 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-
 describe Exceptional do
-
   describe "with no configuration" do
     before(:each) do
       Exceptional.stub!(:to_stderr) # Don't print error when testing
@@ -21,5 +19,4 @@ describe Exceptional do
       lambda { Exceptional.post_exception(exception_data) }.should raise_error(Exceptional::Config::ConfigurationException)
     end
   end
-  
 end

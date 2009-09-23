@@ -9,7 +9,6 @@ require 'exceptional/api'
 require 'exceptional/bootstrap'
 
 module Exceptional
-
   class << self
     include Exceptional::Config
     include Exceptional::Api
