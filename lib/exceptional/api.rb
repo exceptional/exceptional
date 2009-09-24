@@ -2,15 +2,6 @@ require 'json' unless defined? Rails
 
 module Exceptional
   module Api
-    # parse an exception into an ExceptionData object
-    def parse(exception)
-      exception_data = ExceptionData.new
-      exception_data.exception_backtrace = exception.backtrace
-      exception_data.exception_message = exception.message
-      exception_data.exception_class = exception.class.to_s
-      exception_data
-    end
-
     # post the given exception data to getexceptional.com
     def post(exception_data)
       hash = exception_data.to_hash
@@ -27,20 +18,20 @@ module Exceptional
     def handle(exception, controller, request, params)
       Exceptional.log! "Handling #{exception.message}", 'info'
       begin
-        e = parse(exception)
+        exception_data = ExceptionData.new(exception)
         # Additional data for Rails Exceptions
-        e.framework = "rails"
-        e.controller_name = controller.controller_name
-        e.action_name = controller.action_name
-        e.application_root = Exceptional.application_root
-        e.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
-        e.environment = request.env.to_hash
-        e.url = "#{request.protocol}#{request.host}#{request.request_uri}"
-        e.environment = safe_environment(request)
-        e.session = safe_session(request.session)
-        e.parameters = sanitize_hash(params.to_hash)
+        exception_data.framework = "rails"
+        exception_data.controller_name = controller.controller_name
+        exception_data.action_name = controller.action_name
+        exception_data.application_root = Exceptional.application_root
+        exception_data.occurred_at = Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+        exception_data.environment = request.env.to_hash
+        exception_data.url = "#{request.protocol}#{request.host}#{request.request_uri}"
+        exception_data.environment = safe_environment(request)
+        exception_data.session = safe_session(request.session)
+        exception_data.parameters = sanitize_hash(params.to_hash)
 
-        post(e)
+        post(exception_data)
       rescue Exception => exception
         Exceptional.log! "Error preparing exception data."
         Exceptional.log! exception.message
@@ -61,7 +52,7 @@ module Exceptional
     end
 
     def catch(exception)
-      exception_data = parse(exception)
+      exception_data = ExceptionData.new(exception)
       exception_data.controller_name = File.basename($0)
       post(exception_data)
     end

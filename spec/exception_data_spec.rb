@@ -3,10 +3,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Exceptional::ExceptionData do
   describe "with valid base data" do
     before(:each) do
-      @exception_data = Exceptional::ExceptionData.new
-      @exception_data.exception_class = "Error"
-      @exception_data.exception_message = "There was an error"
-      @exception_data.exception_backtrace = "/var/www/app/fail.rb:42 Error('There was an error')"
+      exception = mock('Exception', :backtrace => "/var/www/app/fail.rb:42 Error('There was an error')", :message => "There was an error", :class => 'Error')
+      @exception_data = Exceptional::ExceptionData.new(exception)
     end
     
     it "language should be ruby" do

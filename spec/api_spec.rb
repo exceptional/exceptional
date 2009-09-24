@@ -21,7 +21,7 @@ describe Exceptional::Api do
     it "should parse exception into exception data object" do
       exception = mock(Exception, :message => "Something bad has happened",
                        :backtrace => ["/app/controllers/buggy_controller.rb:29:in `index'"])
-      exception_data = Exceptional.parse(exception)
+      exception_data = Exceptional::ExceptionData.new(exception)
       exception_data.kind_of?(Exceptional::ExceptionData).should be_true
       exception_data.exception_message.should == exception.message
       exception_data.exception_backtrace.should == exception.backtrace
@@ -49,7 +49,7 @@ describe Exceptional::Api do
                             :class => Exception, :to_hash => { :message => "Something bad has happened" })
       exception_data.should_receive(:controller_name=).with(File.basename($0))
 
-      Exceptional.should_receive(:parse, :with => [exception]).and_return(exception_data)
+      Exceptional::ExceptionData.should_receive(:new).with(exception).and_return(exception_data)
       Exceptional.should_receive(:post, :with => [exception_data])
 
       Exceptional.catch(exception)

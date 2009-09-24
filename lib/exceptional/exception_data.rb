@@ -15,10 +15,13 @@ module Exceptional
     end
     attr_reader   :language
 
-    def initialize
+    def initialize(exception)
       environment = {}
       session = {}
       parameters = {}
+      self.exception_backtrace = exception.backtrace
+      self.exception_message = exception.message
+      self.exception_class = exception.class.to_s
       @language = ::LANGUAGE
     end
     

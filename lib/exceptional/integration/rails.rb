@@ -10,14 +10,16 @@ if defined? ActionController
     class Base
     
       def rescue_action_with_exceptional(exception)
-        # TODO potentially hook onto rescue_without_handler if it exists? would negate need to check handler_for_rescue every time.
-        # if there's handler defined with rescue_from() do not call Exceptional
-        if !(respond_to?(:handler_for_rescue) && handler_for_rescue(exception))
+        unless exception_will_be_handled_by_rescue_from?(exception)
           params_to_send = (respond_to? :filter_parameters) ? filter_parameters(params) : params
           Exceptional.handle(exception, self, request, params_to_send)
         end
-            
-        rescue_action_without_exceptional exception
+        rescue_action_without_exceptional(exception)
+      end
+
+      def exception_will_be_handled_by_rescue_from?(exception)
+        # don't report to exceptional if app has custom rescue_from for particular exception
+        respond_to?(:handler_for_rescue) && handler_for_rescue(exception)
       end
     
       alias_method :rescue_action_without_exceptional, :rescue_action
