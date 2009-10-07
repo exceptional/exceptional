@@ -1,74 +1,59 @@
-require 'yaml'
-
 module Exceptional
-  module Config
+  class Config
+    class << self
+      DEFAULTS = {
+          :ssl_enabled => false,
+          :remote_host_http => 'api.getexceptional.com',
+          :remote_port_http => 80,
+          :remote_host_https => 'getexceptional.appspot.com',
+          :remote_port_https => 443,
+          :disabled_by_default => %w(development test)
+      }
 
-    # Defaults for configuration variables
-    REMOTE_HOST = "getexceptional.com"
-    REMOTE_PORT = 80
-    REMOTE_SSL_PORT = 443
-    SSL = false
-    LOG_LEVEL = 'info'
-    LOG_PATH = nil
+      attr_accessor :api_key
+      attr_writer :ssl_enabled
 
-    class ConfigurationException < StandardError; end
-
-    attr_reader :api_key
-    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key
-
-    def setup_config(environment, config_file)
-      begin
-        config = YAML::load(File.open(config_file))[environment]
-        @api_key = config['api-key'] unless config['api-key'].nil?
-        @ssl_enabled = config['ssl'] unless config['ssl'].nil?
-        @log_level = config['log-level'] unless config['log-level'].nil?
-        @enabled = config['enabled'] unless config['enabled'].nil?
-        @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
-        @remote_host = config['remote-host'] unless config['remote-host'].nil?
-        @applicaton_root = application_root
-
-        log_config_info
-      rescue Exception => e
-        raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
+      def load(application_root, environment)
+        config_file = "#{application_root}/config/exceptional.yml"
+        @application_root = application_root
+        @environment = environment
+        begin
+          if (File.file?(config_file))
+            config = YAML::load(File.open(config_file))[environment]
+            @api_key = config['api-key'] unless config['api-key'].nil?
+            @ssl_enabled = config['ssl'] unless config['ssl'].nil?
+            @enabled = config['enabled'] unless config['enabled'].nil?
+            @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
+            @remote_host = config['remote-host'] unless config['remote-host'].nil?
+          end
+        rescue Exception => e
+          raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
+        end
       end
-    end
 
-    def application_root
-      @applicaton_root || (File.dirname(__FILE__) + '/../..')
-    end
+      def enabled?
+        @enabled ||= DEFAULTS[:disabled_by_default].include?(@environment) ? false : true 
+      end
 
-    def remote_host
-      @remote_host || REMOTE_HOST
-    end
+      def application_root
+        @applicaton_root ||= File.expand_path(File.dirname(__FILE__) + '/../../../../../')
+      end
 
-    def remote_port
-      @remote_port || default_port
-    end
+      def ssl_enabled?
+        @ssl_enabled ||= DEFAULTS[:ssl_enabled]
+      end
 
-    def log_level
-      @log_level || LOG_LEVEL
-    end
+      def remote_host
+        @remote_host ||= ssl_enabled? ? DEFAULTS[:remote_host_https] : DEFAULTS[:remote_host_http]
+      end
 
-    def default_port
-      ssl_enabled? ? REMOTE_SSL_PORT : REMOTE_PORT
-    end
+      def remote_port
+        @remote_port ||= ssl_enabled? ? DEFAULTS[:remote_port_https] : DEFAULTS[:remote_port_http]
+      end
 
-    def ssl_enabled?
-      @ssl_enabled || SSL
-    end
-
-    def enabled?
-      @enabled || false
-    end
-
-    def valid_api_key?
-      @api_key && @api_key.length == 40 ? true : false
-    end
-
-    def log_config_info
-      Exceptional.to_log('debug', "API Key: #{api_key}")
-      Exceptional.to_log('debug', "Remote Host: #{remote_host}:#{remote_port}")
-      Exceptional.to_log('debug', "Log level: #{log_level}")
+      def reset
+        @ssl_enabled = @remote_host = @remote_port = @api_key = nil
+      end
     end
   end
 end
