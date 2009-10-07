@@ -1,8 +1,9 @@
+require 'rubygems'
 begin
   require 'ginger'
 rescue LoadError
+  raise "cant load ginger"
 end
-require 'rubygems'
 gem 'rails'
 require File.dirname(__FILE__) + '/../lib/exceptional' unless defined?(Exceptional)
 

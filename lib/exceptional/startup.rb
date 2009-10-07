@@ -3,11 +3,11 @@ module Exceptional
   end
   class Startup
     class << self
-      def announce_and_authenticate
+      def announce
         if Config.api_key.blank?
           raise StartupException, 'API Key must be configured (/config/exceptional.yml)'
         end
-        Remote.announce(Config.api_key, {:client_name => Exceptional::CLIENT_NAME, :client_version => Exceptional::VERSION,
+        Remote.announce({:client_name => Exceptional::CLIENT_NAME, :client_version => Exceptional::VERSION,
                                          :protocol_version => Exceptional::PROTOCOL_VERSION,
                                          :language => 'ruby',
                                          :library_information => {

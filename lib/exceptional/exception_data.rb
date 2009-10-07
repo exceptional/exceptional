@@ -6,13 +6,22 @@ module Exceptional
 
     def to_hash
       hash = {
-          'exception' => {
-              'exception_class' => @exception.class.to_s,
-              'exception_message' => @exception.message,
-              'exception_backtrace' => @exception.backtrace
-          }
+        'client' => {
+          'name' => Exceptional::CLIENT_NAME,
+          'version' => Exceptional::VERSION
+          },
+        'exception' => {
+          'exception_class' => @exception.class.to_s,
+          'message' => @exception.message,
+          'backtrace' => @exception.backtrace,
+          'occurred_at' => Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+        }
       }
       hash
     end
-   end
+
+    def to_json
+      to_hash.to_json
+    end
+  end
 end
