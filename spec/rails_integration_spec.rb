@@ -31,6 +31,7 @@ describe TestingController do
   end
 
   it "still return an error response to the user" do
+    Exceptional::Catcher.stub!(:handle)
     request(:raises_something)
     @response.code.should == '500'
   end
