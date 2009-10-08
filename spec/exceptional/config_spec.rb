@@ -25,4 +25,19 @@ describe Exceptional::Config, 'defaults' do
       Exceptional::Config.enabled?.should == true
     end
   end
+  it "will allow a new simpler format for exception.yml" do
+    Exceptional::Config.load('','production','spec/fixtures/exceptional.yml')
+    Exceptional::Config.api_key.should == 'abc123'
+    Exceptional::Config.ssl_enabled?.should == true
+    Exceptional::Config.remote_host.should == 'example.com'
+    Exceptional::Config.remote_port.should == 123
+    Exceptional::Config.enabled?.should == true
+  end
+
+  it "will allow olded format for exception.yml" do
+    Exceptional::Config.load('','production','spec/fixtures/exceptional_old.yml')
+    Exceptional::Config.api_key.should == 'abc123'
+    Exceptional::Config.ssl_enabled?.should == true
+    Exceptional::Config.enabled?.should == true
+  end
 end

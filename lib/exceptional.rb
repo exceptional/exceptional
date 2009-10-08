@@ -10,4 +10,8 @@ module Exceptional
   PROTOCOL_VERSION = 5
   VERSION = '0.2.0'
   CLIENT_NAME = 'getexceptional-rails-plugin'
+
+  def self.logger
+    ::Exceptional::Logger.logger
+  end
 end

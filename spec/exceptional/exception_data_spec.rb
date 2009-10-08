@@ -6,19 +6,98 @@ class Exceptional::FunkyError < StandardError
   end
 end
 
-describe Exceptional::ExceptionData do
-  it "create hash for exception only" do
-    Time.stub!(:now).and_return(now = Time.mktime(1970,1,1))
+describe Exceptional::ExceptionData, 'when no request/controller/params' do
+  before :each do
+    ENV['LOGNAME'] = 'bob'
+    ENV['SOMEVAR'] = 'something'
+    ENV['HTTP_SOMETHING'] = 'should be stripped'
+    Exceptional::Config.application_root = Dir.pwd
+    Time.stub!(:now).and_return(Time.mktime(1970,1,1))
     error = Exceptional::FunkyError.new('some message')
     data = Exceptional::ExceptionData.new(error)
-    hash = data.to_hash
-    error_hash = hash['exception']
+    @hash = data.to_hash
+  end
+
+  it "capture exception details" do
+    error_hash = @hash['exception']
     error_hash['exception_class'].should == 'Exceptional::FunkyError'
     error_hash['message'].should == 'some message'
     error_hash['backtrace'].should == 'backtrace'
-    error_hash['occurred_at'].should == now.strftime("%Y%m%d %H:%M:%S %Z")
-    client_hash = hash['client']
+    error_hash['occurred_at'].should == Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+    client_hash = @hash['client']
     client_hash['name'].should == Exceptional::CLIENT_NAME
     client_hash['version'].should == Exceptional::VERSION    
+    client_hash['protocol_version'].should == Exceptional::PROTOCOL_VERSION
+  end
+
+  it "capture application_environment" do
+    application_env_hash = @hash['application_environment']
+    application_env_hash['environment'].should == 'test'
+    application_env_hash['env'].should_not be_nil
+    application_env_hash['env']['SOMEVAR'].should == 'something'
+    application_env_hash['host'].should == `hostname`.strip
+    application_env_hash['run_as_user'].should == 'bob'
+    application_env_hash['application_root_directory'].should == Dir.pwd
+    application_env_hash['language'].should == 'ruby'
+    application_env_hash['language_version'].should == "#{RUBY_VERSION} p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE} #{RUBY_PLATFORM}"
+    application_env_hash['framework'].should == "rails"
+    application_env_hash['libraries_loaded']['rails'].should =~ /\d\.\d\.\d/
+  end
+end
+
+describe Exceptional::ExceptionData, 'with request/controller/params' do
+  class Exceptional::SomeController < ActionController::Base
+    if(self.respond_to?(:filter_parameter_logging))
+      filter_parameter_logging :filter_me
+    end
+  end
+  
+  before :each do
+    @controller = Exceptional::SomeController.new
+    @request = ActionController::TestRequest.new({'action' => 'some_action' })
+    @request.request_uri = '/some_path?var1=abc' 
+    @request.stub!(:parameters).and_return({'var1' => 'abc', 'action' => 'some_action', 'filter_me' => 'private'})
+    @request.stub!(:request_method).and_return(:get)
+    @request.stub!(:remote_ip).and_return('1.2.3.4')
+    @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html'})
+    error = Exceptional::FunkyError.new('some message')
+    data = Exceptional::ExceptionData.new(error, @controller, @request)
+    @hash = data.to_hash
+  end
+  it "captures request" do
+    request_hash = @hash['request']
+    request_hash['url'].should == 'http://test.host/some_path?var1=abc'
+    request_hash['controller'].should == 'Exceptional::SomeController'
+    request_hash['action'].should == 'some_action'
+    request_hash['parameters'].should == {'var1' => 'abc', 'action' => 'some_action', 'filter_me' => '[FILTERED]'}
+    request_hash['request_method'].should == 'get'
+    request_hash['remote_ip'].should == '1.2.3.4'
+    request_hash['headers'].should == {'Content-Type' => 'text/html'}
+  end
+
+  it "filter out objects that aren't jsonable" do
+    class Crazy
+    def initialize
+      @bar = self
+    end
+    end
+    crazy = Crazy.new
+    input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
+    Exceptional::ExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
+  end
+
+  it "handles session objects with various interfaces" do
+    class SessionWithInstanceVariables
+      def initialize
+        @data = {'a' => '1'}
+        @session_id = '123'
+      end
+    end
+    session = SessionWithInstanceVariables.new
+    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    session = mock('session', :session_id => '123', :instance_variable_get => {'a' => '1'})
+    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    session = mock('session', :session_id => nil, :to_hash => {:session_id => '123', 'a' => '1'})
+    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
   end
 end

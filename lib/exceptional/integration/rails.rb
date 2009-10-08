@@ -8,7 +8,7 @@ if defined? ActionController
     class Base
       def rescue_action_with_exceptional(exception)
         unless exception_handled_by_rescue_from?(exception)
-          Exceptional::Catcher.handle(exception, self, request, params)
+          Exceptional::Catcher.handle(exception, self, request)
         end
         rescue_action_without_exceptional exception
       end

@@ -1,0 +1,4 @@
+api-key: abc123
+ssl: true
+remote-port: 123
+remote-host: example.com

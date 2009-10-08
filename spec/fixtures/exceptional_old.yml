@@ -1,7 +1,7 @@
 # here are the settings that are common to all environments
 common: &default_settings
   # You must specify your Exceptional API key here.
-  api-key: PASTE_YOUR_API_KEY_HERE
+  api-key: abc123
   # Exceptional creates a separate log file from your application's logs
   # available levels are debug, info, warn, error, fatal
   log-level: info
@@ -26,6 +26,7 @@ test:
 production:
   <<: *default_settings
   enabled: true
+  ssl: true
 
 staging:
   # It's common development practice to have a staging environment that closely

@@ -25,14 +25,13 @@ describe TestingController do
   end
 
   it 'handle exception with Exceptional::Catcher' do
-    params = {'a' => 1, 'b' => 2}
-    Exceptional::Catcher.should_receive(:handle).with(an_instance_of(StandardError), @controller, an_instance_of(ActionController::TestRequest), params.merge('action' => 'raises_something'))
-    request(:raises_something, :get, nil, params)
+    Exceptional::Catcher.should_receive(:handle).with(an_instance_of(StandardError), @controller, an_instance_of(ActionController::TestRequest))
+    send_request(:raises_something)
   end
 
   it "still return an error response to the user" do
     Exceptional::Catcher.stub!(:handle)
-    request(:raises_something)
+    send_request(:raises_something)
     @response.code.should == '500'
   end
 end
@@ -59,11 +58,11 @@ if ActionController::Base.respond_to?(:rescue_from)
 
     it 'not handle exception with Exceptional that is dealt with by rescue_from' do
       Exceptional::Catcher.should_not_receive(:handle)
-      request(:raises_custom_error)
+      send_request(:raises_custom_error)
     end
     it 'handle exception with Exceptional that is not dealt with by rescue_from' do
       Exceptional::Catcher.should_receive(:handle)
-      request(:raises_other_error)
+      send_request(:raises_other_error)
     end
   end
 end
