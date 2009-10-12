@@ -47,9 +47,7 @@ end
 
 describe Exceptional::ExceptionData, 'with request/controller/params' do
   class Exceptional::SomeController < ActionController::Base
-    if(self.respond_to?(:filter_parameter_logging))
       filter_parameter_logging :filter_me
-    end
   end
   
   before :each do
@@ -77,9 +75,9 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
 
   it "filter out objects that aren't jsonable" do
     class Crazy
-    def initialize
-      @bar = self
-    end
+      def initialize
+        @bar = self
+      end
     end
     crazy = Crazy.new
     input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
@@ -99,5 +97,11 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     session = mock('session', :session_id => nil, :to_hash => {:session_id => '123', 'a' => '1'})
     Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+  end
+
+  it "filter session cookies from headers" do
+    @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_COOKIE' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=BAh7DDoMbnVtYmVyc1sJaQZpB2kIaQk6FnNvbWVfY3Jhenlfb2JqZWN0bzobU3Bpa2VDb250cm9sbGVyOjpDcmF6eQY6CUBiYXJABzoTc29tZXRoaW5nX2Vsc2UiCGNjYzoKYXBwbGUiDUJyYWVidXJuOgloYXNoewdpBmkHaQhpCToPc2Vzc2lvbl9pZCIlMmJjZTM4MjVjMThkNzYxOWEyZDA4NTJhNWY1NGQzMmU6C3RvbWF0byIJQmVlZg%3D%3D--66fb4606851f06bf409b8bc4ba7aea47a0259bf7'})
+    @hash = Exceptional::ExceptionData.new(Exceptional::FunkyError.new('some message'), @controller, @request).to_hash
+    @hash['request']['headers'].should == {'Cookie' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=[FILTERED]'}
   end
 end

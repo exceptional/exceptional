@@ -10,7 +10,7 @@ module Exceptional
       end
 
       def error(json_data)
-        url = "/errors?api_key=#{Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
+        url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
         compressed = Zlib::Deflate.deflate(json_data,Zlib::BEST_SPEED)
         call_remote(url, compressed)
       end

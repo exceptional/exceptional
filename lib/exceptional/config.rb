@@ -25,8 +25,8 @@ module Exceptional
             @enabled = env_config['enabled']
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
             @remote_host = config['remote-host'] unless config['remote-host'].nil?
-#          rescue Exception => e
-#            raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
+          rescue Exception => e
+            raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
           end
         end
       end

@@ -62,12 +62,15 @@ module Exceptional
     end
 
     def extract_http_headers(env)
-      http_headers = {}
+      headers = {}
       env.select{|k, v| k =~ /^HTTP_/}.each do |name, value|
         proper_name = name.sub(/^HTTP_/, '').split('_').map{|upper_case| upper_case.capitalize}.join('-')
-        http_headers[proper_name] = value
+        headers[proper_name] = value
       end
-      http_headers
+      unless headers['Cookie'].nil?
+        headers['Cookie'] = headers['Cookie'].sub(/_session=\S+/, '_session=[FILTERED]')
+      end
+      headers
     end
 
     def to_json
