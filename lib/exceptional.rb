@@ -2,6 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'exceptional/catcher'
 require 'exceptional/startup'
+require 'exceptional/logger'
 require 'exceptional/config'
 require 'exceptional/exception_data'
 require 'exceptional/remote'
