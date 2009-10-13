@@ -25,7 +25,7 @@ describe Exceptional::Config, 'defaults' do
       Exceptional::Config.enabled?.should == true
     end
   end
-  it "will allow a new simpler format for exception.yml" do
+  it "allow a new simpler format for exception.yml" do
     Exceptional::Config.load('','production','spec/fixtures/exceptional.yml')
     Exceptional::Config.api_key.should == 'abc123'
     Exceptional::Config.ssl_enabled?.should == true
@@ -34,10 +34,16 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.enabled?.should == true
   end
 
-  it "will allow olded format for exception.yml" do
+  it "allow olded format for exception.yml" do
     Exceptional::Config.load('','production','spec/fixtures/exceptional_old.yml')
     Exceptional::Config.api_key.should == 'abc123'
     Exceptional::Config.ssl_enabled?.should == true
     Exceptional::Config.enabled?.should == true
+  end
+
+  it "load api_key from environment variable" do
+    ENV.should_receive(:[]).with('EXCEPTIONAL_API_KEY').any_number_of_times.and_return('98765')
+    Exceptional::Config.load('','production')
+    Exceptional::Config.api_key.should == '98765'
   end
 end

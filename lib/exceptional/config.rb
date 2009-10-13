@@ -29,6 +29,7 @@ module Exceptional
             raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
           end
         end
+        @api_key = ENV['EXCEPTIONAL_API_KEY'] unless ENV['EXCEPTIONAL_API_KEY'].nil? 
       end
 
       def enabled?
