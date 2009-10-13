@@ -9,10 +9,12 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.remote_host.should == 'api.getexceptional.com'
     Exceptional::Config.remote_port.should == 80
     Exceptional::Config.application_root.should == File.expand_path('./../../..')
-    Exceptional::Config.proxy_host.should be_nil
-    Exceptional::Config.proxy_port.should be_nil
-    Exceptional::Config.proxy_username.should be_nil
-    Exceptional::Config.proxy_password.should be_nil
+    Exceptional::Config.http_proxy_host.should be_nil
+    Exceptional::Config.http_proxy_port.should be_nil
+    Exceptional::Config.http_proxy_username.should be_nil
+    Exceptional::Config.http_proxy_password.should be_nil
+    Exceptional::Config.http_open_timeout.should == 2
+    Exceptional::Config.http_read_timeout.should == 4
   end
   it "have correct defaults when ssl_enabled" do
     Exceptional::Config.ssl_enabled = true
@@ -36,10 +38,12 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.remote_host.should == 'example.com'
     Exceptional::Config.remote_port.should == 123
     Exceptional::Config.enabled?.should == true
-    Exceptional::Config.proxy_host.should == 'annoying-proxy.example.com'
-    Exceptional::Config.proxy_port.should == 1066
-    Exceptional::Config.proxy_username.should == 'bob'
-    Exceptional::Config.proxy_password.should == 'jack'
+    Exceptional::Config.http_proxy_host.should == 'annoying-proxy.example.com'
+    Exceptional::Config.http_proxy_port.should == 1066
+    Exceptional::Config.http_proxy_username.should == 'bob'
+    Exceptional::Config.http_proxy_password.should == 'jack'
+    Exceptional::Config.http_open_timeout.should == 5
+    Exceptional::Config.http_read_timeout.should == 10
   end
   it "allow olded format for exception.yml" do
     Exceptional::Config.load('','production','spec/fixtures/exceptional_old.yml')
@@ -47,7 +51,6 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.ssl_enabled?.should == true
     Exceptional::Config.enabled?.should == true
   end
-
   it "load api_key from environment variable" do
     ENV.should_receive(:[]).with('EXCEPTIONAL_API_KEY').any_number_of_times.and_return('98765')
     Exceptional::Config.load('','production')
