@@ -11,6 +11,7 @@ module Exceptional
       }
 
       attr_accessor :api_key, :application_root
+      attr_accessor :proxy_host, :proxy_port, :proxy_username, :proxy_password
       attr_writer :ssl_enabled
 
       def load(application_root, environment, config_file=nil)
@@ -21,6 +22,10 @@ module Exceptional
             config = YAML::load(File.open(config_file))
             env_config = config[environment] || {}
             @api_key = config['api-key'] || env_config['api-key']
+            @proxy_host = config['proxy-host']
+            @proxy_port = config['proxy-port']
+            @proxy_username = config['proxy-username']
+            @proxy_password = config['proxy-password'] 
             @ssl_enabled = config['ssl'] || env_config['ssl']
             @enabled = env_config['enabled']
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?

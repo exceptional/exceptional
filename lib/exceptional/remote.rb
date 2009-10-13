@@ -16,8 +16,13 @@ module Exceptional
       end
 
       def call_remote(url, data)
-        client = Net::HTTP.new(Exceptional::Config.remote_host, Exceptional::Config.remote_port)
-        client.use_ssl = true if Exceptional::Config.ssl_enabled?
+        config = Exceptional::Config
+        optional_proxy = Net::HTTP::Proxy(config.proxy_host,
+                                          config.proxy_port,
+                                          config.proxy_user,
+                                          config.proxy_pass)
+        client = optional_proxy.new(config.remote_host, config.remote_port)
+        client.use_ssl = true if config.ssl_enabled?
         client.post(url, data)
       end
     end

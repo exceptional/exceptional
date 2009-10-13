@@ -2,3 +2,7 @@ api-key: abc123
 ssl: true
 remote-port: 123
 remote-host: example.com
+proxy-host: annoying-proxy.example.com
+proxy-port: 1066
+proxy-username: bob
+proxy-password: jack

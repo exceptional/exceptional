@@ -9,6 +9,10 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.remote_host.should == 'api.getexceptional.com'
     Exceptional::Config.remote_port.should == 80
     Exceptional::Config.application_root.should == File.expand_path('./../../..')
+    Exceptional::Config.proxy_host.should be_nil
+    Exceptional::Config.proxy_port.should be_nil
+    Exceptional::Config.proxy_username.should be_nil
+    Exceptional::Config.proxy_password.should be_nil
   end
   it "have correct defaults when ssl_enabled" do
     Exceptional::Config.ssl_enabled = true
@@ -32,8 +36,11 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.remote_host.should == 'example.com'
     Exceptional::Config.remote_port.should == 123
     Exceptional::Config.enabled?.should == true
+    Exceptional::Config.proxy_host.should == 'annoying-proxy.example.com'
+    Exceptional::Config.proxy_port.should == 1066
+    Exceptional::Config.proxy_username.should == 'bob'
+    Exceptional::Config.proxy_password.should == 'jack'
   end
-
   it "allow olded format for exception.yml" do
     Exceptional::Config.load('','production','spec/fixtures/exceptional_old.yml')
     Exceptional::Config.api_key.should == 'abc123'
