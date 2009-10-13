@@ -38,5 +38,5 @@ desc 'Run specs using ginger'
 task :ginger do
   ARGV.clear
   ARGV << 'spec'
-  load File.join(*%w[bin ginger])
+  load File.join(*%w[spec bin ginger])
 end
