@@ -2,7 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'exceptional/catcher'
 require 'exceptional/startup'
-require 'exceptional/logger'
+require 'exceptional/log_factory'
 require 'exceptional/config'
 require 'exceptional/exception_data'
 require 'exceptional/remote'
@@ -13,6 +13,15 @@ module Exceptional
   CLIENT_NAME = 'getexceptional-rails-plugin'
 
   def self.logger
-    ::Exceptional::Logger.logger
+    ::Exceptional::LogFactory.logger
+  end
+
+  def self.rescue(&block)
+    begin
+      block.call
+    rescue Exception => e
+      Exceptional::Catcher.handle(e)
+      raise(e)
+    end
   end
 end
