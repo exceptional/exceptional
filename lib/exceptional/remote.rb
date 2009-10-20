@@ -34,7 +34,7 @@ module Exceptional
           else
             Exceptional.logger.error('Failed')
           end
-        rescue Error => e
+        rescue Exception => e
           Exceptional.logger.error('Problem notifying Exceptional about the error')
           Exceptional.logger.error(e)
         end

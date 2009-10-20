@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+args = ARGV.dup
+ARGV.clear
+command = args.shift.strip rescue 'help'
+
+case command
+  when 'help'
+    puts <<USAGE
+help # show this usage
+test # send a test exception to exceptional
+USAGE
+  when 'test'
+    puts "Loading Rails environment."
+    require(File.join('config', 'boot'))
+    require(File.join(RAILS_ROOT, 'config', 'environment'))
+    require "exceptional/integration/tester"
+    puts "Sending test exception to Exceptional for api-key: #{Exceptional::Config.api_key}."
+    Exceptional::Integration.test
+    puts "Done."
+end
