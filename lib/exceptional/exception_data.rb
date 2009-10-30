@@ -42,7 +42,7 @@ module Exceptional
             'request_method' => @request.request_method.to_s,
             'remote_ip' => @request.remote_ip,
             'headers' => extract_http_headers(@request.env),
-            'session' => Exceptional::ExceptionData.sanitize_session(@request.session)
+            'session' => Exceptional::ExceptionData.sanitize_session(@request)
           }
         })
       end
@@ -111,9 +111,11 @@ module Exceptional
       {}
     end
 
-    def self.sanitize_session(session)
+    def self.sanitize_session(request)
+      session = request.session
       session_hash = {}
-      session_hash['session_id'] = session.respond_to?(:session_id) ? session.session_id : session.instance_variable_get("@session_id")
+      session_hash['session_id'] = request.session_options.try(:[], :id)
+      session_hash['session_id'] ||= session.respond_to?(:session_id) ? session.session_id : session.instance_variable_get("@session_id")
       session_hash['data'] = session.respond_to?(:to_hash) ? session.to_hash : session.instance_variable_get("@data") || {}
       session_hash['session_id'] ||= session_hash['data'][:session_id] 
       session_hash['data'].delete(:session_id)

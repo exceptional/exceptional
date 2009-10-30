@@ -12,7 +12,7 @@ module Exceptional
       def error(json_data)
         Exceptional.logger.info "Notifying Exceptional about an error"
         url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
-        compressed = Zlib::Deflate.deflate(json_data,Zlib::BEST_SPEED)
+        compressed = Zlib::Deflate.deflate(json_data, Zlib::BEST_SPEED)
         call_remote(url, compressed)
       end
 
@@ -29,10 +29,10 @@ module Exceptional
         begin
           response = client.post(url, data)
           case response
-          when Net::HTTPSuccess
-            Exceptional.logger.info('Successful')
-          else
-            Exceptional.logger.error('Failed')
+            when Net::HTTPSuccess
+              Exceptional.logger.info('Successful')
+            else
+              Exceptional.logger.error('Failed')
           end
         rescue Exception => e
           Exceptional.logger.error('Problem notifying Exceptional about the error')

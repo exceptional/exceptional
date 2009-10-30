@@ -65,7 +65,7 @@ module Exceptional
       end
 
       def reset
-        @ssl_enabled = @remote_host = @remote_port = @api_key = nil
+        @enabled = @ssl_enabled = @remote_host = @remote_port = @api_key = nil
       end
 
       def http_open_timeout

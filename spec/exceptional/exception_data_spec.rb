@@ -91,12 +91,19 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
         @session_id = '123'
       end
     end
+    request = ActionController::TestRequest.new
     session = SessionWithInstanceVariables.new
-    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    request.stub!(:session).and_return(session)
+    request.stub!(:session_options).and_return({})
+    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     session = mock('session', :session_id => '123', :instance_variable_get => {'a' => '1'})
-    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    request.stub!(:session).and_return(session)
+    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     session = mock('session', :session_id => nil, :to_hash => {:session_id => '123', 'a' => '1'})
-    Exceptional::ExceptionData.sanitize_session(session).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    request.stub!(:session).and_return(session)
+    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    request.stub!(:session_options).and_return({:id => 'xyz'})
+    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => 'xyz', 'data' => {'a' => '1'}}
   end
 
   it "filter session cookies from headers" do
