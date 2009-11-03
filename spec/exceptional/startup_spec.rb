@@ -7,15 +7,9 @@ describe Exceptional::Startup, 'announce_and_authenticate' do
   end
   it "calls Remote announce" do
     Exceptional::Config.api_key = '123'
-    Exceptional::Remote.should_receive(:announce).with(hash_including({:client_name => Exceptional::CLIENT_NAME,
-                                                                              :client_version => Exceptional::VERSION,
-                                                                              :protocol_version => Exceptional::PROTOCOL_VERSION,
-                                                                              :language => 'ruby',
-                                                                              :library_information => {
-                                                                                  :ruby_version => anything(),
-                                                                                  :gems => hash_including({'rails' => anything()})
-                                                                              }
-    }))
+    Exceptional::Remote.should_receive(:startup_announce).with(hash_including({'client' => { 'name' => Exceptional::CLIENT_NAME,
+                                                                                     'version' => Exceptional::VERSION,
+                                                                                     'protocol_version' => Exceptional::PROTOCOL_VERSION}}))
     Exceptional::Startup.announce
   end
 end

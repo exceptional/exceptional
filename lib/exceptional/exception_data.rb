@@ -9,31 +9,15 @@ module Exceptional
     end
 
     def to_hash
-      hash = {
-        'client' => {
-          'name' => Exceptional::CLIENT_NAME,
-          'version' => Exceptional::VERSION,
-          'protocol_version' => Exceptional::PROTOCOL_VERSION
-        },
+      hash = ::Exceptional::ApplicationEnvironment.to_hash
+      hash.merge!({
         'exception' => {
           'exception_class' => @exception.class.to_s,
           'message' => @exception.message,
           'backtrace' => @exception.backtrace,
           'occurred_at' => Time.now.strftime("%Y%m%d %H:%M:%S %Z")
-        },
-        'application_environment' => {
-          'environment' => RAILS_ENV,
-          'env' => extract_environment(ENV),
-          'host' => get_hostname,
-          'run_as_user' => get_username,
-          'application_root_directory' => Config.application_root,
-          'language' => 'ruby',
-          'language_version' => "#{RUBY_VERSION} p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE} #{RUBY_PLATFORM}",
-          'framework' => defined?(RAILS_ENV) ? "rails" : nil,
-          'libraries_loaded' => libraries_loaded
-        },
-
         }
+      })
       unless @request.nil?
         hash.merge!({
           'request' => {
@@ -68,10 +52,6 @@ module Exceptional
       end
     end
 
-    def extract_environment(env)
-      env.reject{|k, v| k =~ /^HTTP_/}
-    end
-
     def extract_http_headers(env)
       headers = {}
       env.select{|k, v| k =~ /^HTTP_/}.each do |name, value|
@@ -82,25 +62,6 @@ module Exceptional
         headers['Cookie'] = headers['Cookie'].sub(/_session=\S+/, '_session=[FILTERED]')
       end
       headers
-    end
-
-    def get_hostname
-      require 'socket' unless defined?(Socket)
-      Socket.gethostname
-    rescue
-      'UNKNOWN'
-    end
-
-    def get_username
-      ENV['LOGNAME'] || ENV['USER'] || ENV['USERNAME'] || ENV['APACHE_RUN_USER'] || 'UNKNOWN'
-    end
-
-    def libraries_loaded
-      begin
-        return Hash[*Gem.loaded_specs.map{|name, gem_specification| [name, gem_specification.version.to_s]}.flatten]
-      rescue
-      end
-      {}
     end
 
     def self.sanitize_hash(hash)
@@ -124,7 +85,7 @@ module Exceptional
       session_hash['session_id'] = request.session_options ? request.session_options[:id] : nil
       session_hash['session_id'] ||= session.respond_to?(:session_id) ? session.session_id : session.instance_variable_get("@session_id")
       session_hash['data'] = session.respond_to?(:to_hash) ? session.to_hash : session.instance_variable_get("@data") || {}
-      session_hash['session_id'] ||= session_hash['data'][:session_id] 
+      session_hash['session_id'] ||= session_hash['data'][:session_id]
       session_hash['data'].delete(:session_id)
       ExceptionData.sanitize_hash(session_hash)
     rescue

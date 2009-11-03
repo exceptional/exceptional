@@ -6,8 +6,10 @@ require 'digest/md5'
 module Exceptional
   class Remote
     class << self
-      def announce(startup_data)
-        # post to /announcements
+      def startup_announce(startup_data)
+        url = "/api/announcements?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
+        compressed = Zlib::Deflate.deflate(startup_data.to_json, Zlib::BEST_SPEED)
+        call_remote(url, compressed)
       end
 
       def error(exception_data)
@@ -41,6 +43,7 @@ module Exceptional
           Exceptional.logger.error('Problem notifying Exceptional about the error')
           Exceptional.logger.error(e)
         end
+        nil
       end
     end
   end

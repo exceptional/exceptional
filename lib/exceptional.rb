@@ -4,6 +4,7 @@ require 'exceptional/catcher'
 require 'exceptional/startup'
 require 'exceptional/log_factory'
 require 'exceptional/config'
+require 'exceptional/application_environment'
 require 'exceptional/exception_data'
 require 'exceptional/remote'
 
