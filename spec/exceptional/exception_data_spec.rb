@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'digest/md5'
 
 class Exceptional::FunkyError < StandardError
   def backtrace
@@ -110,5 +111,12 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_COOKIE' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=BAh7DDoMbnVtYmVyc1sJaQZpB2kIaQk6FnNvbWVfY3Jhenlfb2JqZWN0bzobU3Bpa2VDb250cm9sbGVyOjpDcmF6eQY6CUBiYXJABzoTc29tZXRoaW5nX2Vsc2UiCGNjYzoKYXBwbGUiDUJyYWVidXJuOgloYXNoewdpBmkHaQhpCToPc2Vzc2lvbl9pZCIlMmJjZTM4MjVjMThkNzYxOWEyZDA4NTJhNWY1NGQzMmU6C3RvbWF0byIJQmVlZg%3D%3D--66fb4606851f06bf409b8bc4ba7aea47a0259bf7'})
     @hash = Exceptional::ExceptionData.new(Exceptional::FunkyError.new('some message'), @controller, @request).to_hash
     @hash['request']['headers'].should == {'Cookie' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=[FILTERED]'}
+  end
+
+  it "creates a uniqueness_hash from backtrace" do
+    myException = Exception.new
+    myException.stub!(:backtrace).and_return('123')
+    data = Exceptional::ExceptionData.new(myException)
+    data.uniqueness_hash.should == Digest::MD5.hexdigest('123')
   end
 end

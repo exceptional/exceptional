@@ -1,18 +1,21 @@
 require 'zlib'
 require 'cgi'
 require 'net/http'
+require 'digest/md5'
 
 module Exceptional
   class Remote
     class << self
-      def announce(json_data)
+      def announce(startup_data)
         # post to /announcements
       end
 
-      def error(json_data)
+      def error(exception_data)
         Exceptional.logger.info "Notifying Exceptional about an error"
-        url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
-        compressed = Zlib::Deflate.deflate(json_data, Zlib::BEST_SPEED)
+        uniqueness_hash = exception_data.uniqueness_hash
+        hash_param = uniqueness_hash.nil? ? nil: "&hash=#{uniqueness_hash}"
+        url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}#{hash_param}"
+        compressed = Zlib::Deflate.deflate(exception_data.to_json, Zlib::BEST_SPEED)
         call_remote(url, compressed)
       end
 

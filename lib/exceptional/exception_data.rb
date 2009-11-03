@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module Exceptional
   class ExceptionData
     def initialize(exception, controller=nil, request=nil)
@@ -49,6 +51,15 @@ module Exceptional
       hash
     end
 
+    def to_json
+      to_hash.to_json
+    end
+
+    def uniqueness_hash
+      return nil if @exception.backtrace.blank?
+      Digest::MD5.hexdigest(@exception.backtrace)
+    end
+
     def filter_paramaters(hash)
       if @controller.respond_to?(:filter_parameters)
         @controller.send(:filter_parameters, hash)
@@ -71,10 +82,6 @@ module Exceptional
         headers['Cookie'] = headers['Cookie'].sub(/_session=\S+/, '_session=[FILTERED]')
       end
       headers
-    end
-
-    def to_json
-      to_hash.to_json
     end
 
     def get_hostname
@@ -114,7 +121,7 @@ module Exceptional
     def self.sanitize_session(request)
       session = request.session
       session_hash = {}
-      session_hash['session_id'] = request.session_options.try(:[], :id)
+      session_hash['session_id'] = request.session_options ? request.session_options[:id] : nil
       session_hash['session_id'] ||= session.respond_to?(:session_id) ? session.session_id : session.instance_variable_get("@session_id")
       session_hash['data'] = session.respond_to?(:to_hash) ? session.to_hash : session.instance_variable_get("@data") || {}
       session_hash['session_id'] ||= session_hash['data'][:session_id] 

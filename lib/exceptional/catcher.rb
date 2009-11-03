@@ -4,7 +4,7 @@ module Exceptional
       def handle(exception, controller=nil, request=nil)
         if Config.enabled?
           data = ExceptionData.new(exception, controller, request)
-          Remote.error(data.to_json)
+          Remote.error(data)
         end
       end
     end

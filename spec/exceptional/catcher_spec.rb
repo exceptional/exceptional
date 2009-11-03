@@ -5,8 +5,8 @@ describe Exceptional::Catcher do
     exception = mock('exception')
     controller = mock('controller')
     request = mock('request')
-    Exceptional::ExceptionData.should_receive(:new).with(exception,controller,request).and_return(mock('exception_data', :to_json =>'"json"'))
-    Exceptional::Remote.should_receive(:error).with('"json"')
+    Exceptional::ExceptionData.should_receive(:new).with(exception,controller,request).and_return(data = mock('exception_data'))
+    Exceptional::Remote.should_receive(:error).with(data)
     Exceptional::Catcher.handle(exception,controller,request) 
   end
 end
