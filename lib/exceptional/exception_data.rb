@@ -92,7 +92,7 @@ module Exceptional
     end
 
     def get_username
-      ENV['LOGNAME'] || ENV['USER'] || ENV['USERNAME'] || 'UNKNOWN'
+      ENV['LOGNAME'] || ENV['USER'] || ENV['USERNAME'] || ENV['APACHE_RUN_USER'] || 'UNKNOWN'
     end
 
     def libraries_loaded
