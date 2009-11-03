@@ -5,14 +5,19 @@ This plugin posts exception data to Exceptional (http://getexceptional.com). Dat
 = Installation
 
 1. gem install exceptional
-2. Add config.gem 'exceptional' to your environment
-3. Follow the instructions on http://getexceptional.com for configuring your api_key
+2. Add config.gem 'exceptional' to 'config/environment.rb'
+3. Follow the instructions on http://getexceptional.com for configuring your api_key in 'config/exceptional.yml'
 
 Other ways to install:
 
 1. traditional rails plugin install
 2. gem bundler
 
+= Upgrading from old version of the exceptional plugin
+
+1. Delete vendor/plugins/exceptional
+2. Follow installation instructions above
+3. (optional) Simplify your config/exceptional.yml file - all it needs now is a single line with 'api-key: YOUR-KEY'
 
 Please send any questions or comments to feedback@getexceptional.com.
 

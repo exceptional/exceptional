@@ -5,7 +5,7 @@ module Exceptional
 
     def self.test
       data = Exceptional::ExceptionData.new(ExceptionalTestException.new)
-      Exceptional::Remote.error(data.to_hash)
+      Exceptional::Remote.error(data)
     end
   end
 end
