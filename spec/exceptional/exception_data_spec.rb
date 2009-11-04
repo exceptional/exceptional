@@ -115,7 +115,7 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
 
   it "creates a uniqueness_hash from backtrace" do
     myException = Exception.new
-    myException.stub!(:backtrace).and_return('123')
+    myException.stub!(:backtrace).and_return(['123'])
     data = Exceptional::ExceptionData.new(myException)
     data.uniqueness_hash.should == Digest::MD5.hexdigest('123')
   end

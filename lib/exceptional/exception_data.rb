@@ -41,7 +41,7 @@ module Exceptional
 
     def uniqueness_hash
       return nil if @exception.backtrace.blank?
-      Digest::MD5.hexdigest(@exception.backtrace)
+      Digest::MD5.hexdigest(@exception.backtrace.join)
     end
 
     def filter_paramaters(hash)
