@@ -12,7 +12,7 @@ describe Exceptional::ExceptionData, 'when no request/controller/params' do
     ENV['LOGNAME'] = 'bob'
     ENV['SOMEVAR'] = 'something'
     ENV['HTTP_SOMETHING'] = 'should be stripped'
-    Exceptional::Config.application_root = Dir.pwd
+    RAILS_ENV = 'test' unless defined?(RAILS_ENV)
     Time.stub!(:now).and_return(Time.mktime(1970,1,1))
     error = Exceptional::FunkyError.new('some message')
     data = Exceptional::ExceptionData.new(error)

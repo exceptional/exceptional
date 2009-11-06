@@ -12,18 +12,15 @@ module Exceptional
         :disabled_by_default => %w(development test)
       }
 
-      attr_accessor :api_key, :application_root
+      attr_accessor :api_key
       attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password
       attr_writer :ssl_enabled
 
-      def load(application_root, environment, config_file=nil)
-        @application_root = application_root
-        @environment = environment
+      def load(config_file=nil)
         if (config_file && File.file?(config_file))
           begin
             config = YAML::load(File.open(config_file))
-            env_config = config[environment] || {}
-
+            env_config = config[application_environment] || {}
             @api_key = config['api-key'] || env_config['api-key']
 
             @http_proxy_host = config['http-proxy-host']
@@ -38,18 +35,26 @@ module Exceptional
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
             @remote_host = config['remote-host'] unless config['remote-host'].nil?
           rescue Exception => e
-            raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
+            raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{application_environment} : #{e.message}")
           end
         end
-        @api_key = ENV['EXCEPTIONAL_API_KEY'] unless ENV['EXCEPTIONAL_API_KEY'].nil?
       end
 
-      def enabled?
-        @enabled ||= DEFAULTS[:disabled_by_default].include?(@environment) ? false : true
+      def api_key
+        return @api_key unless @api_key.nil?
+        @api_key ||= ENV['EXCEPTIONAL_API_KEY'] unless ENV['EXCEPTIONAL_API_KEY'].nil?
+      end
+
+      def application_environment
+        ENV['RACK_ENV'] || ENV['RAILS_ENV']|| 'development'
+      end
+
+      def should_send_to_api?
+        @enabled ||= DEFAULTS[:disabled_by_default].include?(application_environment) ? false : true
       end
 
       def application_root
-        @application_root ||= File.expand_path(File.dirname(__FILE__) + '/../../../../../')
+        defined?(RAILS_ROOT) ? RAILS_ROOT : Dir.pwd
       end
 
       def ssl_enabled?

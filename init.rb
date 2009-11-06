@@ -14,8 +14,7 @@ if defined?(Exceptional::VERSION::STRING) && %w(development test).include?(RAILS
   exit -1
 else
   begin
-    config_file = "#{RAILS_ROOT}/config/exceptional.yml"
-    Exceptional::Config.load(RAILS_ROOT, RAILS_ENV, config_file)
+    Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
     Exceptional::Startup.announce
     require File.join('exceptional', 'integration', 'rails')
   rescue => e

@@ -10,18 +10,30 @@ module Exceptional
           'protocol_version' => Exceptional::PROTOCOL_VERSION
         },
         'application_environment' => {
-          'environment' => RAILS_ENV,
+          'environment' => environment,
           'env' => extract_environment(ENV),
           'host' => get_hostname,
           'run_as_user' => get_username,
-          'application_root_directory' => Config.application_root,
+          'application_root_directory' => application_root,
           'language' => 'ruby',
           'language_version' => "#{RUBY_VERSION} p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE} #{RUBY_PLATFORM}",
-          'framework' => defined?(RAILS_ENV) ? "rails" : nil,
+          'framework' => framework,
           'libraries_loaded' => libraries_loaded
         }
       }
       hash
+    end
+
+    def self.framework
+      defined?(RAILS_ENV) ? "rails" : nil
+    end
+
+    def self.environment
+      Config.application_environment
+    end
+
+    def self.application_root
+      Config.application_root
     end
 
     def self.extract_environment(env)

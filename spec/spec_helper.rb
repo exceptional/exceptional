@@ -7,7 +7,7 @@ end
 gem 'rails'
 require File.dirname(__FILE__) + '/../lib/exceptional' unless defined?(Exceptional)
 
-RAILS_ENV = "test" unless defined?(RAILS_ENV)
+ENV['RAILS_ENV'] = 'test'
 
 require 'action_controller'
 require 'action_controller/test_process'

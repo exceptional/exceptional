@@ -36,6 +36,7 @@ module Exceptional
           case response
             when Net::HTTPSuccess
               Exceptional.logger.info('Successful')
+              return true
             else
               Exceptional.logger.error('Failed')
           end

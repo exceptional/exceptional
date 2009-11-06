@@ -16,9 +16,9 @@ USAGE
     require(File.join('config', 'boot'))
     require(File.join(RAILS_ROOT, 'config', 'environment'))
     require "exceptional/integration/tester"
-    puts "Sending test exception to Exceptional for api-key: #{Exceptional::Config.api_key}."
-    Exceptional::Integration.test
-    puts "Done."
+    unless Exceptional::Config.api_key.blank?
+      Exceptional::Integration.test
+    end
   when 'install'
     api_key = args[0]
     if (api_key.nil?)

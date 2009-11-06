@@ -7,6 +7,7 @@ require 'exceptional/config'
 require 'exceptional/application_environment'
 require 'exceptional/exception_data'
 require 'exceptional/remote'
+require 'exceptional/integration/rack'
 
 module Exceptional
   PROTOCOL_VERSION = 5
