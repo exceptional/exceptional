@@ -1,74 +1,85 @@
-require 'yaml'
-
 module Exceptional
-  module Config
+  class Config
+    class << self
+      DEFAULTS = {
+        :ssl_enabled => false,
+        :remote_host_http => 'api.getexceptional.com',
+        :remote_port_http => 80,
+        :remote_host_https => 'getexceptional.appspot.com',
+        :remote_port_https => 443,
+        :http_open_timeout => 2,
+        :http_read_timeout => 4,
+        :disabled_by_default => %w(development test)
+      }
 
-    # Defaults for configuration variables
-    REMOTE_HOST = "getexceptional.com"
-    REMOTE_PORT = 80
-    REMOTE_SSL_PORT = 443
-    SSL = false
-    LOG_LEVEL = 'info'
-    LOG_PATH = nil
+      attr_accessor :api_key
+      attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password
+      attr_writer :ssl_enabled
 
-    class ConfigurationException < StandardError; end
+      def load(config_file=nil)
+        if (config_file && File.file?(config_file))
+          begin
+            config = YAML::load(File.open(config_file))
+            env_config = config[application_environment] || {}
+            @api_key = config['api-key'] || env_config['api-key']
 
-    attr_reader :api_key
-    attr_writer :ssl_enabled, :remote_host, :remote_port, :api_key
+            @http_proxy_host = config['http-proxy-host']
+            @http_proxy_port = config['http-proxy-port']
+            @http_proxy_username = config['http-proxy-username']
+            @http_proxy_password = config['http-proxy-password']
+            @http_open_timeout = config['http-open-timeout']
+            @http_read_timeout = config['http-read-timeout'] 
 
-    def setup_config(environment, config_file)
-      begin
-        config = YAML::load(File.open(config_file))[environment]
-        @api_key = config['api-key'] unless config['api-key'].nil?
-        @ssl_enabled = config['ssl'] unless config['ssl'].nil?
-        @log_level = config['log-level'] unless config['log-level'].nil?
-        @enabled = config['enabled'] unless config['enabled'].nil?
-        @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
-        @remote_host = config['remote-host'] unless config['remote-host'].nil?
-        @applicaton_root = application_root
-
-        log_config_info
-      rescue Exception => e
-        raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{environment} : #{e.message}")
+            @ssl_enabled = config['ssl'] || env_config['ssl']
+            @enabled = env_config['enabled']
+            @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
+            @remote_host = config['remote-host'] unless config['remote-host'].nil?
+          rescue Exception => e
+            raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{application_environment} : #{e.message}")
+          end
+        end
       end
-    end
 
-    def application_root
-      @applicaton_root || (File.dirname(__FILE__) + '/../..')
-    end
+      def api_key
+        return @api_key unless @api_key.nil?
+        @api_key ||= ENV['EXCEPTIONAL_API_KEY'] unless ENV['EXCEPTIONAL_API_KEY'].nil?
+      end
 
-    def remote_host
-      @remote_host || REMOTE_HOST
-    end
+      def application_environment
+        ENV['RACK_ENV'] || ENV['RAILS_ENV']|| 'development'
+      end
 
-    def remote_port
-      @remote_port || default_port
-    end
+      def should_send_to_api?
+        @enabled ||= DEFAULTS[:disabled_by_default].include?(application_environment) ? false : true
+      end
 
-    def log_level
-      @log_level || LOG_LEVEL
-    end
+      def application_root
+        defined?(RAILS_ROOT) ? RAILS_ROOT : Dir.pwd
+      end
 
-    def default_port
-      ssl_enabled? ? REMOTE_SSL_PORT : REMOTE_PORT
-    end
+      def ssl_enabled?
+        @ssl_enabled ||= DEFAULTS[:ssl_enabled]
+      end
 
-    def ssl_enabled?
-      @ssl_enabled || SSL
-    end
+      def remote_host
+        @remote_host ||= ssl_enabled? ? DEFAULTS[:remote_host_https] : DEFAULTS[:remote_host_http]
+      end
 
-    def enabled?
-      @enabled || false
-    end
+      def remote_port
+        @remote_port ||= ssl_enabled? ? DEFAULTS[:remote_port_https] : DEFAULTS[:remote_port_http]
+      end
 
-    def valid_api_key?
-      @api_key && @api_key.length == 40 ? true : false
-    end
+      def reset
+        @enabled = @ssl_enabled = @remote_host = @remote_port = @api_key = nil
+      end
 
-    def log_config_info
-      Exceptional.to_log('debug', "API Key: #{api_key}")
-      Exceptional.to_log('debug', "Remote Host: #{remote_host}:#{remote_port}")
-      Exceptional.to_log('debug', "Log level: #{log_level}")
+      def http_open_timeout
+        @http_open_timeout ||= DEFAULTS[:http_open_timeout]
+      end
+
+      def http_read_timeout
+        @http_read_timeout ||= DEFAULTS[:http_read_timeout]
+      end
     end
   end
 end

@@ -1,0 +1,10 @@
+api-key: abc123
+ssl: true
+remote-port: 123
+remote-host: example.com
+http-proxy-host: annoying-proxy.example.com
+http-proxy-port: 1066
+http-proxy-username: bob
+http-proxy-password: jack
+http-open-timeout: 5
+http-read-timeout: 10

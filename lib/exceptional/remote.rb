@@ -1,74 +1,50 @@
 require 'zlib'
 require 'cgi'
 require 'net/http'
+require 'digest/md5'
 
 module Exceptional
-  module Remote
-
-    class RemoteException < StandardError; end
-
-    ::PROTOCOL_VERSION = 3
-
-    # authenticate with getexceptional.com
-    # returns true if the configured api_key is registered and can send data
-    # otherwise false
-    def authenticate
-
-      return @authenticated if @authenticated
-
-      if Exceptional.api_key.nil?
-        raise Exceptional::Config::ConfigurationException.new("API Key must be configured")
+  class Remote
+    class << self
+      def startup_announce(startup_data)
+        url = "/api/announcements?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
+        compressed = Zlib::Deflate.deflate(startup_data.to_json, Zlib::BEST_SPEED)
+        call_remote(url, compressed)
       end
 
-      begin
-        # TODO No data required to authenticate, send a nil string? hacky
-        # TODO should retry if a http connection failed
-        authenticated = call_remote(:authenticate, "")
-        
-        @authenticated = authenticated =~ /true/ ? true : false
-      rescue
-        @authenticated = false
-      ensure
-        return @authenticated
-      end
-    end
-
-    def authenticated?
-      @authenticated || false
-    end
-
-    def post_exception(data)
-      if !authenticated?
-        authenticate
+      def error(exception_data)
+        Exceptional.logger.info "Notifying Exceptional about an error"
+        uniqueness_hash = exception_data.uniqueness_hash
+        hash_param = uniqueness_hash.nil? ? nil: "&hash=#{uniqueness_hash}"
+        url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}#{hash_param}"
+        compressed = Zlib::Deflate.deflate(exception_data.to_json, Zlib::BEST_SPEED)
+        call_remote(url, compressed)
       end
 
-      call_remote(:errors, data)
-    end
-
-    protected
-
-    def call_remote(method, data)
-      begin
-        http = Net::HTTP.new(Exceptional.remote_host, Exceptional.remote_port)
-        http.use_ssl = true if Exceptional.ssl_enabled?
-        uri = "/#{method.to_s}?&api_key=#{Exceptional.api_key}&protocol_version=#{::PROTOCOL_VERSION}"
-        headers = method.to_s == 'errors' ? { 'Content-Type' => 'application/x-gzip', 'Accept' => 'application/x-gzip' } : {}
-
-        compressed_data = CGI::escape(Zlib::Deflate.deflate(data, Zlib::BEST_SPEED))
-        response = http.start do |http|
-          http.post(uri, compressed_data, headers)
+      def call_remote(url, data)
+        config = Exceptional::Config
+        optional_proxy = Net::HTTP::Proxy(config.http_proxy_host,
+                                          config.http_proxy_port,
+                                          config.http_proxy_username,
+                                          config.http_proxy_password)
+        client = optional_proxy.new(config.remote_host, config.remote_port)
+        client.open_timeout = config.http_open_timeout
+        client.read_timeout = config.http_read_timeout
+        client.use_ssl = config.ssl_enabled?
+        begin
+          response = client.post(url, data)
+          case response
+            when Net::HTTPSuccess
+              Exceptional.logger.info('Successful')
+              return true
+            else
+              Exceptional.logger.error('Failed')
+          end
+        rescue Exception => e
+          Exceptional.logger.error('Problem notifying Exceptional about the error')
+          Exceptional.logger.error(e)
         end
-
-        if response.kind_of? Net::HTTPSuccess
-          return response.body
-        else
-          raise RemoteException.new("#{response.code}: #{response.message}")
-        end
-
-      rescue Exception => e
-        Exceptional.log! "Error contacting Exceptional: #{e}", 'info'
-        Exceptional.log! e.backtrace.join("\n"), 'debug'
-        raise e
+        nil
       end
     end
   end
