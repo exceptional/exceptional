@@ -63,6 +63,7 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     data = Exceptional::ExceptionData.new(error, @controller, @request)
     @hash = data.to_hash
   end
+
   it "captures request" do
     request_hash = @hash['request']
     request_hash['url'].should == 'http://test.host/some_path?var1=abc'

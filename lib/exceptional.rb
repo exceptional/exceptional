@@ -18,6 +18,10 @@ module Exceptional
     ::Exceptional::LogFactory.logger
   end
 
+  def self.configure(api_key)
+    Exceptional::Config.api_key = api_key
+  end
+
   def self.rescue(&block)
     begin
       block.call
