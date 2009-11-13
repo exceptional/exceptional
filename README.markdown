@@ -7,7 +7,8 @@ Once installed and configured, all exceptions from web requests are reported to 
 ## Installation
 
 1. gem install exceptional
-2. Add config.gem 'exceptional' to 'config/environment.rb'
+2. Add config.gem entry to 'config/environment.rb'
+<pre>config.gem 'exceptional', :version => '2.0.0'</pre>
 3. run 'exceptional install <api-key>' using the api-key for your app from http://getexceptional.com
 
 ### Other ways to install:
