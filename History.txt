@@ -1,4 +1,5 @@
-0.2.0 - Rewrite, this time with a splash of encapsulation.
+2.0.1 - fix bug, require for missing file (which existed in gem, but not when installed from git as a plugin)
+2.0.0 - Rewrite, this time with a splash of encapsulation.
 0.0.6 - Added a better 'safe' to_json method which works more effectively for rails integration avoiding cyclic reference and un-jsonable data
 0.0.5 - Fixed a bug in the plugin where request.env was being modified directly. dup to solve issues.
 0.0.4 - Restructured the plugin to extract all different concerns into self contained modules, will give a better base to extend. Also plays nicer with Rdoc + singleton classes
