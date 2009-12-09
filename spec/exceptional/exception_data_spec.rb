@@ -7,7 +7,7 @@ class Exceptional::FunkyError < StandardError
   end
 end
 
-describe Exceptional::ExceptionData, 'when no request/controller/params' do
+describe Exceptional::ControllerExceptionData, 'when no request/controller/params' do
   before :each do
     ENV['LOGNAME'] = 'bob'
     ENV['SOMEVAR'] = 'something'
@@ -15,7 +15,7 @@ describe Exceptional::ExceptionData, 'when no request/controller/params' do
     RAILS_ENV = 'test' unless defined?(RAILS_ENV)
     Time.stub!(:now).and_return(Time.mktime(1970,1,1))
     error = Exceptional::FunkyError.new('some message')
-    data = Exceptional::ExceptionData.new(error)
+    data = Exceptional::ControllerExceptionData.new(error)
     @hash = data.to_hash
   end
 
@@ -46,7 +46,7 @@ describe Exceptional::ExceptionData, 'when no request/controller/params' do
   end
 end
 
-describe Exceptional::ExceptionData, 'with request/controller/params' do
+describe Exceptional::ControllerExceptionData, 'with request/controller/params' do
   class Exceptional::SomeController < ActionController::Base
       filter_parameter_logging :filter_me
   end
@@ -60,7 +60,7 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     @request.stub!(:remote_ip).and_return('1.2.3.4')
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html'})
     error = Exceptional::FunkyError.new('some message')
-    data = Exceptional::ExceptionData.new(error, @controller, @request)
+    data = Exceptional::ControllerExceptionData.new(error, @controller, @request)
     @hash = data.to_hash
   end
 
@@ -83,7 +83,7 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     end
     crazy = Crazy.new
     input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
-    Exceptional::ExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
+    Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
   end
 
   it "handles session objects with various interfaces" do
@@ -97,27 +97,27 @@ describe Exceptional::ExceptionData, 'with request/controller/params' do
     session = SessionWithInstanceVariables.new
     request.stub!(:session).and_return(session)
     request.stub!(:session_options).and_return({})
-    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     session = mock('session', :session_id => '123', :instance_variable_get => {'a' => '1'})
     request.stub!(:session).and_return(session)
-    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     session = mock('session', :session_id => nil, :to_hash => {:session_id => '123', 'a' => '1'})
     request.stub!(:session).and_return(session)
-    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
     request.stub!(:session_options).and_return({:id => 'xyz'})
-    Exceptional::ExceptionData.sanitize_session(request).should == {'session_id' => 'xyz', 'data' => {'a' => '1'}}
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => 'xyz', 'data' => {'a' => '1'}}
   end
 
   it "filter session cookies from headers" do
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_COOKIE' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=BAh7DDoMbnVtYmVyc1sJaQZpB2kIaQk6FnNvbWVfY3Jhenlfb2JqZWN0bzobU3Bpa2VDb250cm9sbGVyOjpDcmF6eQY6CUBiYXJABzoTc29tZXRoaW5nX2Vsc2UiCGNjYzoKYXBwbGUiDUJyYWVidXJuOgloYXNoewdpBmkHaQhpCToPc2Vzc2lvbl9pZCIlMmJjZTM4MjVjMThkNzYxOWEyZDA4NTJhNWY1NGQzMmU6C3RvbWF0byIJQmVlZg%3D%3D--66fb4606851f06bf409b8bc4ba7aea47a0259bf7'})
-    @hash = Exceptional::ExceptionData.new(Exceptional::FunkyError.new('some message'), @controller, @request).to_hash
+    @hash = Exceptional::ControllerExceptionData.new(Exceptional::FunkyError.new('some message'), @controller, @request).to_hash
     @hash['request']['headers'].should == {'Cookie' => '_something_else=faafsafafasfa; _myapp-lick-nation_session=[FILTERED]'}
   end
 
   it "creates a uniqueness_hash from backtrace" do
     myException = Exception.new
     myException.stub!(:backtrace).and_return(['123'])
-    data = Exceptional::ExceptionData.new(myException)
+    data = Exceptional::ControllerExceptionData.new(myException)
     data.uniqueness_hash.should == Digest::MD5.hexdigest('123')
   end
 end

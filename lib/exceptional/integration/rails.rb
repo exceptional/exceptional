@@ -9,6 +9,7 @@ if defined? ActionController
       def rescue_action_with_exceptional(exception)
         unless exception_handled_by_rescue_from?(exception)
           Exceptional::Catcher.handle(exception, self, request)
+          Thread.current[:exceptional_context] = nil
         end
         rescue_action_without_exceptional exception
       end

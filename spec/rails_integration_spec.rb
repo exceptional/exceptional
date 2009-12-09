@@ -3,13 +3,13 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integrati
 
 describe Exceptional, 'version number' do
   it "be available proramatically" do
-    Exceptional::VERSION.should == '0.2.0'
+    Exceptional::VERSION.should == '0.2.1'
   end
 end
 
 describe ActiveSupport::JSON, 'standards compliant json' do
   it "quote keys" do
-    {:a => '123'}.to_json.gsub(/ /,'').should == '{"a":"123"}'
+    {:a => '123'}.to_json.gsub(/ /, '').should == '{"a":"123"}'
   end
 end
 
@@ -37,15 +37,24 @@ describe TestingController do
 end
 
 if ActionController::Base.respond_to?(:rescue_from)
-  class CustomError < StandardError; end
+  class CustomError < StandardError;
+  end
   class TestingWithRescueFromController < ActionController::Base
     rescue_from CustomError, :with => :custom_handler
+
     def raises_custom_error
       raise CustomError.new
     end
+
     def raises_other_error
       raise StandardError.new
     end
+
+    def raises_with_context
+      Exceptional.context('foo' => 'bar')
+      raise StandardError.new
+    end
+
     def custom_handler
       head :ok
     end
@@ -63,6 +72,14 @@ if ActionController::Base.respond_to?(:rescue_from)
     it 'handle exception with Exceptional that is not dealt with by rescue_from' do
       Exceptional::Catcher.should_receive(:handle)
       send_request(:raises_other_error)
+    end
+    it "has context and clears context after request" do
+      Exceptional::Config.should_receive(:should_send_to_api?).and_return(true)
+      Exceptional::Remote.should_receive(:error) {|exception_data|
+        exception_data.to_hash['context']['foo'] == 'bar'
+      }
+      send_request(:raises_with_context)
+      Thread.current[:exceptional_context].should == nil
     end
   end
 end
