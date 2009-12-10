@@ -36,4 +36,9 @@ context 'resuce errors from within a block' do
     end
     Thread.current[:exceptional_context].should == nil
   end
+
+  it "allows optional second paramater hash to get added to context" do
+    Exceptional.should_receive(:context).with(context_hash = {'foo' => 'bar', 'baz' => 42})
+    Exceptional.rescue('my resccue', context_hash) {}
+  end
 end

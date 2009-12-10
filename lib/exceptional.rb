@@ -22,8 +22,9 @@ module Exceptional
     Exceptional::Config.api_key = api_key
   end
 
-  def self.rescue(name=nil, &block)
+  def self.rescue(name=nil, context=nil, &block)
     begin
+      self.context(context) unless context.nil?
       block.call
     rescue Exception => e
       Exceptional::Catcher.handle_without_controller(e,name)
