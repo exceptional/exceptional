@@ -86,6 +86,11 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
   end
 
+  it "to_strings regex because JSON.parse(/aa/.to_json) doesn't work" do
+    input = {'crazy' => /abc.*/}
+    Exceptional::ExceptionData.sanitize_hash(input).should == {'crazy' => /abc.*/.to_s}
+  end
+
   it "handles session objects with various interfaces" do
     class SessionWithInstanceVariables
       def initialize
