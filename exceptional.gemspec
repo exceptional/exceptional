@@ -11,5 +11,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.executables << 'exceptional'
   s.rubyforge_project = %q{exceptional}
-  s.add_dependency('json', ">= 1.0.0")
+  s.requirements << "json_pure, json-ruby or json required"
 end
