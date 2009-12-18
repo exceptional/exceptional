@@ -30,7 +30,8 @@ module Exceptional
         client = optional_proxy.new(config.remote_host, config.remote_port)
         client.open_timeout = config.http_open_timeout
         client.read_timeout = config.http_read_timeout
-        client.use_ssl = config.ssl_enabled?
+        client.use_ssl = config.ssl?
+        client.verify_mode = OpenSSL::SSL::VERIFY_NONE if config.ssl?
         begin
           response = client.post(url, data)
           case response

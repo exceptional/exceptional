@@ -5,8 +5,8 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.reset
   end
   it "have sensible defaults" do
-    Exceptional::Config.ssl_enabled?.should == false
-    Exceptional::Config.remote_host.should == 'api.getexceptional.com'
+    Exceptional::Config.ssl?.should == false
+    Exceptional::Config.remote_host.should == 'plugin.getexceptional.com'
     Exceptional::Config.remote_port.should == 80
     Exceptional::Config.application_root.should == Dir.pwd
     Exceptional::Config.http_proxy_host.should be_nil
@@ -16,9 +16,9 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.http_open_timeout.should == 2
     Exceptional::Config.http_read_timeout.should == 4
   end
-  it "have correct defaults when ssl_enabled" do
-    Exceptional::Config.ssl_enabled = true
-    Exceptional::Config.remote_host.should == 'getexceptional.appspot.com'
+  it "have correct defaults when ssl" do
+    Exceptional::Config.ssl = true
+    Exceptional::Config.remote_host.should == 'plugin.getexceptional.com'
     Exceptional::Config.remote_port.should == 443
   end
   it "be enabled based on environment by default" do
@@ -38,7 +38,7 @@ describe Exceptional::Config, 'defaults' do
     it "allow a new simpler format for exception.yml" do
       Exceptional::Config.load('spec/fixtures/exceptional.yml')
       Exceptional::Config.api_key.should == 'abc123'
-      Exceptional::Config.ssl_enabled?.should == true
+      Exceptional::Config.ssl?.should == true
       Exceptional::Config.remote_host.should == 'example.com'
       Exceptional::Config.remote_port.should == 123
       Exceptional::Config.should_send_to_api?.should == true
@@ -52,7 +52,7 @@ describe Exceptional::Config, 'defaults' do
     it "allow olded format for exception.yml" do
       Exceptional::Config.load('spec/fixtures/exceptional_old.yml')
       Exceptional::Config.api_key.should == 'abc123'
-      Exceptional::Config.ssl_enabled?.should == true
+      Exceptional::Config.ssl?.should == true
       Exceptional::Config.should_send_to_api?.should == true
     end
     it "load api_key from environment variable" do

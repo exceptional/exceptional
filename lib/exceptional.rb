@@ -32,7 +32,7 @@ module Exceptional
       raise(e)
     end
   end
-
+  
   def self.context(hash = {})
     Thread.current[:exceptional_context] ||= {}
     Thread.current[:exceptional_context].merge!(hash)
