@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require 'digest/md5'
+require 'json'
 
 class Exceptional::FunkyError < StandardError
   def backtrace
@@ -15,8 +16,8 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     RAILS_ENV = 'test' unless defined?(RAILS_ENV)
     Time.stub!(:now).and_return(Time.mktime(1970,1,1))
     error = Exceptional::FunkyError.new('some message')
-    data = Exceptional::ControllerExceptionData.new(error)
-    @hash = data.to_hash
+    @data = Exceptional::ControllerExceptionData.new(error)
+    @hash = @data.to_hash
   end
 
   it "capture exception details" do
@@ -29,6 +30,10 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     client_hash['name'].should == Exceptional::CLIENT_NAME
     client_hash['version'].should == Exceptional::VERSION    
     client_hash['protocol_version'].should == Exceptional::PROTOCOL_VERSION
+  end
+
+  it "generates json" do
+    JSON.parse(@data.to_json)
   end
 
   it "capture application_environment" do

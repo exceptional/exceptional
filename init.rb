@@ -1,5 +1,20 @@
 require 'exceptional'
 
+unless Object.const_defined?(:JSON)
+  begin
+    require 'json'
+  rescue LoadError
+    begin
+      require 'json-ruby'
+    rescue LoadError
+      require 'json_pure'
+    end
+  end
+end
+unless Object.const_defined?(:JSON)
+  raise "Could not load json gem; make sure you install one of json_pure, json-ruby, or the C-based json gem."
+end
+
 # If old plugin still installed then we don't want to install this one.
 # In production environments we should continue to work as before, but in development/test we should
 # advise how to correct the problem and exit
