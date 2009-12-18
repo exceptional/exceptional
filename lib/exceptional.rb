@@ -22,19 +22,38 @@ module Exceptional
     Exceptional::Config.api_key = api_key
   end
 
+  def self.handle(exception, name=nil)
+    Exceptional::Catcher.handle(exception, name)
+  end
+  
   def self.rescue(name=nil, context=nil, &block)
     begin
       self.context(context) unless context.nil?
       block.call
     rescue Exception => e
-      Exceptional::Catcher.handle_without_controller(e,name)
-      Thread.current[:exceptional_context] = nil
+      Exceptional::Catcher.handle(e,name)
+      self.clear!
+    end
+  end
+
+  def self.rescue_and_reraise(name=nil, context=nil, &block)
+    begin
+      self.context(context) unless context.nil?
+      block.call
+    rescue Exception => e
+      Exceptional::Catcher.handle(e,name)
+      self.clear!
       raise(e)
     end
   end
-  
+
+  def self.clear!
+    Thread.current[:exceptional_context] = nil
+  end
+
   def self.context(hash = {})
     Thread.current[:exceptional_context] ||= {}
     Thread.current[:exceptional_context].merge!(hash)
+    self
   end
 end

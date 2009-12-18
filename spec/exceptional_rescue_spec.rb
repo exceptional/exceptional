@@ -1,17 +1,35 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 context 'resuce errors from within a block' do
-  class FunkyException < StandardError; end
-  it "send them to catcher with optional name" do
+  class FunkyException < StandardError;
+  end
+  it "Exceptional.rescue should send to exceptional and swallow error " do
     to_raise = FunkyException.new
-    Exceptional::Catcher.should_receive(:handle_without_controller).with(to_raise, 'my rescue name')
+    Exceptional::Catcher.should_receive(:handle).with(to_raise, 'my rescue name')
+    Exceptional.rescue('my rescue name') do
+      raise to_raise
+    end
+  end
+
+  it "reraises error with rescue_and_reraise" do
+    to_raise = FunkyException.new
+    Exceptional::Catcher.should_receive(:handle).with(to_raise, 'my rescue name')
     begin
-      Exceptional.rescue('my rescue name') do
+      Exceptional.rescue_and_reraise('my rescue name') do
         raise to_raise
       end
-      fail "expected to raise"
+      fail 'expected a reraise'
     rescue FunkyException => e
-      e.should == to_raise
+    end
+  end
+
+  it "Exceptional.handle calls Exceptional::Catcher.handle" do
+    to_raise = FunkyException.new
+    Exceptional::Catcher.should_receive(:handle).with(to_raise, 'optional name for where it has occurred')
+    begin
+      raise to_raise
+    rescue => e
+      Exceptional.handle(e, 'optional name for where it has occurred')
     end
   end
 
@@ -23,17 +41,19 @@ context 'resuce errors from within a block' do
       exception_data.to_hash['context']['baz'] == 42
       exception_data.to_hash['context']['cats'] == {'lol' => 'bot'}
     }
-    begin
-      Exceptional.rescue('my rescue name') do
-        Exceptional.context('foo' => 'bar')
-        Exceptional.context('baz' => 42)
-        Exceptional.context('cats' => {'lol' => 'bot'})
-        raise to_raise
-      end
-      fail "expected to raise"
-    rescue FunkyException => e
-      e.should == to_raise
+    Exceptional.rescue('my rescue name') do
+      Exceptional.context('foo' => 'bar')
+      Exceptional.context('baz' => 42)
+      Exceptional.context('cats' => {'lol' => 'bot'})
+      raise to_raise
     end
+    Thread.current[:exceptional_context].should == nil
+  end
+
+  it "clearr context with Exceptional.context.clear!" do
+    Exceptional.context('foo' => 'bar')
+    Thread.current[:exceptional_context].should_not == nil
+    Exceptional.context.clear!
     Thread.current[:exceptional_context].should == nil
   end
 
