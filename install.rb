@@ -10,10 +10,10 @@ if File::exists? config_file
   puts "Exceptional config file already exists. Please ensure it is up-to-date with the current format."
   puts "See #{example_config_file}"
 else  
-  puts "Installing default Exceptional config"
+  puts "Installing default Exceptional config."
   puts "  From #{example_config_file}"
-  puts "For exceptional to work you need to configure your API Key"
+  puts "For exceptional to work you need to configure your API key."
   puts "  See #{example_config_file}"
-  puts "If you don't have an API Key, get one at http://getexceptional.com/"
+  puts "If you don't have an API key, get one at http://getexceptional.com/."
   File.copy example_config_file, config_file
 end

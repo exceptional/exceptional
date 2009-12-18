@@ -4,11 +4,11 @@ module Exceptional
     end
 
     def self.test
-      data = Exceptional::ExceptionData.new(ExceptionalTestException.new, 'Boom town!!')
+      data = Exceptional::ExceptionData.new(ExceptionalTestException.new, 'Test exception')
       unless Exceptional::Remote.error(data)
-        puts "Problem sending error to Exceptional. Check your api key"
+        puts "Problem sending exception to Exceptional. Check your API key."
       else
-        puts "Exception sent successfully"
+        puts "Exception sent successfully."
       end
     end
   end
