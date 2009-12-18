@@ -7,9 +7,9 @@ command = args.shift.strip rescue 'help'
 case command
   when 'help'
     puts <<USAGE
-help               # show this usage
-test               # send a test exception to exceptional
-install <api_key>  # create config/exceptional.yml with your api_key. Overrites existing one.
+help               # Show this usage.
+test               # Send a test exception to Exceptional.
+install <api_key>  # Create config/exceptional.yml with your api_key. Overrites existing one.
 USAGE
   when 'test'
     puts "Loading Rails environment."
@@ -22,15 +22,15 @@ USAGE
   when 'install'
     api_key = args[0]
     if (api_key.nil?)
-      puts 'missing required paramater <api-key>. Check your app configuration at http://getexceptional.com'
+      puts 'Missing required paramater <api-key>. Check your app configuration at http://getexceptional.com.'
     else
       unless File.file?('config/environment.rb')
-        puts "Run this command from the root of your rails application"
+        puts "Run this command from the root of your rails application."
       else
         config_file = File.open('config/exceptional.yml', 'w')
         config_file.puts("api-key: #{api_key}\n")
         config_file.close
-        puts "Config file written as config/exceptional.yml"
+        puts "Config file written as config/exceptional.yml."
       end
     end
 end

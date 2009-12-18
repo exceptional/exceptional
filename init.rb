@@ -6,7 +6,7 @@ require 'exceptional'
 if defined?(Exceptional::VERSION::STRING) && %w(development test).include?(RAILS_ENV)
   message = %Q(
   ***********************************************************************
-  You seem to still have an old version of the exceptional plugin installed.
+  You seem to still have an old version of the Exceptional plugin installed.
   Remove it from /vendor/plugins and try again.
   ***********************************************************************
   )
