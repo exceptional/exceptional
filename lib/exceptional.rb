@@ -11,7 +11,7 @@ require 'exceptional/remote'
 
 module Exceptional
   PROTOCOL_VERSION = 5
-  VERSION = '0.2.1'
+  VERSION = '2.0.2'
   CLIENT_NAME = 'getexceptional-rails-plugin'
 
   def self.logger

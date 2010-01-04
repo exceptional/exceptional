@@ -16,7 +16,7 @@ module Exceptional
           'run_as_user' => get_username,
           'application_root_directory' => application_root,
           'language' => 'ruby',
-          'language_version' => "#{RUBY_VERSION} p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE} #{RUBY_PLATFORM}",
+          'language_version' => language_version_string,
           'framework' => framework,
           'libraries_loaded' => libraries_loaded
         }
@@ -45,6 +45,10 @@ module Exceptional
       Socket.gethostname
     rescue
       'UNKNOWN'
+    end
+
+    def self.language_version_string
+      "#{RUBY_VERSION rescue '?.?.?'} p#{RUBY_PATCHLEVEL rescue '???'} #{RUBY_RELEASE_DATE rescue '????-??-??'} #{RUBY_PLATFORM rescue '????'}"
     end
 
     def self.get_username
