@@ -7,7 +7,7 @@ rescue LoadError
   puts <<-INSTALL_GINGER
 Install ginger to test plugin against multiple environments:
 
-sudo gem install freelancing-god-ginger --source=http://gems.github.com
+ gem install ginger
 
 More details: http://github.com/freelancing-god/ginger
   INSTALL_GINGER
