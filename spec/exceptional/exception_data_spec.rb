@@ -1,10 +1,24 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require 'digest/md5'
-require 'json'
 
 class Exceptional::FunkyError < StandardError
   def backtrace
     'backtrace'
+  end
+end
+
+describe Exceptional::ControllerExceptionData do
+  it "raises useful error when to_json isn't available on to_hash" do
+    begin
+      data = Exceptional::ExceptionData.new(Exceptional::FunkyError.new)
+      hash_without_json = {}
+      hash_without_json.stub!(:to_json).and_raise(NoMethodError)
+      data.stub!(:to_hash).and_return(hash_without_json)
+      data.to_json
+      fail 'expects to raise and error'
+    rescue StandardError => e
+      e.message.should =~ /to_json/
+    end
   end
 end
 
@@ -14,7 +28,7 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     ENV['SOMEVAR'] = 'something'
     ENV['HTTP_SOMETHING'] = 'should be stripped'
     ::RAILS_ENV = 'test' unless defined?(RAILS_ENV)
-    Time.stub!(:now).and_return(Time.mktime(1970,1,1))
+    Time.stub!(:now).and_return(Time.mktime(1970, 1, 1))
     error = Exceptional::FunkyError.new('some message')
     @data = Exceptional::ControllerExceptionData.new(error)
     @hash = @data.to_hash
@@ -28,11 +42,12 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     error_hash['occurred_at'].should == Time.now.strftime("%Y%m%d %H:%M:%S %Z")
     client_hash = @hash['client']
     client_hash['name'].should == Exceptional::CLIENT_NAME
-    client_hash['version'].should == Exceptional::VERSION    
+    client_hash['version'].should == Exceptional::VERSION
     client_hash['protocol_version'].should == Exceptional::PROTOCOL_VERSION
   end
 
   it "generates parseable json" do
+    require 'json'
     JSON.parse(@data.to_json)['exception']['exception_class'].should == 'Exceptional::FunkyError'
   end
 
@@ -53,13 +68,13 @@ end
 
 describe Exceptional::ControllerExceptionData, 'with request/controller/params' do
   class Exceptional::SomeController < ActionController::Base
-      filter_parameter_logging :filter_me
+    filter_parameter_logging :filter_me
   end
-  
+
   before :each do
     @controller = Exceptional::SomeController.new
     @request = ActionController::TestRequest.new({'action' => 'some_action' })
-    @request.request_uri = '/some_path?var1=abc' 
+    @request.request_uri = '/some_path?var1=abc'
     @request.stub!(:parameters).and_return({'var1' => 'abc', 'action' => 'some_action', 'filter_me' => 'private'})
     @request.stub!(:request_method).and_return(:get)
     @request.stub!(:remote_ip).and_return('1.2.3.4')
@@ -87,8 +102,8 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
       end
     end
     crazy = Crazy.new
-    input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
-    Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1','2']}
+    input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
+    Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
   end
 
   it "to_strings regex because JSON.parse(/aa/.to_json) doesn't work" do

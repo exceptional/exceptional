@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name = %q{exceptional}
-  s.version = "2.0.2"
+  s.version = "2.0.3"
   s.authors = ["Contrast"]
   s.summary = %q{Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service)}
   s.description = %q{Exceptional is the core Ruby library for communicating with http://getexceptional.com (hosted error tracking service). Use it to find out about errors that happen in your live app. It captures lots of helpful information to help you fix the errors.}
