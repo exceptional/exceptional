@@ -14,6 +14,8 @@ describe ActiveSupport::JSON, 'standards compliant json' do
 end
 
 class TestingController < ActionController::Base
+  filter_parameter_logging :password, /credit_card/
+
   def raises_something
     raise StandardError
   end
@@ -33,6 +35,14 @@ describe TestingController do
     Exceptional::Catcher.stub!(:handle_with_controller)
     send_request(:raises_something)
     @response.code.should == '500'
+  end
+
+  it "filters paramaters based on controller filter_parameter_logging" do
+    Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
+    Exceptional::Remote.should_receive(:error) {|exception_data|
+      exception_data.to_hash['request']['parameters']['credit_card_number'].should == '[FILTERED]'
+    }
+    send_request(:raises_something, {:credit_card_number => '1234566777775453', :something_else => 'boo'})
   end
 end
 
