@@ -31,16 +31,6 @@ end
 
 This reports exceptions to Exceptional and re-raises them.
 
-## Configuration options
-
-config/exceptional.yml needs a minimul of:
-
-api-key: YOUR-API-KEY
-
-and optionally:
-
-ssl: true
-
 ### (Optional) Loading exceptional config
 
 You can either do something like
