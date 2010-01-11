@@ -28,7 +28,7 @@ module Exceptional
 
     def context_stuff
       context = Thread.current[:exceptional_context]
-      context.blank? ? {} : {'context' => context}
+      (context.nil? || context.empty?) ? {} : {'context' => context}
     end
 
     def to_json
