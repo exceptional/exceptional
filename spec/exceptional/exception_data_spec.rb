@@ -145,4 +145,18 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     data = Exceptional::ControllerExceptionData.new(myException)
     data.uniqueness_hash.should == Digest::MD5.hexdigest('123')
   end
+  
+  it "creates a nil uniqueness_hash if nil backtrace" do
+    myException = Exception.new
+    myException.stub!(:backtrace).and_return(nil)
+    data = Exceptional::ControllerExceptionData.new(myException)    
+    data.uniqueness_hash.should == nil
+  end
+  
+  it "creates a uniqueness_hash from backtrace" do
+    myException = Exception.new
+    myException.stub!(:backtrace).and_return([])
+    data = Exceptional::ControllerExceptionData.new(myException)
+    data.uniqueness_hash.should == nil
+  end
 end
