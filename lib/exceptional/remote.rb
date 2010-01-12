@@ -1,6 +1,7 @@
 require 'zlib'
 require 'cgi'
 require 'net/http'
+require 'net/https'
 require 'digest/md5'
 
 module Exceptional
