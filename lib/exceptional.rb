@@ -8,6 +8,7 @@ require 'exceptional/application_environment'
 require 'exceptional/exception_data'
 require 'exceptional/controller_exception_data'
 require 'exceptional/remote'
+require 'rack/exceptional'
 
 module Exceptional
   PROTOCOL_VERSION = 5
