@@ -35,7 +35,7 @@ describe Exceptional::RackExceptionData do
       "SERVER_PORT" =>"9292",
       "REQUEST_METHOD" =>"GET",
       "rack.input" => StringIO.new,
-      "QUERY_STRING" =>"",
+      "QUERY_STRING" =>"cockle=shell&bay=cool",
       "GATEWAY_INTERFACE" =>"CGI/1.1"
     }
                         
@@ -54,7 +54,8 @@ describe Exceptional::RackExceptionData do
 
   it "should capture request details" do
     request_hash = @data.to_hash['request']
-    request_hash['url'].should == 'http://localhost:9292/'
+    request_hash['url'].should == 'http://localhost:9292/?cockle=shell&bay=cool'
+    request_hash['parameters'].should == {"cockle"=>"shell", "bay"=>"cool"} 
     request_hash['request_method'].should == 'GET'
     request_hash['remote_ip'].should == '127.0.0.1'
     request_hash['headers'].should == {"HTTP_HOST"=>"localhost:9292", "HTTP_ACCEPT"=>"*/*", "HTTP_USER_AGENT"=>"curl/7.19.6 (i386-apple-darwin9.8.0) libcurl/7.19.6 zlib/1.2.3", "HTTP_VERSION"=>"HTTP/1.1"}
