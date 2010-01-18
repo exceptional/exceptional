@@ -8,6 +8,10 @@ module Exceptional
       @controller = controller
     end
 
+    def framework
+      "rails"
+    end
+
     def extra_stuff
       return {} if @request.nil?
       {

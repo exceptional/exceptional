@@ -2,8 +2,8 @@ require 'digest/md5'
 
 module Exceptional
   class ApplicationEnvironment
-    def self.to_hash
-      hash = {
+    def self.to_hash(framework)
+      {
         'client' => {
           'name' => Exceptional::CLIENT_NAME,
           'version' => Exceptional::VERSION,
@@ -21,11 +21,6 @@ module Exceptional
           'libraries_loaded' => libraries_loaded
         }
       }
-      hash
-    end
-
-    def self.framework
-      defined?(RAILS_ENV) ? "rails" : nil
     end
 
     def self.environment

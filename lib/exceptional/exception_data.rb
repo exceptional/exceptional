@@ -8,7 +8,7 @@ module Exceptional
     end
 
     def to_hash
-      hash = ::Exceptional::ApplicationEnvironment.to_hash
+      hash = ::Exceptional::ApplicationEnvironment.to_hash(framework)
       hash.merge!({
         'exception' => {
           'exception_class' => @exception.class.to_s,
@@ -43,6 +43,10 @@ module Exceptional
         end
       end
     end
+    
+    def framework
+      nil
+    end    
 
     def uniqueness_hash
       return nil if (@exception.backtrace.nil? || @exception.backtrace.empty?)

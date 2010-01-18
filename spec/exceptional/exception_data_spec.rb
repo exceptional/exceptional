@@ -118,6 +118,7 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
         @session_id = '123'
       end
     end
+    
     request = ActionController::TestRequest.new
     session = SessionWithInstanceVariables.new
     request.stub!(:session).and_return(session)
@@ -159,4 +160,6 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     data = Exceptional::ControllerExceptionData.new(myException)
     data.uniqueness_hash.should == nil
   end
+  
+  
 end

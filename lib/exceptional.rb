@@ -7,13 +7,15 @@ require 'exceptional/config'
 require 'exceptional/application_environment'
 require 'exceptional/exception_data'
 require 'exceptional/controller_exception_data'
+require 'exceptional/rack_exception_data'
 require 'exceptional/remote'
 require 'rack/exceptional'
 
 module Exceptional
+
   PROTOCOL_VERSION = 5
   VERSION = '2.0.3'
-  CLIENT_NAME = 'getexceptional-rails-plugin'
+  CLIENT_NAME = 'getexceptional-gem'
 
   def self.logger
     ::Exceptional::LogFactory.logger
