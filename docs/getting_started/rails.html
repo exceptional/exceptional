@@ -1,0 +1,46 @@
+---
+layout: default
+title: Exceptional on Rails
+---
+<script type="text/javascript">
+ $(document).ready(
+	function() {
+  	$('div#TableOfContents ul li a.getting_started').addClass('selected');
+	}
+);
+</script>
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/">Home</a> &#187; <a href="/docs/getting_started/index.html">Getting Started</a> &#187; <a href="/getting_started/rails.html">Rails</a>
+ </div>
+<!-->
+ <div id="Tools">
+   <a href="#" class="icon_printer">Print</a><span class="sepearator">|</span><a href="#">Permalink</a>
+ </div>
+-->
+</div>
+
+<h1><a href="#">Install Exceptional in your Rails app</a></h1>
+
+<h3>1. Install the exceptional gem:</h3>
+{% highlight bash %}
+	$ gem install exceptional
+{% endhighlight %}
+
+<h3>2. Configure your environment.rb file:</h3>
+{% highlight bash %}
+	config.gem 'exceptional', :version => '2.0.6'
+{% endhighlight %}
+
+<h3>3. Configure Exceptional for your app</h3>
+{% highlight bash %}
+	$ exceptional install YOUR-API-KEY
+{% endhighlight %}
+
+<p>You will find your api key in your apps settings in Exceptional.</p>
+
+<h3>4. Test everything is working</h3>
+{% highlight bash %}
+	$ exceptional test
+{% endhighlight %}
+<p>You will see a test exception in your exceptional app</p>
