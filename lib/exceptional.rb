@@ -9,6 +9,7 @@ require 'exceptional/exception_data'
 require 'exceptional/controller_exception_data'
 require 'exceptional/rack_exception_data'
 require 'exceptional/remote'
+require 'exceptional/integration/rack'
 
 module Exceptional
 

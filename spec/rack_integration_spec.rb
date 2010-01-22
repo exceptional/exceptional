@@ -15,7 +15,7 @@ describe Rack::Exceptional do
   
   it 're-raises errors caught in the middleware' do       
     rr = Rack::Exceptional.new(@app)        
-    Exceptional::Catcher.should_receive(:handle)
+    Exceptional::Catcher.should_receive(:handle_with_rack)
     lambda { rr.call(@env)}.should raise_error(ExceptionalTestError)    
   end
 end
