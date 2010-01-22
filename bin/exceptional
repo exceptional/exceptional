@@ -12,25 +12,35 @@ test               # Send a test exception to Exceptional.
 install <api_key>  # Create config/exceptional.yml with your api_key. Overrites existing one.
 USAGE
   when 'test'
-    puts "Loading Rails environment."
-    require(File.join('config', 'boot'))
-    require(File.join(RAILS_ROOT, 'config', 'environment'))
-    require "exceptional/integration/tester"
-    unless Exceptional::Config.api_key.blank?
+    if defined?(RAILS_ROOT)
+      puts "Loading Rails environment."
+      require(File.join('config', 'boot'))
+      require(File.join(RAILS_ROOT, 'config', 'environment')) if defined?(RAILS_ROOT)
+      require "exceptional/integration/tester"
+    else 
+      require 'json'
+      require 'exceptional'    
+      require "exceptional/integration/tester"      
+      Exceptional::Config.load('config/exceptional.yml')
+    end    
+    unless Exceptional::Config.api_key.empty?
       Exceptional::Integration.test
-    end
+    else
+      puts 'API key not configured'
+    end 
   when 'install'
     api_key = args[0]
     if (api_key.nil?)
       puts 'Missing required paramater <api-key>. Check your app configuration at http://getexceptional.com.'
     else
-      unless File.file?('config/environment.rb')
-        puts "Run this command from the root of your rails application."
+      if (defined?(RAILS_ROOT) && !File.file?('config/environment.rb'))
+        puts "Run this command from the root of your rails application." and return
       else
-        config_file = File.open('config/exceptional.yml', 'w')
-        config_file.puts("api-key: #{api_key}\n")
-        config_file.close
-        puts "Config file written as config/exceptional.yml."
+        Dir.mkdir('config') unless File.exists?('config')        
       end
-    end
+    end        
+    config_file = File.open('config/exceptional.yml', 'w')
+    config_file.puts("api-key: #{api_key}\n")
+    config_file.close
+    puts "Config file written as config/exceptional.yml."
 end
