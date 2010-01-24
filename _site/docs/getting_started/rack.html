@@ -34,7 +34,7 @@
 -->
 </div>
 
-<h1><a href="#">Install Exceptional in your Rack app</a></h1>
+<h1><a href="#">Install Exceptional in your pure rack app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
 <div>
@@ -43,6 +43,43 @@
   </pre>
 </div>
 
+
+<h3>2. Generate an Exceptional config file (config/exceptional.yml)</h3>
+<div>
+  <pre>
+    <code class='ruby'>$ exceptional install YOUR-API-KEY</code>
+  </pre>
+</div>
+
+<p>You will find your api key in your apps settings in Exceptional.
+
+<h3>3. Configure your config.ru file:</h3>
+<div>
+  <pre>
+    <code class='ruby'>require 'rack/exceptional'	
+  use Rack::Exceptional</code>
+  </pre>
+</div>
+
+
+<h3>4. Test everything is working</h3>
+<div>
+  <pre>
+    <code class='bash'>$ exceptional test</code>
+  </pre>
+</div>
+
+<p>You will see a test exception in your exceptional app screen</p>
+
+<h3>5. Enabling Exceptional for non production rack environments</h3>
+<p>By default Exceptional is only enabled for the <i>Production</i> environment. If you want exceptional collecting errors for other environments then enable that environment in the config/exceptional.yml file.
+e.g	
+<div>
+  <pre>
+    <code class='bash'>development
+    enabled: true</code>
+  </pre>
+</div>
 
     </div>
     
@@ -62,11 +99,17 @@
             <li><a href="/docs/heroku/rack.html">Rack</a></li>
           </ul>
         </li>
+        <li><a href="#">Support</a>
+          <ul>
+            <li><a href="mailto:support@getexceptional.com">support@getexceptional.com</a></li>
+          </ul>
+        </li>
         <li><a href="#">Source Code</a>
           <ul>
             <li><a href="http://github.com/contrast/exceptional" target="_new">Github</a></li>
           </ul>
         </li>
+
       </ul>        
 
     </div>

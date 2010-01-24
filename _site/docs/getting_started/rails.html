@@ -34,7 +34,7 @@
 -->
 </div>
 
-<h1><a href="#">Install Exceptional in your Rails app</a></h1>
+<h1><a href="#">Install Exceptional in your rails app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
 <div>
@@ -47,12 +47,12 @@
 <h3>2. Configure your environment.rb file:</h3>
 <div>
   <pre>
-    <code class='bash'>config.gem 'exceptional', :version =&gt; '2.0.6'</code>
+    <code class='ruby'>config.gem 'exceptional', :version =&gt; '2.0.6'</code>
   </pre>
 </div>
 
 
-<h3>3. Configure Exceptional for your app</h3>
+<h3>3. Generate an Exceptional config file (config/exceptional.yml)</h3>
 <div>
   <pre>
     <code class='bash'>$ exceptional install YOUR-API-KEY</code>
@@ -60,7 +60,7 @@
 </div>
 
 
-<p>You will find your api key in your apps settings in Exceptional.</p>
+<p>You will find your api key in your apps settings in Exceptional.
 
 <h3>4. Test everything is working</h3>
 <div>
@@ -69,7 +69,18 @@
   </pre>
 </div>
 
-<p>You will see a test exception in your exceptional app</p>
+<p>You will see a test exception in your exceptional app screen</p>
+
+<h3>5. Enabling Exceptional for non production rails environments</h3>
+<p>By default Exceptional is only enabled for the <i>Production</i> environment. If you want exceptional collecting errors for other environments then enable that environment in the config/exceptional.yml file.
+e.g	
+<div>
+  <pre>
+    <code class='bash'>development
+    enabled: true</code>
+  </pre>
+</div>
+
     </div>
     
     <div id="TableOfContents">
@@ -88,11 +99,17 @@
             <li><a href="/docs/heroku/rack.html">Rack</a></li>
           </ul>
         </li>
+        <li><a href="#">Support</a>
+          <ul>
+            <li><a href="mailto:support@getexceptional.com">support@getexceptional.com</a></li>
+          </ul>
+        </li>
         <li><a href="#">Source Code</a>
           <ul>
             <li><a href="http://github.com/contrast/exceptional" target="_new">Github</a></li>
           </ul>
         </li>
+
       </ul>        
 
     </div>

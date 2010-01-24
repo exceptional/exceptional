@@ -20,9 +20,28 @@ title: Exceptional on Ruby
 -->
 </div>
 
-<h1><a href="#">Install Exceptional in your Rack app</a></h1>
+<h1><a href="#">Install Exceptional in your ruby apps</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
 <pre><code>$ gem install exceptional</code></pre>
 
+<h3>2. Generate an Exceptional config file (config/exceptional.yml)</h3>
+{% highlight ruby %}
+	$ exceptional install YOUR-API-KEY
+{% endhighlight %}
+<p>You will find your api key in your apps settings in Exceptional.
+
+<h3>3. Enable Exceptional in your ruby code </h3>
+{% highlight ruby %}
+	require 'rubygems'
+  require 'exceptional'
+{% endhighlight %}
+
+<h3>4. Use the Exceptional.rescue block to catch exceptions</h3>
+{% highlight ruby %}
+  Exceptional.rescue do
+    # Add your Ruby code here!
+  end
+{% endhighlight %}
+<p>This block will report exceptions to exceptional and re-raise them</p>
 
