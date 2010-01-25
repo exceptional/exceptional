@@ -4,7 +4,7 @@ require 'rack'
 module Rack  
   class Exceptional    
 
-    def initialize(app, exceptional_config = "exceptional.yml")
+    def initialize(app, exceptional_config = "config/exceptional.yml")
       @app = app
       ::Exceptional::Config.load(exceptional_config)
     end    
