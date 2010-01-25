@@ -13,42 +13,29 @@ title: Exceptional on Rack
  <div id="Breadcrumbs">
    <strong>In</strong> <a href="/">Home</a> &#187; <a href="/docs/getting_started/index.html">Getting Started</a> &#187; <a href="/getting_started/rack.html">Rack</a>
  </div>
-<!-->
- <div id="Tools">
-   <a href="#" class="icon_printer">Print</a><span class="sepearator">|</span><a href="#">Permalink</a>
- </div>
--->
 </div>
 
 <h1><a href="#">Install Exceptional in your rack app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
-{% highlight bash %}
-	$ gem install exceptional
-{% endhighlight %}
+<pre><code>	$ gem install exceptional</pre></code>
 
-<h3>2. Generate an Exceptional config file (config/exceptional.yml)</h3>
-{% highlight ruby %}
-	$ exceptional install YOUR-API-KEY
-{% endhighlight %}
-<p>You will find your api key in your apps settings in Exceptional.
+<h3>2. Generate the Exceptional config file (config/exceptional.yml)</h3>
+<pre><code>	$ exceptional install YOUR-API-KEY</pre></code>
+
+<p>You will find your api key in the apps settings screen in Exceptional.
 
 <h3>3. Configure your config.ru file:</h3>
-{% highlight ruby %}
-	require 'rack/exceptional'	
-  use Rack::Exceptional
-{% endhighlight %}
+<pre><code>	require 'rack/exceptional'
+	use Rack::Exceptional</pre></code>
 
 <h3>4. Test everything is working</h3>
-{% highlight bash %}
-	$ exceptional test
-{% endhighlight %}
+<pre><code>	$ exceptional test</pre></code>
 <p>You will see a test exception in your exceptional app screen</p>
 
 <h3>5. Enabling Exceptional for non production rack environments</h3>
-<p>By default Exceptional is only enabled for the <i>Production</i> environment. If you want exceptional collecting errors for other environments then enable that environment in the config/exceptional.yml file.
-e.g	
-{% highlight bash %}
-	development
-    enabled: true	
-{% endhighlight %}
+<p>By default Exceptional will only collect errors and exceptions for the <i>production</i> rack environment. If you want exceptional collecting errors in other environments then you must enable that environment in the config/exceptional.yml file.
+	
+<pre><code>	development
+	  enabled: true	
+</pre></code>

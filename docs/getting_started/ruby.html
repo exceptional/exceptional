@@ -13,35 +13,26 @@ title: Exceptional on Ruby
  <div id="Breadcrumbs">
    <strong>In</strong> <a href="/">Home</a> &#187; <a href="/docs/getting_started/index.html">Getting Started</a> &#187; <a href="/getting_started/ruby.html">Ruby</a>
  </div>
-<!-->
- <div id="Tools">
-   <a href="#" class="icon_printer">Print</a><span class="sepearator">|</span><a href="#">Permalink</a>
- </div>
--->
 </div>
 
-<h1><a href="#">Install Exceptional in your ruby apps</a></h1>
+<h1><a href="#">Install Exceptional in your ruby app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
-<pre><code>$ gem install exceptional</code></pre>
+<pre><code>	$ gem install exceptional</pre></code>
 
-<h3>2. Generate an Exceptional config file (config/exceptional.yml)</h3>
-{% highlight ruby %}
-	$ exceptional install YOUR-API-KEY
-{% endhighlight %}
-<p>You will find your api key in your apps settings in Exceptional.
+<h3>2. Generate the Exceptional config file (config/exceptional.yml)</h3>
+<pre><code>	$ exceptional install YOUR-API-KEY</pre></code>
 
+<p>You will find your  key in the apps settings screen in Exceptional.
+	
 <h3>3. Require the Exceptional gem in your ruby code </h3>
-{% highlight ruby %}
-	require 'rubygems'
-  require 'exceptional'
-{% endhighlight %}
+<pre><code>	require 'rubygems'
+	require 'exceptional'</pre></code>
 
 <h3>4. Use the Exceptional.rescue block to catch exceptions</h3>
-{% highlight ruby %}
-  Exceptional.rescue do
-    # Add your Ruby code here!
-  end
-{% endhighlight %}
-<p>This block will report exceptions to exceptional and re-raise them to your ruby app</p>
+<pre><code>	Exceptional.rescue do
+      # Add your Ruby code here!
+    end
+</pre></code>
+<p>This block will report exceptions to getexceptional.com and then re-raise them to your ruby code</p>
 

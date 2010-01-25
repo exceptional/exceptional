@@ -13,43 +13,29 @@ title: Exceptional on Rails
  <div id="Breadcrumbs">
    <strong>In</strong> <a href="/">Home</a> &#187; <a href="/docs/getting_started/index.html">Getting Started</a> &#187; <a href="/getting_started/rails.html">Rails</a>
  </div>
-<!-->
- <div id="Tools">
-   <a href="#" class="icon_printer">Print</a><span class="sepearator">|</span><a href="#">Permalink</a>
- </div>
--->
 </div>
 
 <h1><a href="#">Install Exceptional in your rails app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
-
-{% highlight bash %}
-	$ gem install exceptional
-{% endhighlight %}
+<pre><code>	$ gem install exceptional</pre></code>
 
 <h3>2. Configure your environment.rb file:</h3>
-{% highlight ruby %}
-	config.gem 'exceptional', :version => '2.0.6'
-{% endhighlight %}
+<pre><code>	config.gem 'exceptional', :version => '2.0.6'
+</pre></code>
 
-<h3>3. Generate an Exceptional config file (config/exceptional.yml)</h3>
-{% highlight bash %}
-	$ exceptional install YOUR-API-KEY
-{% endhighlight %}
+<h3>3. Generate the Exceptional config file (config/exceptional.yml)</h3>
+<pre><code>	$ exceptional install YOUR-API-KEY</pre></code>
 
-<p>You will find your api key in your apps settings in Exceptional.
+<p>You will find your api key in the apps settings screen in Exceptional.
 
 <h3>4. Test everything is working</h3>
-{% highlight bash %}
-	$ exceptional test
-{% endhighlight %}
+<pre><code>	$ exceptional test</pre></code>
 <p>You will see a test exception in your exceptional app screen</p>
 
 <h3>5. Enabling Exceptional for non production rails environments</h3>
-<p>By default Exceptional is only enabled for the <i>Production</i> environment. If you want exceptional collecting errors for other environments then enable that environment in the config/exceptional.yml file.
-e.g	
-{% highlight bash %}
-	development
-    enabled: true	
-{% endhighlight %}
+<p>By default Exceptional will only collect errors and exceptions for the <i>production</i> rails environment. If you want exceptional collecting errors in other environments then you must enable that environment in the config/exceptional.yml file.
+	
+<pre><code>	development
+	  enabled: true	
+</pre></code>
