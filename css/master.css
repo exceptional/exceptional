@@ -83,6 +83,13 @@ div#MainContent {
   float: right;
 }
 
+div#Footer {
+  width: 666px;
+  padding: 18px 0;
+  float: right;
+  text-align: center;
+}
+
 div#TableOfContents {
   float: left;
   width: 207px;
