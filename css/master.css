@@ -85,7 +85,7 @@ div#MainContent {
 
 div#Footer {
   width: 666px;
-  padding: 18px 0;
+  padding: 18px 0 54px;
   float: right;
   text-align: center;
 }
@@ -249,3 +249,15 @@ div#TableOfContents ul li ul {
   padding-bottom: 18px;
   margin-left: 0;
 }
+
+/* Footer styling */
+div#Footer {
+  color: #999;
+  font-weight: bold;
+}
+div#Footer a {
+  color: #b80028;
+  font-weight: bold;
+  margin-right: 18px;
+}
+
