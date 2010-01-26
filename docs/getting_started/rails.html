@@ -34,8 +34,9 @@ title: Exceptional on Rails
 <p>You will see a test exception in your exceptional app screen</p>
 
 <h3>5. Enabling Exceptional for non production rails environments</h3>
-<p>By default Exceptional will only collect errors and exceptions for the <i>production</i> rails environment. If you want exceptional collecting errors in other environments then you must enable that environment in the config/exceptional.yml file.
+<p>By default Exceptional will only collect errors and exceptions for the <i>production</i> rails environment (as specified by RAILS_ENV). If you want exceptional collecting errors in other environments then you must enable that environment by adding the following lines to the config/exceptional.yml file.
+<p>e.g for the development environment</p>
 	
-<pre><code>	development
+<pre><code>	development:
 	  enabled: true	
 </pre></code>
