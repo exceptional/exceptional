@@ -80,6 +80,10 @@ div#MainContent a:link:after, div#MainContent a:visited:after {
   font-size: 10pt;
 }
 
+div#MainContent h1 a:link:after, div#MainContent h1 a:visited:after {
+  display: none;
+}
+
 div#MainContent strong {
   font-weight: bold;
 }
