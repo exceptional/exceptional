@@ -33,8 +33,8 @@ title: Exceptional on Rack
 <pre><code>	$ exceptional test</pre></code>
 <p>You will see a test exception in your exceptional app screen</p>
 
-<h3>5. Enabling Exceptional for non production rack environments</h3>
-<p>By default Exceptional will only collect errors and exceptions for the <i>production</i> rack environment (as specified by RACK_ENV). If you want exceptional collecting errors in other environments then you must enable that environment by adding the following lines to the config/exceptional.yml file.
+<h3>6. Enabling Exceptional for non production rack environments</h3>
+<p>By default Exceptional will not collect errors and exceptions for the <i>development(default)</i> or <i>test</i> rack environments (as specified by RACK_ENV). If you want exceptional collecting errors for those environments then you must enable that environment by adding the following lines to the config/exceptional.yml file.
 <p>e.g for the development environment</p>
 	
 <pre><code>	development:
