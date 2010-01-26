@@ -1,0 +1,147 @@
+/* Reset */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* Basic styles */
+body {
+  color: #212121;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-align: left;
+  font-size: 10pt;
+  line-height: 14pt;
+}
+
+div#Header a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+div#Footer {
+  display: none;
+}
+
+div#TableOfContents {
+  display: none;
+}
+
+/* Main content styling */
+div#MainContent a {
+  color: #b80028;
+  font-weight: bold;
+}
+
+div#MainContent a:link:after, div#MainContent a:visited:after {
+  content: " (" attr(href) ") ";
+  font-size: 8pt;
+}
+
+div#MainContent h1 a:link:after, div#MainContent h1 a:visited:after {
+  display: none;
+}
+
+div#MainContent strong {
+  font-weight: bold;
+}
+
+div#MainContent p,
+div#MainContent pre,
+div#MainContent ul,
+div#MainContent ol,
+div#MainContent dl,
+div#MainContent table {
+  padding: 0 0 14pt;
+}
+
+div#MainContent code {
+  font-size: 9pt;
+  font-family: Monaco, "Andale Mono", Consolas, "Courier New", monospace;
+}
+
+div#MainContent h1 {
+  padding: 14pt 0;
+  font-size: 24pt;
+  line-height: 28pt;
+  font-weight: bold;
+}
+
+div#MainContent h1 a {
+  color: #212121;
+  text-decoration: none;
+}
+
+div#MainContent h2 {
+  padding: 0 0 14pt;
+  font-weight: bold;
+  font-size: 14pt;
+  line-height: 21pt;
+}
+
+div#MainContent h3 {
+  padding: 0 0 14pt;
+  font-weight: bold;
+}
+
+div#MainContent h4 {
+  padding: 0;
+  font-weight: bold;
+  color: #666;
+}
+
+div#MainContent dl dt {
+  font-weight: bold;
+  display: block;
+}
+
+div#MainContent dl dd {
+  display: block;
+  padding: 0 0 7pt;
+}
+
+div#MainContent div.container {
+  display: none;
+}

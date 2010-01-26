@@ -4,9 +4,9 @@ title: Exceptional partner api
 pygments: true
 ---
   
-<h1><a href="#">adsdsaPartner API</a></h1>
+<h1><a href="#">Partner API</a></h1>
 <h2>Authentication</h2>
-<p>All requests should be made to https://www.getexceptional.com using HTTP Basic Auth</p>
+<p>All requests should be made to <strong>https</strong>://www.getexceptional.com using HTTP Basic Auth</p>
 
 <h2>Creating an app on exceptional</h2>
 <p>POST /partners/apps</p>
@@ -20,44 +20,68 @@ pygments: true
   <dd>email address of the user who 'owns' the app, at the moment you must be the 'owner' to do certain things, like
     configuring 3rd party services.
   </dd>
+  <dt>plan</dt>
+  <dd>'free' or 'paid'.</dd>
 </dl>
 <h3>Response (JSON)</h3>
 
 <p>When successful (201 created)</p>
 
-  {% highlight ruby %}
-  def something
-  end
-{:api_key => [API_KEY used to configure gem/plugin],
+<pre><code>{:api_key => [API_KEY used to configure gem/plugin],
   :id => [ID used to identify the app with exceptional],
-  :user_id => [ID used to identify the user who owns this app]}
-{% endhighlight %}
+  :user_id => [ID used to identify the user who owns this app]}</code></pre>
 
-  
 <p>When failure (422 unprocessible entity)</p>
 
+<pre><code>['error details']</code></pre>
+
+<h3>Example:</h3>
 <pre><code>require 'rubygems'
-  require 'rest_client'
-  require 'json'
+require 'rest_client'
+require 'json'
 
-  HTTP_USERNAME = 'heroku'
-  HTTP_PASSWORD = 'sdasdasd asdsa d adas dass'
+HTTP_USERNAME = 'heroku'
+HTTP_PASSWORD = 'sdasdasd asdsa d adas dass'
 
-  imaginary_app_id = 'app1@heroku.com'
-
-  exceptional = RestClient::Resource.new("https://getexceptional.com", :password => HTTP_PASSWORD, :user =>
+partner_app_id = 'app1@heroku.com'
+exceptional = RestClient::Resource.new("https://getexceptional.com", :password => HTTP_PASSWORD, :user =>
   HTTP_USERNAME)
 
-  ## create an app, which returns an apikey
-  response = exceptional['partners/apps'].post :partner_app_id => imaginary_app_id, :name => 'Some name', :owner =>
-  'darragh+heroku-exceptional@contrast.ie'
-  api_key = JSON.parse(response)['api_key']
-  app_id = JSON.parse(response)['id']
-  puts api_key
+## create an app, which returns an apikey
+response = exceptional['partners/apps'].post :partner_app_id => partner_app_id,
+                                             :name => 'Some name',
+                                             :owner => 'someone@example.com'
+response_hash = JSON.parse(response)
+api_key = response_hash['api_key']
+app_id = response_hash['id']
+owner_id = response_hash['user_id']
 </code></pre>
-<h2>/partners/apps POST, PUT, DELETE</h2>
-<h2>/partners/apps/users POST, DELETE</h2>
-<h2>/partners/apps/exceptions GET index...</h2>
 
-https + basic auth
+  <h2>Other stuff</h2>
+<h3>/partners/apps POST, PUT, DELETE</h3>
+  <h4>PUT /partners/apps/:id </h4>
+  <p>:id is the ID returned from when created.</p>
+  <p>:plan can be passed to upgrade/downgrade app</p>
+  <p>:name can be changed</p>
+
+  <h4>DELETE /partners/apps/:id </h4>
+  <p>:id as before</p>
+  <p>Will destroy the app on exceptional, only if it's got &lt; 5 errors (totally arbitrary so that we don't delete apps for people potentially migrating off heroku but want to keep using exceptional)</p>
+<h3>/partners/apps/users POST, DELETE</h3>
+  <h4>POST /partners/apps/:id/users</h4>
+  <p>:email param - email address of user to grant permission to for the app</p>
+  <p>response is json with 'id' of the user</p>
+
+  <h4>DELETE /partners/apps/:id/users/:id</h4>
+  <p>:id of the user to revoke permission to the app</p>
+
+<h3>/partners/apps/exceptions GET index...</h3>
+<h4>GET /partners/apps/:id/exceptions</h4>
+  <p>returns json with:</p>
+  <p>app_url</p>
+  <p>last_day</p>
+  <p>last_hour</p>
+  <p>exceptions hash</p>
+
+
 
