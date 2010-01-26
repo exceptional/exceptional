@@ -1,5 +1,63 @@
 ---
 layout: default
 title: Exceptional partner api
+pygments: true
 ---
-<h1><a href="#">Partner API</a></h1>
+  
+<h1><a href="#">adsdsaPartner API</a></h1>
+<h2>Authentication</h2>
+<p>All requests should be made to https://www.getexceptional.com using HTTP Basic Auth</p>
+
+<h2>Creating an app on exceptional</h2>
+<p>POST /partners/apps</p>
+<h3>Request parameters</h3>
+<dl>
+  <dt>partner_app_id</dt>
+  <dd>something like app123@heroku.com</dd>
+  <dt>name</dt>
+  <dd>Name of app as it will appear in exceptional (eg stormy-mountain-34)</dd>
+  <dt>owner</dt>
+  <dd>email address of the user who 'owns' the app, at the moment you must be the 'owner' to do certain things, like
+    configuring 3rd party services.
+  </dd>
+</dl>
+<h3>Response (JSON)</h3>
+
+<p>When successful (201 created)</p>
+
+  {% highlight ruby %}
+  def something
+  end
+{:api_key => [API_KEY used to configure gem/plugin],
+  :id => [ID used to identify the app with exceptional],
+  :user_id => [ID used to identify the user who owns this app]}
+{% endhighlight %}
+
+  
+<p>When failure (422 unprocessible entity)</p>
+
+<pre><code>require 'rubygems'
+  require 'rest_client'
+  require 'json'
+
+  HTTP_USERNAME = 'heroku'
+  HTTP_PASSWORD = 'sdasdasd asdsa d adas dass'
+
+  imaginary_app_id = 'app1@heroku.com'
+
+  exceptional = RestClient::Resource.new("https://getexceptional.com", :password => HTTP_PASSWORD, :user =>
+  HTTP_USERNAME)
+
+  ## create an app, which returns an apikey
+  response = exceptional['partners/apps'].post :partner_app_id => imaginary_app_id, :name => 'Some name', :owner =>
+  'darragh+heroku-exceptional@contrast.ie'
+  api_key = JSON.parse(response)['api_key']
+  app_id = JSON.parse(response)['id']
+  puts api_key
+</code></pre>
+<h2>/partners/apps POST, PUT, DELETE</h2>
+<h2>/partners/apps/users POST, DELETE</h2>
+<h2>/partners/apps/exceptions GET index...</h2>
+
+https + basic auth
+
