@@ -29,7 +29,10 @@ title: Exceptional on Ruby
 <pre><code>	require 'rubygems'
 	require 'exceptional'</pre></code>
 
-<h3>4. Use the Exceptional.rescue block to catch exceptions</h3>
+<h3>4. Configure Exceptional for your ruby app</h3>
+<pre><code>	Exceptional::Config.load("config/exceptional.yml")</pre></code>
+
+<h3>5. Use the Exceptional.rescue block to catch exceptions in your ruby code</h3>
 <pre><code>	Exceptional.rescue do
       # Add your Ruby code here!
     end
