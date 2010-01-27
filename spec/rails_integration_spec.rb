@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integrati
 
 describe Exceptional, 'version number' do
   it "be available proramatically" do
-    Exceptional::VERSION.should == '2.0.7'
+    Exceptional::VERSION.should =~ /\d+\.\d+\.\d+/
   end
 end
 

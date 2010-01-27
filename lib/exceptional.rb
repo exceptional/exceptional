@@ -10,11 +10,10 @@ require 'exceptional/controller_exception_data'
 require 'exceptional/rack_exception_data'
 require 'exceptional/remote'
 require 'exceptional/integration/rack'
+require 'exceptional/version'
 
 module Exceptional
-
   PROTOCOL_VERSION = 5
-  VERSION = '2.0.7'
   CLIENT_NAME = 'getexceptional-gem'
 
   def self.logger
