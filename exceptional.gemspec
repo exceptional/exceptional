@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name = %q{exceptional}
-  s.version = "2.0.6"
+  s.version = "2.0.7"
   s.authors = ["Contrast"]
   s.summary = %q{ getexceptional.com is a hosted service for tracking errors in your Ruby/Rails/Rack apps }
   s.description = %q{Exceptional is the Ruby gem for communicating with http://getexceptional.com (hosted error tracking service). Use it to find out about errors that happen in your live app. It captures lots of helpful information to help you fix the errors.}

@@ -14,7 +14,7 @@ require 'exceptional/integration/rack'
 module Exceptional
 
   PROTOCOL_VERSION = 5
-  VERSION = '2.0.6'
+  VERSION = '2.0.7'
   CLIENT_NAME = 'getexceptional-gem'
 
   def self.logger
