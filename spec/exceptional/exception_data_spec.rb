@@ -79,8 +79,8 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     @request.stub!(:request_method).and_return(:get)
     @request.stub!(:remote_ip).and_return('1.2.3.4')
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html'})
-    error = Exceptional::FunkyError.new('some message')
-    data = Exceptional::ControllerExceptionData.new(error, @controller, @request)
+    @error = Exceptional::FunkyError.new('some message')
+    data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
     @hash = data.to_hash
   end
 
@@ -104,6 +104,13 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     crazy = Crazy.new
     input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
     Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
+  end
+
+  it "ArgumentError bug with file object" do
+    file = File.new(File.expand_path('../../fixtures/favicon.png',__FILE__))
+    @request.stub!(:parameters).and_return({'something' => file })
+    data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
+    data.to_hash['request']['parameters']['something'].should == file.to_s
   end
 
   it "to_strings regex because JSON.parse(/aa/.to_json) doesn't work" do
@@ -141,25 +148,23 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
   end
 
   it "creates a uniqueness_hash from backtrace" do
-    myException = Exception.new
-    myException.stub!(:backtrace).and_return(['123'])
-    data = Exceptional::ControllerExceptionData.new(myException)
+    exception = Exception.new
+    exception.stub!(:backtrace).and_return(['123'])
+    data = Exceptional::ControllerExceptionData.new(exception)
     data.uniqueness_hash.should == Digest::MD5.hexdigest('123')
   end
   
   it "creates a nil uniqueness_hash if nil backtrace" do
-    myException = Exception.new
-    myException.stub!(:backtrace).and_return(nil)
-    data = Exceptional::ControllerExceptionData.new(myException)    
+    exception = Exception.new
+    exception.stub!(:backtrace).and_return(nil)
+    data = Exceptional::ControllerExceptionData.new(exception)
     data.uniqueness_hash.should == nil
   end
   
   it "creates a uniqueness_hash from backtrace" do
-    myException = Exception.new
-    myException.stub!(:backtrace).and_return([])
-    data = Exceptional::ControllerExceptionData.new(myException)
+    exception = Exception.new
+    exception.stub!(:backtrace).and_return([])
+    data = Exceptional::ControllerExceptionData.new(exception)
     data.uniqueness_hash.should == nil
   end
-  
-  
 end

@@ -19,7 +19,7 @@ module Exceptional
       })
       hash.merge!(extra_stuff)
       hash.merge!(context_stuff)
-      hash
+      self.class.sanitize_hash(hash)
     end
 
     def extra_stuff
