@@ -10,6 +10,7 @@ require 'exceptional/controller_exception_data'
 require 'exceptional/rack_exception_data'
 require 'exceptional/remote'
 require 'exceptional/integration/rack'
+require 'exceptional/integration/sinatra'
 require 'exceptional/version'
 
 module Exceptional

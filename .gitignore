@@ -5,3 +5,4 @@ exceptional-*.gem
 doc
 log
 pkg/*
+_site
