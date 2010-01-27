@@ -3,7 +3,7 @@ layout: default
 title: Exceptional partner api
 pygments: true
 ---
-  
+
 <h1><a href="#">Partner API</a></h1>
 <h2>Authentication</h2>
 <p>All requests should be made to <strong>https</strong>://www.getexceptional.com using HTTP Basic Auth</p>
@@ -63,6 +63,7 @@ owner_id = response_hash['user_id']
   <p>:id is the ID returned from when created.</p>
   <p>:plan can be passed to upgrade/downgrade app</p>
   <p>:name can be changed</p>
+  <p>:owner email of user to make the new owner - old owner will still have permission on this app</p>
 
   <h4>DELETE /partners/apps/:id </h4>
   <p>:id as before</p>
