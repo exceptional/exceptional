@@ -2,13 +2,6 @@
 layout: default
 title: Exceptional on Rack
 ---
-<script type="text/javascript">
- $(document).ready(
-	function() {
-  	$('div#TableOfContents ul li a.getting-started').addClass('selected');
-	}
-);
-</script>
 <div class="container">
  <div id="Breadcrumbs">
    <strong>In</strong> <a href="/docs/getting-started/">Getting Started</a> &#187; <a href="/getting-started/rack">Rack</a>
@@ -26,7 +19,7 @@ title: Exceptional on Rack
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
 
 <h3>3. Configure your config.ru file:</h3>
-<pre><code>	require 'rack/exceptional'
+<pre><code>	require 'exceptional'
 	use Rack::Exceptional</code></pre>
 
 <h3>4. Test everything is working</h3>
