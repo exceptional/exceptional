@@ -15,7 +15,9 @@ if (defined?(Exceptional::VERSION::STRING) rescue nil) && %w(development test).i
 else
   begin
     Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
-    Exceptional::Startup.announce
+    if Exceptional::Config.should_send_to_api?
+      Exceptional::Startup.announce 
+    end
     require File.join('exceptional', 'integration', 'rails')
   rescue => e
     STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
