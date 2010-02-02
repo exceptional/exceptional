@@ -4,9 +4,14 @@ require 'rack'
 module Rack  
   class Exceptional    
 
-    def initialize(app, exceptional_config = "config/exceptional.yml")
+    def initialize(app, api_key = nil)
       @app = app
-      ::Exceptional::Config.load(exceptional_config)
+      if api_key.nil?
+        exceptional_config = "config/exceptional.yml"
+        ::Exceptional::Config.load(exceptional_config)
+      else
+        ::Exceptional::Config.api_key = api_key
+      end
     end    
     
     def call(env)
