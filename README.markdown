@@ -2,7 +2,7 @@
 
 Exceptional helps you track errors in your Ruby apps
 
-This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>. Data about the request, session, environment and a backtrace of the exception is transmitted.
+This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>. Data about the request, session, environment and a backtrace of the exception is sent.
 
 ## Rails Installation
 
