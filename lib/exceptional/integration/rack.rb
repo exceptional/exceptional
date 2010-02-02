@@ -10,7 +10,7 @@ module Rack
         exceptional_config = "config/exceptional.yml"
         ::Exceptional::Config.load(exceptional_config)
       else
-        ::Exceptional::Config.api_key = api_key
+        ::Exceptional.configure(api_key)
       end
     end    
     
