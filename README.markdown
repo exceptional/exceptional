@@ -1,4 +1,4 @@
-# Exceptional 
+# Exceptional <http://getexceptional.com>
 
 Exceptional helps you track errors in your Ruby apps
 
@@ -12,8 +12,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
 3. run 'exceptional install <api-key>' using the api-key for your app from http://getexceptional.com
 
 ### Exceptional also supports your rack, sinatra and plain ruby apps
-
-For more information please check out <http://getexceptional.com> or our docs site at <http://docs.getexceptional.com>
+For more information check out our docs site <http://docs.getexceptional.com>
 
 
 Copyright © 2008, 2009 Contrast.
