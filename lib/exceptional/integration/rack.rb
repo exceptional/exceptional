@@ -11,6 +11,8 @@ module Rack
         ::Exceptional::Config.load(exceptional_config)
       else
         ::Exceptional.configure(api_key)
+        ::Exceptional::Config.enabled = true
+        ::Exceptional.logger.info "Enabling Exceptional for Rack"
       end
     end    
     
