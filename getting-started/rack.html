@@ -13,23 +13,10 @@ title: Exceptional on Rack
 <h3>1. Install the exceptional gem:</h3>
 <pre><code>	$ gem install exceptional</code></pre>
 
-<h3>2. Generate the Exceptional config file (config/exceptional.yml)</h3>
-<pre><code>	$ exceptional install YOUR-API-KEY</code></pre>
-
+<h3>2. Configure your config.ru file:</h3>
+<pre><code>	require 'exceptional'
+	use Rack::Exceptional, API_KEY</code></pre>
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
 
-<h3>3. Configure your config.ru file:</h3>
-<pre><code>	require 'exceptional'
-	use Rack::Exceptional</code></pre>
-
-<h3>4. Test everything is working</h3>
-<pre><code>	$ exceptional test</code></pre>
-<p>You will see a test exception in your exceptional app screen</p>
-
-<h3>6. Enabling Exceptional for non production rack environments</h3>
-<p>By default Exceptional will not collect errors and exceptions for the <i>development</i>(default) or <i>test</i> rack environments (as specified by RACK_ENV). If you want exceptional collecting errors for those environments then you must enable that environment by adding the following lines to the config/exceptional.yml file.
-<p>e.g for the development environment</p>
-	
-<pre><code>	development:
-	  enabled: true	
-</code></pre>
+<h3>3. Ensure Exceptional for Rack is being loaded</h3>
+<p>Check <pre>log/exceptional.log</pre> log file
