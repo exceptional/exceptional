@@ -21,11 +21,13 @@ describe Exceptional::Config, 'defaults' do
     Exceptional::Config.remote_host.should == 'plugin.getexceptional.com'
     Exceptional::Config.remote_port.should == 443
   end
-  it "be enabled based on environment by default" do
+  it "be disabled based on environment by default" do
     %w(development test).each do |env|
       Exceptional::Config.stub!(:application_environment).and_return(env)
       Exceptional::Config.should_send_to_api?.should == false
-    end
+    end    
+  end
+  it "be enabled based on environment by default" do
     %w(production staging).each do |env|
       Exceptional::Config.stub!(:application_environment).and_return(env)
       Exceptional::Config.should_send_to_api?.should == true
@@ -35,7 +37,7 @@ describe Exceptional::Config, 'defaults' do
     before :each do
       Exceptional::Config.stub!(:application_environment).and_return('production')
     end
-    it "allow a new simpler format for exception.yml" do
+    it "allow a new simpler format for " do
       Exceptional::Config.load('spec/fixtures/exceptional.yml')
       Exceptional::Config.api_key.should == 'abc123'
       Exceptional::Config.ssl?.should == true
@@ -49,6 +51,11 @@ describe Exceptional::Config, 'defaults' do
       Exceptional::Config.http_open_timeout.should == 5
       Exceptional::Config.http_read_timeout.should == 10
     end
+    it "allow disable production environment" do      
+      Exceptional::Config.load('spec/fixtures/exceptional_disabled.yml')
+      Exceptional::Config.api_key.should == 'abc123'
+      Exceptional::Config.should_send_to_api?.should == false
+    end    
     it "allow olded format for exception.yml" do
       Exceptional::Config.load('spec/fixtures/exceptional_old.yml')
       Exceptional::Config.api_key.should == 'abc123'
