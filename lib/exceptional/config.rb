@@ -47,7 +47,8 @@ module Exceptional
       end
 
       def should_send_to_api?
-        @enabled ||= DEFAULTS[:disabled_by_default].include?(application_environment) ? false : true
+        return @enabled unless @enabled.nil?
+        @enabled = !(DEFAULTS[:disabled_by_default].include?(application_environment))
       end
 
       def application_root
