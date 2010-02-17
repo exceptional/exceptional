@@ -34,6 +34,7 @@ module Exceptional
       block.call
     rescue Exception => e
       Exceptional::Catcher.handle(e,name)
+    ensure
       self.clear!
     end
   end
@@ -44,8 +45,9 @@ module Exceptional
       block.call
     rescue Exception => e
       Exceptional::Catcher.handle(e,name)
-      self.clear!
       raise(e)
+    ensure
+      self.clear!      
     end
   end
 
