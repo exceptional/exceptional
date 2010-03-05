@@ -6,7 +6,7 @@ begin
       Exceptional.context.clear!
     end
     alias_method_chain :log_exception, :exceptional
+    Exceptional.logger.info "DJ integration enabled"
   end
-  puts "Exceptional Delayed::Job integration"
 rescue
 end
