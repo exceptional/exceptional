@@ -59,6 +59,16 @@ context 'resuce errors from within a block' do
 
   it "allows optional second paramater hash to get added to context" do
     Exceptional.should_receive(:context).with(context_hash = {'foo' => 'bar', 'baz' => 42})
-    Exceptional.rescue('my resccue', context_hash) {}
+    Exceptional.rescue('my rescue', context_hash) {}
+  end
+  
+  it "should clear context after every invocation" do
+    Thread.current[:exceptional_context].should == nil
+
+    Exceptional.rescue('my rescue', context_hash = {'foo' => 'bar', 'baz' => 42}) {
+      Thread.current[:exceptional_context].should_not == nil      
+    }
+    
+    Thread.current[:exceptional_context].should == nil        
   end
 end

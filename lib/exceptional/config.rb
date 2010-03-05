@@ -9,7 +9,7 @@ module Exceptional
         :disabled_by_default => %w(development test)
       }
 
-      attr_accessor :api_key
+      attr_accessor :api_key, :enabled
       attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password
       attr_writer :ssl
 
