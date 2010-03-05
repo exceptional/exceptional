@@ -17,6 +17,7 @@ else
     Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
     Exceptional::Startup.announce
     require File.join('exceptional', 'integration', 'rails')
+    require File.join('exceptional', 'integration', 'dj')
   rescue => e
     STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
     STDERR.puts e
