@@ -39,7 +39,7 @@ USAGE
       puts 'Missing required paramater <api-key>. Check your app configuration at http://getexceptional.com.'
     else
       if (defined?(RAILS_ROOT) && !File.file?('config/environment.rb'))
-        puts "Run this command from the root of your rails application." and return
+        puts "Run this command from the root of your rails application." and exit
       else
         Dir.mkdir('config') unless File.exists?('config')        
       end

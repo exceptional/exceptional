@@ -1,5 +1,9 @@
+require 'yaml'
+
 module Exceptional
   class Config
+    class ConfigurationException < StandardError; end
+
     class << self
       DEFAULTS = {
         :ssl => false,
@@ -16,7 +20,7 @@ module Exceptional
       def load(config_file=nil)
         if (config_file && File.file?(config_file))
           begin
-            config = YAML::load(File.open(config_file))
+            config = YAML::load_file(config_file)
             env_config = config[application_environment] || {}
             @api_key = config['api-key'] || env_config['api-key']
 
