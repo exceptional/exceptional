@@ -26,7 +26,7 @@ USAGE
       require "exceptional/integration/tester"      
       Exceptional::Config.load('config/exceptional.yml')
     end    
-    unless Exceptional::Config.api_key.empty?
+    unless Exceptional::Config.api_key.nil?
       Exceptional::Integration.test
     else
       puts 'API key not configured'
