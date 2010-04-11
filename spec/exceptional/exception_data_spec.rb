@@ -39,7 +39,7 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     error_hash['exception_class'].should == 'Exceptional::FunkyError'
     error_hash['message'].should == 'some message'
     error_hash['backtrace'].should == 'backtrace'
-    DateTime.parse(error_hash['occurred_at']).should == Time.now
+    DateTime.parse(error_hash['occurred_at']).should == DateTime.now
     client_hash = @hash['client']
     client_hash['name'].should == Exceptional::CLIENT_NAME
     client_hash['version'].should == Exceptional::VERSION

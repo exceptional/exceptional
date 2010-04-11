@@ -15,8 +15,13 @@ if (defined?(Exceptional::VERSION::STRING) rescue nil) && %w(development test).i
 else
   begin
     Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
-    require File.join('exceptional', 'integration', 'rails')
-    require File.join('exceptional', 'integration', 'dj')
+    if Rails::VERSION::STRING.to_f > 2 
+      puts "Exceptional Rails 3 Support via Rack"
+      ::Rails.configuration.middleware.insert_after 'ActionDispatch::ShowExceptions', Rack::Exceptional      
+    else    
+      require File.join('exceptional', 'integration', 'rails')
+      require File.join('exceptional', 'integration', 'dj')
+    end
   rescue => e
     STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
     STDERR.puts e

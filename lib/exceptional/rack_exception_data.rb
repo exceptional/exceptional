@@ -3,7 +3,7 @@ require 'digest/md5'
 module Exceptional
   class RackExceptionData < ExceptionData
     def initialize(exception, environment, request)
-      super(exception)
+      super(exception)                  
       @environment = environment
       @request = request
     end
@@ -16,12 +16,12 @@ module Exceptional
       return {} if @request.nil?
       {
         'request' => {
-          'url' => "#{@request.url}",
+          'url' => "#{@request.url}",                       
           'parameters' => @request.params,
           'request_method' => @request.request_method.to_s,
           'remote_ip' => @request.ip,
-          'headers' => @environment.reject{|k,v| !k.match(/^HTTP_/)},
-          'session' => @request.session
+          'headers' => extract_http_headers(@environment),
+          'session' => self.class.sanitize_session(@request)
         }
       }
     end

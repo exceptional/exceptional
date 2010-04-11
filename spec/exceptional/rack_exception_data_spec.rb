@@ -58,8 +58,8 @@ describe Exceptional::RackExceptionData do
     request_hash['parameters'].should == {"cockle"=>"shell", "bay"=>"cool"} 
     request_hash['request_method'].should == 'GET'
     request_hash['remote_ip'].should == '127.0.0.1'
-    request_hash['headers'].should == {"HTTP_HOST"=>"localhost:9292", "HTTP_ACCEPT"=>"*/*", "HTTP_USER_AGENT"=>"curl/7.19.6 (i386-apple-darwin9.8.0) libcurl/7.19.6 zlib/1.2.3", "HTTP_VERSION"=>"HTTP/1.1"}
-    request_hash['session'].should == {}
+    request_hash['headers'].should == {"Host"=>"localhost:9292", "Accept"=>"*/*", "User-Agent"=>"curl/7.19.6 (i386-apple-darwin9.8.0) libcurl/7.19.6 zlib/1.2.3", "Version"=>"HTTP/1.1"}
+    request_hash['session'].should == {'data' => {}, 'session_id' => ''}
   end
 
   it "should capture client detais" do
