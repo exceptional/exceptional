@@ -49,7 +49,7 @@ describe Exceptional::RackExceptionData do
     error_hash['exception_class'].should == 'Exceptional::FunkyError'
     error_hash['message'].should == 'some message'
     error_hash['backtrace'].should == 'backtrace'
-    error_hash['occurred_at'].should == Time.now.strftime("%Y%m%d %H:%M:%S %Z")
+    DateTime.parse(error_hash['occurred_at']).should == DateTime.parse(Time.now.to_json)
   end
 
   it "should capture request details" do

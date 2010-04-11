@@ -14,7 +14,7 @@ module Exceptional
           'env' => extract_environment(ENV),
           'host' => get_hostname,
           'run_as_user' => get_username,
-          'application_root_directory' => application_root,
+          'application_root_directory' => application_root.force_encoding("UTF-8"),
           'language' => 'ruby',
           'language_version' => language_version_string,
           'framework' => framework,
