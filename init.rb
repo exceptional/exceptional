@@ -17,7 +17,7 @@ else
     Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
     if Rails::VERSION::STRING.to_f > 2 
       puts "Exceptional Rails 3 Support via Rack"
-      ::Rails.configuration.middleware.insert_after 'ActionDispatch::ShowExceptions', Rack::Exceptional      
+      ::Rails.configuration.middleware.insert_after 'ActionDispatch::ShowExceptions', Rack::RailsExceptional      
     else    
       require File.join('exceptional', 'integration', 'rails')
       require File.join('exceptional', 'integration', 'dj')
