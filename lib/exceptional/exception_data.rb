@@ -39,7 +39,9 @@ module Exceptional
         begin
           require 'json'
           return to_hash.to_json
-        rescue StandardError
+        rescue StandardError => e                   
+          Exceptional.logger.error(e.message)
+          Exceptional.logger.error(e.backtrace)                    
           raise StandardError.new("You need a json gem/library installed to send errors to Exceptional (Object.to_json not defined). \nInstall json_pure, yajl-ruby, json-jruby, or the c-based json gem")
         end
       end

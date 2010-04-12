@@ -12,13 +12,13 @@ module Exceptional
       "rails"
     end
 
-    def extra_stuff
+    def extra_stuff                                                                                               
       return {} if @request.nil?
       {
         'request' => {
           'url' => (@request.respond_to?(:url) ? @request.url : "#{@request.protocol}#{@request.host}#{@request.request_uri}"),
           'controller' => @controller.class.to_s,
-          'action' => @request.parameters['action'],
+          'action' => (@request.respond_to?(:parameters) ? @request.parameters['action'] : @request.params['action']),
           'parameters' => filter_paramaters(@request.respond_to?(:parameters) ? @request.parameters : @request.params),
           'request_method' => @request.request_method.to_s,
           'remote_ip' => (@request.respond_to?(:remote_ip) ? @request.remote_ip : @request.ip),
