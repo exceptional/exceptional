@@ -24,6 +24,7 @@ else
     end
   rescue => e
     STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
-    STDERR.puts e
+    STDERR.puts e.message
+    STDERR.puts e.backtrace
   end
 end
