@@ -21,7 +21,7 @@ module Exceptional
           'action' => @request.parameters['action'],
           'parameters' => filter_paramaters(@request.respond_to?(:parameters) ? @request.parameters : @request.params),
           'request_method' => @request.request_method.to_s,
-          'remote_ip' => (@request.respond_to?(:ip) ? @request.ip : @request.remote_ip),
+          'remote_ip' => (@request.respond_to?(:remote_ip) ? @request.remote_ip : @request.ip),
           'headers' => extract_http_headers(@request.env),
           'session' => self.class.sanitize_session(@request)
         }
