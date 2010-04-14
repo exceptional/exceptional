@@ -9,7 +9,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
 1. Install the Gem
 <pre>gem install exceptional</pre>
 2. Add config.gem entry to 'config/environment.rb'
-<pre>config.gem 'exceptional', :version => '2.0.8'</pre>
+<pre>config.gem 'exceptional'
 3. Create your account and app at <http://getexceptional.com>
 4. Configue your API Key
 <pre>$ exceptional install <api-key></pre>
