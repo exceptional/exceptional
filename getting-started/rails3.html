@@ -1,20 +1,20 @@
 ---
 layout: default
-title: Exceptional on Rails
+title: Exceptional on Rails 3
 ---
 <div class="container">
  <div id="Breadcrumbs">
-   <strong>In</strong> <a href="/getting-started/">Getting Started</a> &#187; <a href="/getting-started/rails">Rails</a>
+   <strong>In</strong> <a href="/getting-started/">Getting Started</a> &#187; <a href="/getting-started/rails3">Rails 3</a>
  </div>
 </div>
 
-<h1><a href="#">Install Exceptional in your rails app</a></h1>
+<h1><a href="#">Install Exceptional in your rails 3 app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
 <pre><code>	$ gem install exceptional</code></pre>
 
-<h3>2. Configure your environment.rb file:</h3>
-<pre><code>	config.gem 'exceptional'
+<h3>2. Configure your Gemfile:</h3>
+<pre><code>	gem 'exceptional'
 </code></pre>
 
 <h3>3. Generate the Exceptional config file (config/exceptional.yml)</h3>
@@ -22,8 +22,18 @@ title: Exceptional on Rails
 
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
 
-<h3>6. Delete the old Exceptional Plugin (if installed)</h3>
-<pre><code>	$ rm -rf vendor/plugins/exceptional</code></pre>
+<h3>4. Create the Exceptional initializer (config/initializers/exceptional.rb)</h3>
+<pre><code>if Exceptional::Config.api_key.nil?
+  begin
+    Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
+    ::Rails.configuration.middleware.insert_after 'ActionDispatch::ShowExceptions', Rack::RailsExceptional
+  rescue => e
+    STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
+    Exceptional.logger.error(e.message)
+    Exceptional.logger.error(e.backtrace)
+  end
+end</code></pre>
+
 
 <h3>5. Test everything is working</h3>
 <pre><code>	$ exceptional test</code></pre>
