@@ -37,10 +37,10 @@ module Exceptional
           response = client.post(url, data)
           case response
             when Net::HTTPSuccess
-              Exceptional.logger.info( "#{url} Successful")
+              Exceptional.logger.info( "#{url} - #{response.message}")
               return true
             else
-              Exceptional.logger.error("#{url} - #{response.code} - Failed")
+              Exceptional.logger.error("#{url} - #{response.code} - #{response.message}")
           end
         rescue Exception => e
           Exceptional.logger.error('Problem notifying Exceptional about the error')
