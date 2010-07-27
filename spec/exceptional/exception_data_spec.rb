@@ -121,7 +121,7 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
   it "handles session objects with various interfaces" do
     class SessionWithInstanceVariables
       def initialize
-        @data = {'a' => '1'}
+        @data = {'a' => '1', 'b' => /hello there Im a regex/i}
         @session_id = '123'
       end
     end
@@ -130,10 +130,10 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     session = SessionWithInstanceVariables.new
     request.stub!(:session).and_return(session)
     request.stub!(:session_options).and_return({})
-    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
-    session = mock('session', :session_id => '123', :instance_variable_get => {'a' => '1'})
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1', 'b' => "(?i-mx:hello there Im a regex)"}}
+    session = mock('session', :session_id => '123', :instance_variable_get => {'a' => '1', 'b' => /another(.+) regex/mx})
     request.stub!(:session).and_return(session)
-    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
+    Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1', 'b' => "(?mx-i:another(.+) regex)"}}
     session = mock('session', :session_id => nil, :to_hash => {:session_id => '123', 'a' => '1'})
     request.stub!(:session).and_return(session)
     Exceptional::ControllerExceptionData.sanitize_session(request).should == {'session_id' => '123', 'data' => {'a' => '1'}}
