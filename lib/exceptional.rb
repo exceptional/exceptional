@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
+require 'exceptional/monkeypatches'
 require 'exceptional/catcher'
 require 'exceptional/startup'
 require 'exceptional/log_factory'
