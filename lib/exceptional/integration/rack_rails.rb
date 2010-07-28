@@ -10,12 +10,17 @@ module Rack
     
     def call(env)
       begin
-        status, headers, body =  @app.call(env)
-      rescue Exception => e                                                               
-        puts ">>>#{env['action_controller.instance']}"
+        body = @app.call(env)
+      rescue Exception => e
         ::Exceptional::Catcher.handle_with_controller(e,env['action_controller.instance'], Rack::Request.new(env))
         raise
       end
-    end
+
+      if env['rack.exception']
+        ::Exceptional::Catcher.handle_with_controller(env['rack.exception'],env['action_controller.instance'], Rack::Request.new(env))
+      end
+
+      body
+    end      
   end
 end

@@ -14,6 +14,8 @@ require 'exceptional/integration/rack'
 require 'exceptional/integration/rack_rails'
 require 'exceptional/version'
 
+require 'exceptional/railtie' if defined?(Rails::Railtie)
+
 module Exceptional
   PROTOCOL_VERSION = 5
   CLIENT_NAME = 'getexceptional-gem'

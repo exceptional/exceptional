@@ -14,7 +14,6 @@ module Exceptional
       end
 
       def error(exception_data)
-        Exceptional.logger.info "Notifying Exceptional about an error"
         uniqueness_hash = exception_data.uniqueness_hash
         hash_param = uniqueness_hash.nil? ? nil: "&hash=#{uniqueness_hash}"
         url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}#{hash_param}"
