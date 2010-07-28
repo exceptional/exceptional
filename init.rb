@@ -17,8 +17,8 @@ else
     Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
     Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")
     
-    require File.join('exceptional', 'integration', 'rails')
-    require File.join('exceptional', 'integration', 'dj')
+    require File.join('exceptional', 'integration', 'rails')    
+    require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
   rescue => e
     STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
     Exceptional.logger.error(e.message)
