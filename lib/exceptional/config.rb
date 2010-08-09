@@ -56,7 +56,7 @@ module Exceptional
       end
 
       def application_root
-        defined?(RAILS_ROOT) ? RAILS_ROOT : Dir.pwd
+        defined?(Rails) ? Rails.root : Dir.pwd
       end
 
       def ssl?

@@ -14,13 +14,22 @@ if (defined?(Exceptional::VERSION::STRING) rescue nil) && %w(development test).i
   exit -1
 else
   begin
-    Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
-    Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")
+
+    if (Rails::VERSION::MAJOR < 3)    
+      Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
+      Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")
     
-    require File.join('exceptional', 'integration', 'rails')    
-    require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
+      require File.join('exceptional', 'integration', 'rails')    
+      require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
+    else
+      if Exceptional::Config.should_send_to_api?
+        Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")      
+        Rails.configuration.middleware.use "Rack::RailsExceptional"
+        require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
+      end      
+    end
   rescue => e
-    STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal."
+    STDERR.puts "Problem starting Exceptional Plugin. Your app will run as normal. #{e.message}"
     Exceptional.logger.error(e.message)
     Exceptional.logger.error(e.backtrace)
   end
