@@ -1,0 +1,20 @@
+---
+layout: default
+title: Send extra data to exceptional with Exceptional.context
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/getting-started/">Getting Started</a> &#187; <a href="/getting-started/rails3">Send extra data</a>
+ </div>
+</div>
+
+<h1>Send extra data to exceptional with Exceptional.context</h1>
+
+<h3>1. Tell Exceptional which extra data you want to send (for rails this could be in a before_filter):</h3>
+<pre><code>	Exceptional.context(:user_id => "1", :email => "someuser@mydomain.com" )
+</code></pre>
+
+<h3>2. Wait for an exception to be thrown in your app:</h3>
+
+<h3>3. See the extra data in the params section of the exception page</h3>
+<img src="../img/context.png" />
