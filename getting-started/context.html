@@ -10,9 +10,9 @@ title: Send extra data to exceptional with Exceptional.context
 
 <h1>Sending extra data to exceptional</h1>
 
-<h3>1. Use Exceptional.context to set the extra data you want to send (for rails this could be in a before_filter):</h3>
+<h3>Use Exceptional.context to set the extra data you want to send (for rails this could be in a before_filter):</h3>
 <pre><code>	Exceptional.context(:user_id => "1", :email => "someuser@mydomain.com" )
 </code></pre>
 
-<h3>3. When an exception is thrown the extra data is visible in the params section of the exception page</h3>
+<h3>When an exception is thrown the extra data is visible in the params section of the exception page</h3>
 <img src="/img/context.png" />
