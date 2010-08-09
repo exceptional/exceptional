@@ -57,17 +57,23 @@ module Exceptional
     end
 
     def self.sanitize_hash(hash)
+            
       case hash
         when Hash
-          hash.inject({}) do |result, (key, value)|
+          hash.inject({}) do |result, (key, value)|            
             result.update(key => sanitize_hash(value))
           end
-        when Fixnum, Array, String, Bignum
+        when Array
+          hash.collect{|value| sanitize_hash(value)}
+        when Fixnum, String, Bignum
           hash
         else
           hash.to_s
       end
-    rescue
+    rescue Exception => e
+      Exceptional.logger.error(hash)
+      Exceptional.logger.error(e.message)
+      Exceptional.logger.error(e.backtrace)      
       {}
     end
 

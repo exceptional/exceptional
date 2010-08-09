@@ -105,6 +105,17 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     input = {'crazy' => crazy, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
     Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => crazy.to_s, :simple => '123', :some_hash => {'1' => '2'}, :array => ['1', '2']}
   end
+  
+  it "allow if non jsonable objects are hidden in an array" do
+    class Bonkers
+      def to_json
+        no.can.do!
+      end
+    end
+    crazy = Bonkers.new
+    input = {'crazy' => [crazy]}
+    Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => [crazy.to_s]}    
+  end
 
   it "ArgumentError bug with file object" do
     file = File.new(File.expand_path('../../fixtures/favicon.png',__FILE__))
