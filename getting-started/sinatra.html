@@ -13,9 +13,9 @@ title: Exceptional on Sinatra
 <h3>1. Install the exceptional gem:</h3>
 <pre><code>	$ gem install exceptional</code></pre>
 
-<h3>2. Add Exceptional to your sinatra app</h3>
+<h3>2. Add Exceptional to your sinatra app's production environment</h3>
 <pre><code>	require 'exceptional'
-	use Rack::Exceptional, API_KEY</code></pre>
+	use Rack::Exceptional, API_KEY if ENV['RACK_ENV'] == 'production'</code></pre>
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
 
 <h3>3. Ensure :raise_errors is set to true</h3>
