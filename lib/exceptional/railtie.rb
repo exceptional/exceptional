@@ -4,7 +4,7 @@ require 'rails'
 module Exceptional
   class Railtie < Rails::Railtie
 
-    Exceptional::Config.load(File.join(Rails.root, "/config/exceptional.yml"))
+    Exceptional::Config.load("config/exceptional.yml")
 
     initializer "exceptional.middleware" do |app|
       if Exceptional::Config.should_send_to_api?
