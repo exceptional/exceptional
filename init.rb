@@ -17,13 +17,16 @@ else
 
     if (Rails::VERSION::MAJOR < 3)    
       Exceptional::Config.load(File.join(RAILS_ROOT, "/config/exceptional.yml"))
-      Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")
-    
-      require File.join('exceptional', 'integration', 'rails')    
-      require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
-    else
       if Exceptional::Config.should_send_to_api?
-        Exceptional.logger.info("Loading Exceptional for #{Rails::VERSION::STRING}")      
+        Exceptional.logger.info("Loading Exceptional #{Exceptional::VERSION} for #{Rails::VERSION::STRING}")      
+        require File.join('exceptional', 'integration', 'rails')    
+        require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
+      end
+    else
+      Exceptional::Config.load(File.join(Rails.root, "/config/exceptional.yml"))
+      
+      if Exceptional::Config.should_send_to_api?
+        Exceptional.logger.info("Loading Exceptional #{Exceptional::VERSION} for #{Rails::VERSION::STRING}")      
         Rails.configuration.middleware.use "Rack::RailsExceptional"
         require File.join('exceptional', 'integration', 'dj') if defined?(Delayed::Job)
       end      
