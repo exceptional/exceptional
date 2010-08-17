@@ -9,6 +9,7 @@ case command
     puts <<USAGE
 help               # Show this usage.
 test               # Send a test exception to Exceptional.
+alert <message>    # Send a message to Exceptional. Exits 0 for success, 1 for config error, and 2 for report failure
 install <api_key>  # Create config/exceptional.yml with your api_key. Overrites existing one.
 install <api_key> <environment> # Create config/exceptional.yml with your api_key and enabled for a specific environment. Overrites existing config file.
 install <api_key> <environment>,<environment> # Create config/exceptional.yml with your api_key enabled for multiple environments (comma seperated). Overrites existing config file.
@@ -30,7 +31,19 @@ USAGE
       Exceptional::Integration.test
     else
       puts 'API key not configured'
-    end 
+    end
+  when 'alert'
+    require "exceptional"
+    require "exceptional/alert_data"
+    require "exceptional/integration/alerter"
+    Exceptional::Config.load('/etc/exceptional.yml')
+    Exceptional::Config.load('./exceptional.yml') # overwrites prior load, if exists
+    if Exceptional::Config.api_key
+      exit(Exceptional::Integration.alert(args[0]) ? 0 : 2)
+    else
+      puts 'API key not configured. Put exceptional.yml in current directory or /etc'
+      exit(1)
+    end
   when 'install'
     api_key = args[0]
     environments = args[1]
