@@ -36,12 +36,11 @@ USAGE
     require "exceptional"
     require "exceptional/alert_data"
     require "exceptional/integration/alerter"
-    Exceptional::Config.load('/etc/exceptional.yml')
-    Exceptional::Config.load('./exceptional.yml') # overwrites prior load, if exists
+    Exceptional::Config.load('config/exceptional.yml')
     if Exceptional::Config.api_key
       exit(Exceptional::Integration.alert(args[0]) ? 0 : 2)
     else
-      puts 'API key not configured. Put exceptional.yml in current directory or /etc'
+      puts 'API key not configured. Put exceptional.yml in current directory or /config'
       exit(1)
     end
   when 'install'
