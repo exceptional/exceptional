@@ -1,0 +1,130 @@
+---
+layout: default
+title: Publish API
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/api/">API</a> &#187; <a href="/api/publish">Publish</a>
+ </div>
+</div>
+
+<h1>Exceptional Publish API</h1>
+
+<p>The Exceptional Publish API accepts error information which is then processed and made available on getexceptional.com.</p>
+<p>Client implementations exist for 
+	<ul>
+		<li><a href="http://github.com/contrast/exceptional">Ruby/Rails/Rack/Sinatra</a></li>
+		<li><a href="http://github.com/ankane/exceptional-php">PHP (via Andrew Kane)</a></li>
+	</ul>
+	This document will help anyone wishing to develop an exceptional client for other platforms.
+</p>
+
+<h3>JSON Document</h3>
+<p>The core of the API is a suitably structured JSON document. This document is processed by the Exceptional publish API.</p>
+<code><pre>
+{
+   "request": {
+       "session": {
+           "session_variable_1": "Session 1 Variable Value",
+           "session_variable_2": "Session 2 Variable Value",
+       },
+       "remote_ip": "127.0.0.1",
+       "parameters": {
+           "action": "gonuts",
+           "controller": "spike"
+       },
+       "action": "gonuts",
+       "url": "http://localhost/spike/gonuts",
+       "request_method": "get",
+       "controller": "SpikeController",
+       "headers": {
+           "Version": "HTTP/1.1",
+           "User-Agent": "Mozilla/5.0",
+           "Accept-Encoding": "gzip,deflate",
+           "Keep-Alive": "300",
+           "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+           "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.7",
+           "Accept-Language": "en-us,en;q=0.5",
+           "Connection": "keep-alive",
+           "Host": "myapp.com"
+       }
+   },
+   "application_environment": {
+       "framework": "rails",
+       "env": {
+           "MANPATH": "/usr/local/git/man:/opt/local/share/man",
+           "SHELL": "/bin/bash",
+           "DISPLAY": "/tmp/launch-SYxDj8/:0",
+           "CVSEDITOR": "mate -w",
+           "LANG": "en_IE.UTF-8",
+           "PWD": "/var/www/myapp",
+           "PATH": "/opt/local/bin:/usr/local/git/bin:/opt/local/bin",
+       },
+       "language": "ruby",
+       "language_version": "1.8.7 p72 2008-08-11 i686-darwin9",
+       "application_root_directory": "/var/www/myapp"
+   },
+   "exception": {
+       "occurred_at": "20091008 15:32:06 IST",
+       "message": "NoMethodError: undefined method `horse!' for nil:NilClass",
+       "backtrace": [
+"/Users/wal/work/myapp/app/controllers/spike_controller.rb:16:in `gonuts'", 
+"/actionpack-2.3.2/lib/action_controller/base.rb:1322:in `send'", 
+"/actionpack-2.3.2/lib/action_controller/base.rb:1322:in `perform_action_without_filters'",
+"/actionpack-2.3.2/lib/action_controller/filters.rb:617:in `call_filters'",
+"/actionpack-2.3.2/lib/action_controller/filters.rb:610:in `perform_action_without_benchmark'",
+"/actionpack-2.3.2/lib/action_controller/benchmarking.rb:68:in `perform_action_without_rescue'",
+"/activesupport-2.3.2/lib/active_support/core_ext/benchmark.rb:17:in `ms'", 
+"/ruby/1.8/benchmark.rb:308:in `realtime'", 
+"/ruby/gems/1.8/gems/activesupport-2.3.2/lib/active_support/core_ext/benchmark.rb:17:in `ms'"],
+       "exception_class": "RuntimeError"
+   },
+   "client": {
+       "name": "getexceptional-rails-plugin",
+       "version": "0.2.0",
+       "protocol_version": 5
+   }
+}
+</pre></code>
+
+<h3>Mandatory Fields</h3>
+<p>The more information from above that can be provided, the more exceptional features that will be available, but at a minimum 5 entries are required for processing</p>
+
+<dl>
+	<dt>exception/backtrace</dt>
+	<dd>A JSON Array of strings representing the backtrace where the error occurred</dd>
+
+	<dt>exception/exception_class</dt>
+	<dd>This string represents the name of the class within which the error occurred</dd>	
+	
+	<dt>exception/message</dt>
+	<dd>The error details string for the error</dd>
+
+	<dt>exception/occurred_at</dt>
+	<dd>The time the error occurred at in ISO 8641 format (e.g YYYY-MM-DDThh:mm:ss.sTZD)</dd>
+
+	<dt>application_environment/application_root_directory</dt>
+	<dd>The local(client) filesystem location of the project</dd>
+</dl>
+
+<h3>Compression</h3>
+<p>Once the document above is prepared, it must be compressed using ZLib compression</p>
+
+<h3>POST'ing to api.getexceptional.com</h3>
+<p>Once compressed, the document needs to be posted to the exceptional api. You will need your API_KEY to post this
+	
+<pre><code>POST http://api.getexceptional.com/api/errors?api_key=YOUR_API_KEY&protocol_version=5</pre></code>
+
+<hr />
+
+Thats all you should need to pass your own error data to exceptional!
+
+
+
+
+	
+
+
+
+	
+	
