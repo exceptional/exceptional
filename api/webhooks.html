@@ -1,0 +1,79 @@
+---
+layout: default
+title: Webhooks
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/api/">API</a> &#187; <a href="/api/webhooks">Webhooks</a>
+ </div>
+</div>
+
+<h1>Webhooks</h1>
+
+<p>
+  You can supply us with a URL that we will POST to every time a new exception occurs (or a closed exception re-occurs).
+  We will send a JSON object containing information about the exception to your URL. You can use this to build your own service that performs some action every time an exception is thrown.
+</p>
+
+<h3>JSON structure</h3>
+<pre>
+<code>
+  {
+    "error": {
+      "app": {
+        "id": 1234,
+        "name": "Your Apps name"
+      },
+      "environment": "production",
+      "first_occurred_at": "2010-09-02T17:51:10+01:00",
+      "id": 12345678,
+      "last_occurred_at": "2010-09-02T17:51:10+01:00",
+      "last_occurrence": {
+        "backtrace": [
+          "On line #6 of app\/views\/layouts\/_services_config.html.erb",
+          "    6: if @app.webhook_active ",
+          "    app\/models\/app.rb:168:in `webhook_active'",
+          "    app\/views\/layouts\/_services_config.html.erb:6",
+          "    app\/views\/layouts\/_config_modal.html.erb:120",
+          "    app\/views\/layouts\/application.html.erb:52",
+          "    \/home\/heroku_rack\/lib\/static_assets.rb:9:in `call'",
+          "    \/home\/heroku_rack\/lib\/last_access.rb:25:in `call'",
+          "    \/home\/heroku_rack\/lib\/date_header.rb:14:in `call'",
+          "    thin (1.0.1) lib\/thin\/connection.rb:80:in `pre_process'",
+          "    thin (1.0.1) lib\/thin\/connection.rb:78:in `catch'",
+          "    thin (1.0.1) lib\/thin\/connection.rb:78:in `pre_process'",
+          "    thin (1.0.1) lib\/thin\/connection.rb:57:in `process'",
+          "    thin (1.0.1) lib\/thin\/connection.rb:42:in `receive_data'",
+          "    eventmachine (0.12.6) lib\/eventmachine.rb:240:in `run_machine'",
+          "    eventmachine (0.12.6) lib\/eventmachine.rb:240:in `run'",
+          "    thin (1.0.1) lib\/thin\/backends\/base.rb:57:in `start'",
+          "    thin (1.0.1) lib\/thin\/server.rb:150:in `start'",
+          "    thin (1.0.1) lib\/thin\/controllers\/controller.rb:80:in `start'",
+          "    thin (1.0.1) lib\/thin\/runner.rb:173:in `send'",
+          "    thin (1.0.1) lib\/thin\/runner.rb:173:in `run_command'",
+          "    thin (1.0.1) lib\/thin\/runner.rb:139:in `run!'",
+          "    thin (1.0.1) bin\/thin:6",
+          "    \/usr\/local\/bin\/thin:20:in `load'",
+          "    \/usr\/local\/bin\/thin:20"
+        ],
+        "id": 123456789,
+        "occurred_at": "2010-09-02T17:51:10+01:00",
+        "request_method": "get",
+        "url": "http:\/\/www.getexceptional.com\/exceptions\/123"
+      },
+      "sub_title": "http:\/\/www.getexceptional.com\/exceptions\/123",
+      "title": "The title of your exception",
+      "url": "http:\/\/getexl.com\/abcdxyz"
+    }
+  }
+</code>
+</pre>
+
+
+
+
+
+
+
+
+
