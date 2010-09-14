@@ -28,8 +28,27 @@ module Exceptional
       }
     end
 
+    def filter_hash(keys_to_filter, hash)
+      if keys_to_filter.is_a?(Array) && !keys_to_filter.empty?
+        hash.each do |key, value|
+          if value.respond_to?(:to_hash)
+            filter_hash(keys_to_filter, hash[key])
+          elsif key_match?(key, keys_to_filter)
+            hash[key] = "[FILTERED]"
+          end
+        end
+      end
+      hash
+    end
+
+    def key_match?(key, keys_to_filter)
+      keys_to_filter.map {|k| k.to_s}.include?(key.to_s)
+    end
+
     def filter_paramaters(hash)                                                                                       
-      if @controller.respond_to?(:filter_parameters)
+      if @request.respond_to?(:env) && @request.env["action_dispatch.parameter_filter"]
+        filter_hash(@request.env["action_dispatch.parameter_filter"], hash)
+      elsif @controller.respond_to?(:filter_parameters)
         @controller.send(:filter_parameters, hash)
       else
         hash

@@ -117,6 +117,13 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     Exceptional::ControllerExceptionData.sanitize_hash(input).should == {'crazy' => [crazy.to_s]}    
   end
 
+  it "filter params specified in env['action_dispatch.parameter_filter']" do
+    @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html', 'action_dispatch.parameter_filter' => [:var1]})
+    @request.stub!(:parameters).and_return({'var1' => 'abc'})
+    data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
+    data.to_hash['request']['parameters'].should == {'var1' => '[FILTERED]'}
+  end
+
   it "ArgumentError bug with file object" do
     file = File.new(File.expand_path('../../fixtures/favicon.png',__FILE__))
     @request.stub!(:parameters).and_return({'something' => file })
