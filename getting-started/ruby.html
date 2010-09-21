@@ -17,16 +17,32 @@ title: Exceptional on Ruby
 <pre><code>	$ exceptional install YOUR-API-KEY</code></pre>
 
 <p>You will find your  key in the apps settings screen in Exceptional.
-	
+
 <h3>3. Require the Exceptional gem in your ruby code </h3>
 <pre><code>require 'rubygems'
 require 'exceptional'</code></pre>
 <h3>4. Configure Exceptional for your ruby app</h3>
 <pre><code>	Exceptional::Config.load("config/exceptional.yml")</code></pre>
 
-<h3>5. Use the Exceptional.rescue block to catch exceptions in your ruby code</h3>
+<h3>5. Use Exceptional block to catch exceptions in your ruby code in different ways</h3>
+<ul>
+
+  <li>
 <pre><code>Exceptional.rescue do
-  # Add your Ruby code here!
+  # Exceptions inside this block will be reported to getexceptional.com
 end</code></pre>
-<p>This block will report exceptions to getexceptional.com and then re-raise them to your ruby code</p>
+  </li>
+
+  <li>
+<pre><code>Exceptional.rescue_and_reraise do
+  # Exceptions will be reported to getexceptional.com and then re-raised to your ruby code
+end</code></pre>
+  </li>
+
+  <li>
+<pre><code># This will report the exception e to getexceptional.com
+Exceptional.handle(e, 'some extra information')</code></pre>
+  </li>
+
+</ul>
 
