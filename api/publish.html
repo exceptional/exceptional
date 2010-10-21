@@ -88,7 +88,7 @@ title: Publish API
 </pre></code>
 
 <h3>Mandatory Fields</h3>
-<p>The more information from above that can be provided, the more exceptional features that will be available, but at a minimum 5 entries are required for processing</p>
+<p>The more information from above that can be provided, the more exceptional features that will be available, but at a minimum 6 entries are required for processing</p>
 
 <dl>
 	<dt>exception/backtrace</dt>
@@ -105,6 +105,9 @@ title: Publish API
 
 	<dt>application_environment/application_root_directory</dt>
 	<dd>The local(client) filesystem location of the project</dd>
+	
+	<dt>application_environment/env</dt>
+	<dd>A hash containing key value pairs about the applications environment (this can be empty)</dd>	
 </dl>
 
 <h3>Compression</h3>
