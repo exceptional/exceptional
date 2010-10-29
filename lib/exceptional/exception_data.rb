@@ -15,7 +15,7 @@ module Exceptional
           'exception_class' => @exception.class.to_s,
           'message' => @exception.message,
           'backtrace' => @exception.backtrace,
-          'occurred_at' => Time.now
+          'occurred_at' => Time.now.utc.iso8601
         }
       })
       hash.merge!(extra_stuff)
