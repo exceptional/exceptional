@@ -124,6 +124,13 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     data.to_hash['request']['parameters'].should == {'var1' => '[FILTERED]'}
   end
 
+  it "formats the occurred_at as iso8601" do
+    @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html', 'action_dispatch.parameter_filter' => [:var1]})
+    @request.stub!(:parameters).and_return({'var1' => 'abc'})
+    data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
+    data.to_hash['exception']['occurred_at'].should match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.{1,6}$/)
+  end
+
   it "ArgumentError bug with file object" do
     file = File.new(File.expand_path('../../fixtures/favicon.png',__FILE__))
     @request.stub!(:parameters).and_return({'something' => file })
