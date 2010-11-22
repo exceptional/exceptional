@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'time'
 
 module Exceptional
   class ExceptionData 

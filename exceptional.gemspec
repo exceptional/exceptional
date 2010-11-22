@@ -14,4 +14,5 @@ Gem::Specification.new do |gem|
   gem.executables << 'exceptional'
   gem.rubyforge_project = %q{exceptional}
   gem.requirements << "json_pure, json-jruby or json gem required"
+  gem.add_dependency 'rack'
 end
