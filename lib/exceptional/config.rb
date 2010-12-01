@@ -38,6 +38,8 @@ module Exceptional
           rescue Exception => e
             raise ConfigurationException.new("Unable to load configuration #{config_file} for environment #{application_environment} : #{e.message}")
           end
+        else
+          puts "Exceptional::Config.load - no configuration file"
         end
       end
 
