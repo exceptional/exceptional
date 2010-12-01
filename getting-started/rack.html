@@ -13,12 +13,15 @@ title: Exceptional on Rack
 <h3>1. Install the exceptional gem:</h3>
 <pre><code>	$ gem install exceptional</code></pre>
 
-<h3>2. Configure your config.ru file:</h3>
+<h3>2. Install the json gem of your choice (choices are: json, json_pure, yajl-ruby, json-jruby):</h3>
+<pre><code> $ gem install json</code></pre>
+
+<h3>3. Configure your config.ru file:</h3>
 <pre><code>	require 'exceptional'
 	use Rack::Exceptional, API_KEY</code></pre>
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
 
-<h3>3. Ensure Exceptional for Rack is being loaded</h3>
+<h3>4. Ensure Exceptional for Rack is being loaded</h3>
 <p>Check log/exceptional.log log file</p>
 
 <br/>

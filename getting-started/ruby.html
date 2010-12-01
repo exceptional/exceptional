@@ -11,20 +11,23 @@ title: Exceptional on Ruby
 <h1><a href="#">Install Exceptional in your ruby app</a></h1>
 
 <h3>1. Install the exceptional gem:</h3>
-<pre><code>	$ gem install exceptional</code></pre>
+<pre><code> $ gem install exceptional</code></pre>
 
-<h3>2. Generate the Exceptional config file (config/exceptional.yml)</h3>
+<h3>2. Install the json gem of your choice (choices are: json, json_pure, yajl-ruby, json-jruby):</h3>
+<pre><code> $ gem install json</code></pre>
+
+<h3>3. Generate the Exceptional config file (config/exceptional.yml)</h3>
 <pre><code>	$ exceptional install YOUR-API-KEY</code></pre>
 
 <p>You will find your  key in the apps settings screen in Exceptional.
 
-<h3>3. Require the Exceptional gem in your ruby code </h3>
+<h3>4. Require the Exceptional gem in your ruby code </h3>
 <pre><code>require 'rubygems'
 require 'exceptional'</code></pre>
-<h3>4. Configure Exceptional for your ruby app</h3>
+<h3>5. Configure Exceptional for your ruby app</h3>
 <pre><code>	Exceptional::Config.load("config/exceptional.yml")</code></pre>
 
-<h3>5. Use Exceptional block to catch exceptions in your ruby code in different ways</h3>
+<h3>6. Use Exceptional block to catch exceptions in your ruby code in different ways</h3>
 <ul>
 
   <li>
