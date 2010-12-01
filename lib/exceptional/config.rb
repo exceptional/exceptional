@@ -56,7 +56,7 @@ module Exceptional
       end
 
       def application_root
-        defined?(Rails) ? Rails.root : Dir.pwd
+        (defined?(Rails) && Rails.respond_to?(:root)) ? Rails.root : Dir.pwd
       end
 
       def ssl?
