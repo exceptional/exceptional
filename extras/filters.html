@@ -1,0 +1,19 @@
+---
+layout: default
+title: Filtering sensitive data from your exceptions
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/extras/">Extras</a> &#187; <a href="/extras/filters">Filtering sensitive data</a>
+ </div>
+</div>
+
+<h1>Filtering sensitive data</h1>
+
+<h3>Rails params:</h3>
+<p>Exceptional honours the standard rails parameter filtering (<code>config.filter_parameters</code> in rails 3)</p>
+
+<h3>To filter environment variables, add them to Exceptional::ENVIRONMENT_FILTER :</h3>
+<pre><code>	Exceptional::ENVIRONMENT_FILTER &lt;&lt; 'SOMEOTHERVAR'
+</code></pre>
+
