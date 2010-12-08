@@ -32,7 +32,9 @@ module Exceptional
     end
 
     def self.extract_environment(env)
-      env.reject{|k, v| k =~ /^HTTP_/}
+      env.reject do |k, v|
+        (k =~ /^HTTP_/) || Exceptional::ENVIRONMENT_FILTER.include?(k)
+      end
     end
 
     def self.get_hostname

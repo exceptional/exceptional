@@ -26,6 +26,8 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
   before :each do
     ENV['LOGNAME'] = 'bob'
     ENV['SOMEVAR'] = 'something'
+    ENV['SOMEOTHERVAR'] = 'something else'
+    Exceptional::ENVIRONMENT_FILTER << 'SOMEOTHERVAR'
     ENV['HTTP_SOMETHING'] = 'should be stripped'
     ::RAILS_ENV = 'test' unless defined?(RAILS_ENV)
     Time.stub!(:now).and_return(Time.mktime(1970, 1, 1))
@@ -56,6 +58,7 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     application_env_hash['environment'].should == 'test'
     application_env_hash['env'].should_not be_nil
     application_env_hash['env']['SOMEVAR'].should == 'something'
+    application_env_hash['env']['SOMEOTHERVAR'].should == nil
     application_env_hash['host'].should == `hostname`.strip
     application_env_hash['run_as_user'].should == 'bob'
     application_env_hash['application_root_directory'].should == Dir.pwd

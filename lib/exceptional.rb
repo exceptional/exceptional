@@ -21,6 +21,7 @@ require 'exceptional/railtie' if defined?(Rails::Railtie)
 module Exceptional
   PROTOCOL_VERSION = 5
   CLIENT_NAME = 'getexceptional-gem'
+  ENVIRONMENT_FILTER = []
 
   def self.logger
     ::Exceptional::LogFactory.logger
