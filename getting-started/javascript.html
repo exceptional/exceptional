@@ -1,0 +1,28 @@
+---
+layout: default
+title: Exceptional.js
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/getting-started/">Getting Started</a> &#187; <a href="/getting-started/javascript">Javascript</a>
+ </div>
+</div>
+
+<h1><a href="#">Track javascript errors in your app</a></h1>
+
+<h3>Include the following snippet in your html before any other Javascript</h3>
+<pre><code>&lt;script type="text/javascript" src="http://js.getexceptional.com/exceptional.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+  Exceptional.setKey('API_KEY_HERE');
+&lt;/script&gt;</code></pre>
+
+<h3>For SSL support use this modified snippet</h3>
+<pre><code>&lt;script type="text/javascript" src="https://exceptional-js.heroku.com/exceptional.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+  Exceptional.setHost('exceptional-api.heroku.com');
+  Exceptional.setKey('API_KEY_HERE');
+&lt;/script&gt;</code></pre>
+
+<br/>
+<hr/>
+<br/>
