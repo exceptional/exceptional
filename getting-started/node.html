@@ -1,0 +1,34 @@
+---
+layout: default
+title: Exceptional on node.js
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/getting-started/">Getting Started</a> &#187; <a href="/getting-started/node">Node</a>
+ </div>
+</div>
+
+<h1><a href="#">Install Exceptional in your node.js app</a></h1>
+
+<h3>1. Download the <a href="https://github.com/contrast/exceptional-node/blob/master/lib/exceptional.js">exceptional.js</a> and add to your node project</h3>
+
+<h3>2. Install the exceptional module in your node.js application</h3>
+<pre><code> var Exceptional = require(./'exceptional');
+ Exceptional.API_KEY = **YOUR-API-KEY**</code></pre>
+
+<h3>3. Integrate with your node.js app</h3>
+<p>To catch all uncaught exceptions </p>
+<pre><code> process.addListener('uncaughtException', function(err) {
+    Exceptional.handle(err);
+  });</code></pre>
+<p>To manually handle errors</p>
+<pre><code>try {
+
+    // Your Code
+
+  } catch(error) {
+    // Your own error processing
+    Exceptional.handle(error);
+  }</code></pre>
+
+<p>You will find your API_KEY key in the apps settings screen in Exceptional.
