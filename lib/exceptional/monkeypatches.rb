@@ -3,3 +3,8 @@ class Regexp
     "\"#{self.to_s}\""
   end
 end
+class Fixnum
+  def to_json(options = {})
+    to_s
+  end
+end
