@@ -21,7 +21,7 @@ title: Exceptional on Rails 3
 <h3>3. Generate the Exceptional config file (config/exceptional.yml)</h3>
 <p>If you are using bundler:</p>
 <pre><code> $ bundle exec exceptional install YOUR-API-KEY</code></pre>
-<p>If you are using bundler:</p>
+<p>If you are not using bundler:</p>
 <pre><code> $ exceptional install YOUR-API-KEY</code></pre>
 
 <p>You will find the <i>API_KEY</i> in the apps settings screen within Exceptional.</p>
@@ -33,7 +33,7 @@ title: Exceptional on Rails 3
 <h3>5. Enabling Exceptional for non production rails environments</h3>
 <p>By default Exceptional will not collect errors and exceptions for the <i>development</i>(default) or <i>test</i> rails environments (as specified by RAILS_ENV). If you want exceptional collecting errors for those environments then you must enable that environment by adding the following lines to the config/exceptional.yml file.
 <p>e.g for the development environment</p>
-	
+
 <pre><code>	development:
-	  enabled: true	
+	  enabled: true
 </code></pre>
