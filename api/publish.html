@@ -82,7 +82,7 @@ title: Publish API
    "client": {
        "name": "getexceptional-rails-plugin",
        "version": "0.2.0",
-       "protocol_version": 5
+       "protocol_version": 6
    }
 }
 </pre></code>
@@ -111,12 +111,12 @@ title: Publish API
 </dl>
 
 <h3>Compression</h3>
-<p>Once the document above is prepared, it must be compressed using ZLib compression</p>
+<p>Once the document above is prepared, it must be compressed using gzip (for protocol version 6) or ZLib compression (for protocol version 5). Protocols 5 and 6 are identical except for the compression format.</p>
 
 <h3>POST'ing to api.getexceptional.com</h3>
 <p>Once compressed, the document needs to be posted to the exceptional api. You will need your API_KEY to post this
 	
-<pre><code>POST http://api.getexceptional.com/api/errors?api_key=YOUR_API_KEY&protocol_version=5</pre></code>
+<pre><code>POST http://api.getexceptional.com/api/errors?api_key=YOUR_API_KEY&protocol_version=6</pre></code>
 
 <hr />
 
