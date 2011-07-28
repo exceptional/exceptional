@@ -35,7 +35,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
 1.  Add  gem entry to Gemfile
     
     ```ruby
-    config.gem 'exceptional'
+    gem 'exceptional'
     ```
     
 2.  Run <code>bundle install</code>
