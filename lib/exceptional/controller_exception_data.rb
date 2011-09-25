@@ -45,7 +45,11 @@ module Exceptional
       keys_to_filter.map {|k| k.to_s}.include?(key.to_s)
     end
 
-    def filter_paramaters(hash)                                                                                       
+    def filter_paramaters(hash)
+      if Config.filtered_parameters
+        filter_hash(Config.filtered_parameters, hash)
+      end
+      
       if @request.respond_to?(:env) && @request.env["action_dispatch.parameter_filter"]
         filter_hash(@request.env["action_dispatch.parameter_filter"], hash)
       elsif @controller.respond_to?(:filter_parameters)

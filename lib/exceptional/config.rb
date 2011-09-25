@@ -14,7 +14,7 @@ module Exceptional
       }
 
       attr_accessor :api_key, :enabled
-      attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password
+      attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password, :filtered_parameters
       attr_writer :ssl
 
       def load(config_file=nil)
@@ -30,6 +30,8 @@ module Exceptional
             @http_proxy_password = config['http-proxy-password']
             @http_open_timeout = config['http-open-timeout']
             @http_read_timeout = config['http-read-timeout'] 
+            
+            @filtered_parameters = config['filtered_parameters']
 
             @ssl = config['ssl'] || env_config['ssl']
             @enabled = env_config['enabled']
