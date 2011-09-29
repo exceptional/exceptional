@@ -19,7 +19,7 @@ module Exceptional
           'url' => (@request.respond_to?(:url) ? @request.url : "#{@request.protocol}#{@request.host}#{@request.request_uri}"),
           'controller' => @controller.class.to_s,
           'action' => (@request.respond_to?(:parameters) ? @request.parameters['action'] : @request.params['action']),
-          'parameters' => filter_paramaters(@request.respond_to?(:parameters) ? @request.parameters : @request.params),
+          'parameters' => filter_parameters(@request.respond_to?(:parameters) ? @request.parameters : @request.params),
           'request_method' => @request.request_method.to_s,
           'remote_ip' => (@request.respond_to?(:remote_ip) ? @request.remote_ip : @request.ip),
           'headers' => extract_http_headers(@request.env),
@@ -41,11 +41,17 @@ module Exceptional
       hash
     end
 
+    # Closer alignment to latest filtered_params:
+    # https://github.com/rails/rails/blob/master/actionpack/lib/action_dispatch/http/parameter_filter.rb
+    # https://github.com/exceptional/exceptional/issues/20
     def key_match?(key, keys_to_filter)
-      keys_to_filter.map {|k| k.to_s}.include?(key.to_s)
+      keys_to_filter.any? { |k| 
+        regexp = k.is_a?(Regexp)? k : Regexp.new(k, true) 
+        key =~ regexp
+      }
     end
 
-    def filter_paramaters(hash)                                                                                       
+    def filter_parameters(hash)                                                                                       
       if @request.respond_to?(:env) && @request.env["action_dispatch.parameter_filter"]
         filter_hash(@request.env["action_dispatch.parameter_filter"], hash)
       elsif @controller.respond_to?(:filter_parameters)

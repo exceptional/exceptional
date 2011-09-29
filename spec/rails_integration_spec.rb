@@ -37,7 +37,7 @@ describe TestingController do
     @response.code.should == '500'
   end
 
-  it "filters paramaters based on controller filter_parameter_logging" do
+  it "filters parameters based on controller filter_parameter_logging" do
     Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
     Exceptional::Remote.should_receive(:error) {|exception_data|
       exception_data.to_hash['request']['parameters']['credit_card_number'].should == '[FILTERED]'
