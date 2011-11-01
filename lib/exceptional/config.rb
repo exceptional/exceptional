@@ -33,6 +33,7 @@ module Exceptional
 
             @ssl = config['ssl'] || env_config['ssl']
             @enabled = env_config['enabled']
+            @swallow_in_development = env_config['swallow_in_development']
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
             @remote_host = config['remote-host'] unless config['remote-host'].nil?
           rescue Exception => e
@@ -53,6 +54,10 @@ module Exceptional
       def should_send_to_api?
         return @enabled unless @enabled.nil?
         @enabled = !(DEFAULTS[:disabled_by_default].include?(application_environment))
+      end
+
+      def should_raise?
+        ('development' == application_environment) && !@swallow_in_development
       end
 
       def application_root
