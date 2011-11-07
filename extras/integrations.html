@@ -1,0 +1,34 @@
+---
+layout: default
+title: Integrations with 3rd Party Services. 
+---
+<div class="container">
+ <div id="Breadcrumbs">
+   <strong>In</strong> <a href="/extras/">Extras</a> &#187; <a href="/extras/integrations">Integrating with 3rd Party Services.</a>
+ </div>
+</div>
+
+<h1>Integrating with 3rd Party Services.</h1>
+
+<h2>Pivotal Tracker:</h2>
+<p>The quick summary is:</p>
+<ul>
+<li>You can pull errors from Exceptional into a PT project as bugs utilizing PT's "Integrations" feature</li>
+<li>Updates from PT can be propagated back to Exceptional utilizing PT's "Activity Web Hook" feature</li>
+</ul>
+<p>Instructions for use:</p>
+<b>Adding exceptions as "bug" stories in PT</b>
+<ul><li>From your PT Project page, click on "Project" --> "Configure Integrations"</li>
+	<li>Under the "External Tool Integrations", from the pull-down select on the right choose "Other"</li>
+	<li>Fill in the form with these values:<br>	Name: Exceptional<br>Basic Auth Username: your exceptional username<br>Base URL: https://www.getexceptional.com/exceptions/<br>Import API URL: https://www.getexceptional.com/apps/<app ID>/exceptions.xml?template=pivotal</li><li>Click save</li><li>Back on your PT Project page, click on "More" --> "Exceptional" to view new exceptions in their own panel</li>
+	</ul>
+<b>Getting updates from PT in your Exceptional errors</b>	
+<ul>
+	<li>Again, from you PT Project page, click on "Project" --> "Configure Integrations"</li>
+	<li>Under the "Activity Web Hook" enter these values:<br>Web Hook URL: <pre><code>https://www.getexceptional.com/apps/"app ID"/pivotal_activities?api_key="your app's API key"</code></pre><br>API Version: v3.</li>
+
+		<li>Click Save</li>
+</ul>
+	
+	
+
