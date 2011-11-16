@@ -208,7 +208,7 @@ div#MainContent div.container div#Tools a.icon_printer {
 }
 
 .bullet-list li {
-	
+		list-style-type: square;
 }
 
 /* Table of contents styling */
