@@ -211,6 +211,10 @@ div#MainContent div.container div#Tools a.icon_printer {
 		list-style-type: square;
 		margin-left:20px;
 }
+.number-list li {
+		list-style-type: decimal;
+		margin-left:20px;
+}
 
 /* Table of contents styling */
 div#TableOfContents {
