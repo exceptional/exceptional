@@ -209,7 +209,7 @@ div#MainContent div.container div#Tools a.icon_printer {
 
 .bullet-list li {
 		list-style-type: square;
-		padding-right:40px;
+		margin-left:20px;
 }
 
 /* Table of contents styling */
