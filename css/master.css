@@ -202,6 +202,14 @@ div#MainContent div.container div#Tools a.icon_printer {
   padding-left: 26px;
   background: transparent url(../img/printer.png) no-repeat center left;
 }
+/* Simple Text Formating */
+.bullet-list ul {
+	list-style-type: square;
+}
+
+.bullet-list li {
+	
+}
 
 /* Table of contents styling */
 div#TableOfContents {
