@@ -1,89 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="/css/master.css" type="text/css" media="screen" charset="utf-8" />
-	<link rel="stylesheet" href="/css/syntax.css" type="text/css" media="screen" charset="utf-8" />
-	<link rel="stylesheet" href="/css/print.css" type="text/css" media="print" charset="utf-8" />
-
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-10428626-4']);
-	  _gaq.push(['_trackPageview']);
-
-	  (function() {
-	    var ga = document.createElement('script');
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    ga.setAttribute('async', 'true');
-	    document.documentElement.firstChild.appendChild(ga);
-	  })();
-	</script>
-	<script src="/js/docs.js"></script>
-	<title>Exceptional Docs</title>
-</head>
-
-<body>
-
-  <div id="Page">
-
-    <div id="Header">
-      <a href="/" id="Logo"><strong>Exceptional Documentation</strong></a>
-    </div>
-
-    <div id="MainContent">
-			{{ content }}
-    </div>
-
-    <div id="TableOfContents">
-
-      <ul>
-        <li><a href="/getting-started/">Getting Started</a>
-          <ul>
-            <li><a href="/getting-started/rails3">Rails 3</a></li>
-            <li><a href="/getting-started/rails2">Rails 2</a></li>
-            <li><a href="/getting-started/rack">Rack</a></li>
-            <li><a href="/getting-started/sinatra">Sinatra</a></li>
-	        <li><a href="/getting-started/ruby">Ruby</a></li>
-	        <li><a href="/getting-started/javascript">Javascript</a></li>
-	        <li><a href="/getting-started/node">Node.js</a></li>
-          </ul>
-        </li>
-        <li><a href="/heroku/">Heroku</a>
-          <ul>
-            <li><a href="/heroku/rails">Rails</a></li>
-          </ul>
-        </li>
-        <li><a href="/extras/">Extras</a>
-          <ul>
-            <li><a href="/extras/context">Sending extra data to exceptional</a></li>
-            <li><a href="/extras/filters">Filtering sensitive data</a></li>
-			<li><a href="/extras/integrations/integrations">Integrations</a></li>
-          </ul>
-			
-        </ul>
-			<li><a href="/api/">API</a>	
-	          <ul>
-			    <li><a href="/api/publish">Publish API</a></li>
-	            <li><a href="/api/webhooks">Webhooks</a></li>
-	          </ul>
-	        </li>
-	      </ul>
-        </li>
-	
-
-    </div>
-
-    <div id="Footer">
-      <p>
-        Support: <a href="mailto:support@getexceptional.com">support@getexceptional.com</a>
-        Links: <a href="http://github.com/exceptional/exceptional">github</a>
-        <a href="http://getexceptional.com">getexceptional.com</a>
-        <a href="http://status.getexceptional.com">Status</a>
-        <a href="http://blog.getexceptional.com">Blog</a>
-      </p>
-    </div>
-
-  </div>
-</body>
-</html>
+<div id="Page">
+	<div id="Header">
+		<a href="/" id="Logo" name="Logo"><strong>Exceptional Documentation</strong></a>
+	</div>
+	<div id="MainContent">
+		{{ content }}
+	</div>
+	<div id="TableOfContents">
+		<ul>
+			<li>
+				<a href="/getting-started/">Getting Started</a>
+				<ul>
+					<li>
+						<a href="/getting-started/rails3">Rails 3</a>
+					</li>
+					<li>
+						<a href="/getting-started/rails2">Rails 2</a>
+					</li>
+					<li>
+						<a href="/getting-started/rack">Rack</a>
+					</li>
+					<li>
+						<a href="/getting-started/sinatra">Sinatra</a>
+					</li>
+					<li>
+						<a href="/getting-started/ruby">Ruby</a>
+					</li>
+					<li>
+						<a href="/getting-started/javascript">Javascript</a>
+					</li>
+					<li>
+						<a href="/getting-started/node">Node.js</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="/heroku/">Heroku</a>
+				<ul>
+					<li>
+						<a href="/heroku/rails">Rails</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="/extras/">Extras</a>
+				<ul>
+					<li>
+						<a href="/extras/context">Sending extra data to exceptional</a>
+					</li>
+					<li>
+						<a href="/extras/filters">Filtering sensitive data</a>
+					</li>
+					<li>
+						<a href="/extras/integrations/integrations">Integrations</a>
+					</li>
+				</ul>
+				<li>
+					<a href="/api/">API</a>
+					<ul>
+						<li>
+							<a href="/api/publish">Publish API</a>
+						</li>
+						<li>
+							<a href="/api/webhooks">Webhooks</a>
+						</li>
+					</ul>
+				</li>
+			</li>
+		</ul>
+	</div>
+	<div id="Footer">
+		<p>
+			Support: <a href="mailto:support@getexceptional.com">support@getexceptional.com</a> Links: <a href="http://github.com/exceptional/exceptional">github</a> <a href="http://getexceptional.com">getexceptional.com</a> <a href="http://status.getexceptional.com">Status</a> <a href="http://blog.getexceptional.com">Blog</a>
+		</p>
+	</div>
+</div>
