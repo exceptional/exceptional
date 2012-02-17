@@ -1,8 +1,8 @@
-# Exceptional <http://getexceptional.com>
+# Exceptional <http://exceptional.io>
 
 Exceptional helps you track errors in your Ruby apps
 
-This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>. Data about the request, session, environment and a backtrace of the exception is sent.
+This Gem/Plugin posts exception data to Exceptional <http://exceptional.io>. Data about the request, session, environment and a backtrace of the exception is sent.
 
 ## Rails 2.x Installation
 
@@ -18,7 +18,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
     config.gem 'exceptional'
     ```
     
-3.  Create your account and app at <http://getexceptional.com>
+3.  Create your account and app at <http://exceptional.io>
     
 4.  Configue your API Key
     
@@ -40,7 +40,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
     
 2.  Run <code>bundle install</code>
 
-3.  Create your account and app at <http://getexceptional.com>
+3.  Create your account and app at <http://exceptional.io>
 
 4.  Configue your API Key
     
@@ -54,6 +54,7 @@ This Gem/Plugin posts exception data to Exceptional <http://getexceptional.com>.
 
 
 ### Exceptional also supports your rack, sinatra and plain ruby apps
-For more information check out our docs site <http://docs.getexceptional.com>
+For more information check out our docs site <http://docs.exceptional.io> 
+Or visit our knowledge base <http://support.exceptional.io/>
 
-Copyright © 2008, 2010 Contrast.
+Copyright © 2008 - 2012 Contrast.
