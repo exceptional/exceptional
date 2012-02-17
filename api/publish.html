@@ -10,7 +10,7 @@ title: Publish API
 
 <h1>Exceptional Publish API</h1>
 
-<p>The Exceptional Publish API accepts error information which is then processed and made available on getexceptional.com.</p>
+<p>The Exceptional Publish API accepts error information which is then processed and made available on exceptional.io.</p>
 <p>Client implementations exist for 
 	<ul>
 		<li><a href="https://github.com/exceptional/exceptional">Ruby/Rails/Rack/Sinatra</a></li>
@@ -118,10 +118,10 @@ title: Publish API
 <h3>Compression</h3>
 <p>Once the document above is prepared, it must be compressed using gzip (for protocol version 6) or ZLib compression (for protocol version 5). Protocols 5 and 6 are identical except for the compression format.</p>
 
-<h3>POST'ing to api.getexceptional.com</h3>
+<h3>POST'ing to api.exceptional.io</h3>
 <p>Once compressed, the document needs to be posted to the exceptional api. You will need your API_KEY to post this
 	
-<pre><code>POST http://api.getexceptional.com/api/errors?api_key=YOUR_API_KEY&protocol_version=6</pre></code>
+<pre><code>POST http://api.exceptional.io/api/errors?api_key=YOUR_API_KEY&protocol_version=6</pre></code>
 
 <hr />
 

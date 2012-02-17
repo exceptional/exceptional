@@ -6,7 +6,7 @@ pygments: true
 
 <h1><a href="#">Partner API</a></h1>
 <h2>Authentication</h2>
-<p>All requests should be made to <strong>https</strong>://www.getexceptional.com using HTTP Basic Auth</p>
+<p>All requests should be made to <strong>https</strong>://www.exceptional.io using HTTP Basic Auth</p>
 
 <h2>Creating an app on exceptional</h2>
 <p>POST /partners/apps</p>
@@ -44,7 +44,7 @@ HTTP_USERNAME = 'heroku'
 HTTP_PASSWORD = 'sdasdasd asdsa d adas dass'
 
 partner_app_id = 'app1@heroku.com'
-exceptional = RestClient::Resource.new("https://getexceptional.com", :password => HTTP_PASSWORD, :user =>
+exceptional = RestClient::Resource.new("https://exceptional.io", :password => HTTP_PASSWORD, :user =>
   HTTP_USERNAME)
 
 ## create an app, which returns an apikey

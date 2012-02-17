@@ -35,18 +35,18 @@ require 'exceptional'</code></pre>
 
   <li>
 <pre><code>Exceptional.rescue do
-  # Exceptions inside this block will be reported to getexceptional.com
+  # Exceptions inside this block will be reported to exceptional.io
 end</code></pre>
   </li>
 
   <li>
 <pre><code>Exceptional.rescue_and_reraise do
-  # Exceptions will be reported to getexceptional.com and then re-raised to your ruby code
+  # Exceptions will be reported to exceptional.io and then re-raised to your ruby code
 end</code></pre>
   </li>
 
   <li>
-<pre><code># This will report the exception e to getexceptional.com
+<pre><code># This will report the exception e to exceptional.io
 Exceptional.handle(e, 'some extra information')</code></pre>
   </li>
 
