@@ -57,4 +57,4 @@ This Gem/Plugin posts exception data to Exceptional <http://exceptional.io>. Dat
 For more information check out our docs site <http://docs.exceptional.io> 
 Or visit our knowledge base <http://support.exceptional.io/>
 
-Copyright © 2008 - 2012 Contrast.
+Copyright © 2008 - 2012 Exceptional Cloud Services.
