@@ -7,7 +7,9 @@ if defined? ActionController
   module ActionController
     class Base
       def rescue_action_with_exceptional(exception)
-        unless exception_handled_by_rescue_from?(exception)
+        unless exception_handled_by_rescue_from?(exception) ||
+               Regexp.new(Exceptional::Config.ignored_agents.join('|')) =~ request.user_agent ||
+               Regexp.new(Exceptional::Config.ignored_exceptions.join('|')) =~ exception.class.to_s
           Exceptional::Catcher.handle_with_controller(exception, self, request)
           Exceptional.context.clear!
         end
