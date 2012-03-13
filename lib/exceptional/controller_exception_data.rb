@@ -29,12 +29,13 @@ module Exceptional
     end
 
     def filter_hash(keys_to_filter, hash)
+      keys_to_filter.map! {|x| x.to_s}
       if keys_to_filter.is_a?(Array) && !keys_to_filter.empty?
         hash.each do |key, value|
-          if value.respond_to?(:to_hash)
-            filter_hash(keys_to_filter, hash[key])
-          elsif key_match?(key, keys_to_filter)
+          if key_match?(key, keys_to_filter)
             hash[key] = "[FILTERED]"
+          elsif value.respond_to?(:to_hash)
+            filter_hash(keys_to_filter, hash[key])
           end
         end
       end
@@ -45,13 +46,13 @@ module Exceptional
     # https://github.com/rails/rails/blob/master/actionpack/lib/action_dispatch/http/parameter_filter.rb
     # https://github.com/exceptional/exceptional/issues/20
     def key_match?(key, keys_to_filter)
-      keys_to_filter.any? { |k| 
-        regexp = k.is_a?(Regexp)? k : Regexp.new(k, true) 
+      keys_to_filter.any? { |k|
+        regexp = k.is_a?(Regexp)? k : Regexp.new(k, true)
         key =~ regexp
       }
     end
 
-    def filter_parameters(hash)                                                                                       
+    def filter_parameters(hash)
       if @request.respond_to?(:env) && @request.env["action_dispatch.parameter_filter"]
         filter_hash(@request.env["action_dispatch.parameter_filter"], hash)
       elsif @controller.respond_to?(:filter_parameters)

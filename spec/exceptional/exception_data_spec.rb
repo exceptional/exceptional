@@ -127,6 +127,13 @@ describe Exceptional::ControllerExceptionData, 'with request/controller/params' 
     data.to_hash['request']['parameters'].should == {'var1' => '[FILTERED]'}
   end
 
+  it "filter nested params specified in env['action_dispatch.parameter_filter']" do
+    @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html', 'action_dispatch.parameter_filter' => [:var1]})
+    @request.stub!(:parameters).and_return({'var1' => {'var2' => 'abc','var3' => "abc"}})
+    data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
+    data.to_hash['request']['parameters'].should == {'var1' => '[FILTERED]'}
+  end
+
   it "formats the occurred_at as iso8601" do
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html', 'action_dispatch.parameter_filter' => [:var1]})
     @request.stub!(:parameters).and_return({'var1' => 'abc'})
