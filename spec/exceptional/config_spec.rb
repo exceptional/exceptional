@@ -6,7 +6,7 @@ describe Exceptional::Config, 'defaults' do
   end
   it "have sensible defaults" do
     Exceptional::Config.ssl?.should == false
-    Exceptional::Config.remote_host.should == 'plugin.getexceptional.com'
+    Exceptional::Config.remote_host.should == 'plugin.exceptional.io'
     Exceptional::Config.remote_port.should == 80
     Exceptional::Config.application_root.should == Dir.pwd
     Exceptional::Config.http_proxy_host.should be_nil
@@ -18,7 +18,7 @@ describe Exceptional::Config, 'defaults' do
   end
   it "have correct defaults when ssl" do
     Exceptional::Config.ssl = true
-    Exceptional::Config.remote_host.should == 'plugin.getexceptional.com'
+    Exceptional::Config.remote_host.should == 'plugin.exceptional.io'
     Exceptional::Config.remote_port.should == 443
   end
   it "be disabled based on environment by default" do
