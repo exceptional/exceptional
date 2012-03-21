@@ -8,6 +8,8 @@ end
 gem 'rails'
 require File.dirname(__FILE__) + '/../lib/exceptional' unless defined?(Exceptional)
 
+alias :context :describe
+
 ENV['RAILS_ENV'] = 'test'
 
 require 'action_controller'
