@@ -52,6 +52,19 @@ This Gem/Plugin posts exception data to Exceptional <http://exceptional.io>. Dat
 
 5.  Test with <code>exceptional test</code>
 
+## Multiple Rails environments
+To use Exceptional within multiple Rails environments, edit your
+config/exceptional.yml to look like the following
+
+```
+development:
+  enabled: true
+  api-key: your-dev-api-key
+
+production:
+  enabled: true
+  api-key: you-prod-api-key
+```
 
 ### Exceptional also supports your rack, sinatra and plain ruby apps
 For more information check out our docs site <http://docs.exceptional.io> 
