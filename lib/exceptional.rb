@@ -15,6 +15,7 @@ require 'exceptional/integration/rack'
 require 'exceptional/integration/rack_rails'
 require 'exceptional/integration/alerter'
 require 'exceptional/version'
+require 'exceptional/integration/show_exceptions'
 
 require 'exceptional/railtie' if defined?(Rails::Railtie)
 
