@@ -6,6 +6,7 @@ module Exceptional
           data = ControllerExceptionData.new(exception, controller, request)
           Remote.error(data)
         end
+        raise exception if Config.should_raise?
       end
       
       def handle_with_rack(exception, environment, request) 
@@ -13,6 +14,7 @@ module Exceptional
           data = RackExceptionData.new(exception, environment, request)
           Remote.error(data)
         end
+        raise exception if Config.should_raise?
       end
 
       def handle(exception, name=nil)
@@ -20,6 +22,7 @@ module Exceptional
           data = ExceptionData.new(exception, name)
           Remote.error(data)
         end
+        raise exception if Config.should_raise?
       end
     end
   end
