@@ -52,6 +52,18 @@ This Gem/Plugin posts exception data to Exceptional <http://exceptional.io>. Dat
 
 5.  Test with <code>exceptional test</code>
 
+## Reporting exceptions in development
+
+Exceptional will not report your exceptions in *development* environment by default. 
+
+To enable reporting of exceptions in development, please add the following lines to your `exceptional.yml`
+
+```ruby
+development:
+
+  enabled: true
+```
+
 ## Multiple Rails environments
 To use Exceptional within multiple Rails environments, edit your
 config/exceptional.yml to look like the following
