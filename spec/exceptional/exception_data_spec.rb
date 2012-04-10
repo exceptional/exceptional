@@ -25,10 +25,14 @@ end
 describe Exceptional::ControllerExceptionData, 'when no request/controller/params' do
   before :each do
     ENV['LOGNAME'] = 'bob'
-    ENV['SOMEVAR'] = 'something'
-    ENV['SOMEOTHERVAR'] = 'something else'
-    Exceptional::ENVIRONMENT_FILTER << 'SOMEOTHERVAR'
+    ENV['SOMETHING_SECRET'] = 'secretPasswords'
+    ENV['DATABASE_URL'] = 'something'
+    ENV['SOMETHING_INTERESTING'] = 'instagram'
     ENV['HTTP_SOMETHING'] = 'should be stripped'
+    ENV['FILTERED_BY_OLD_FILTER_CONFIG'] = 'should_be_filtered'
+    Exceptional::ENVIRONMENT_WHITELIST << /_INTERESTING/
+    Exceptional::ENVIRONMENT_WHITELIST << 'FILTERED_BY_OLD_FILTER_CONFIG'
+    Exceptional::ENVIRONMENT_FILTER << 'FILTERED_BY_OLD_FILTER_CONFIG'
     ::RAILS_ENV = 'test' unless defined?(RAILS_ENV)
     Time.stub!(:now).and_return(Time.mktime(1970, 1, 1))
     error = Exceptional::FunkyError.new('some message')
@@ -48,6 +52,21 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     client_hash['protocol_version'].should == Exceptional::PROTOCOL_VERSION
   end
 
+  it "has sensible initial ENVIRONMENT_WHITELIST" do
+    %w(HOME PATH PWD RUBYOPT GEM_HOME RACK_ENV RAILS_ENV BUNDLE_GEMFILE BUNDLE_BIN_PATH).each do |expected_to_be_whitelisted|
+      Exceptional::ENVIRONMENT_WHITELIST.should include(expected_to_be_whitelisted)
+    end
+  end
+
+  it "uses a whitelist for ENV variables aswell as existing filter" do
+    env = @hash['application_environment']['env']
+    env['SOMETHING_SECRET'].should be_nil
+    env['DATABASE_URL'].should be_nil
+    env['HTTP_SOMETHING'].should be_nil
+    env['FILTERED_BY_OLD_FILTER_CONFIG'].should be_nil
+    env['SOMETHING_INTERESTING'].should == 'instagram'
+  end
+
   it "generates parseable json" do
     require 'json'
     JSON.parse(@data.to_json)['exception']['exception_class'].should == 'Exceptional::FunkyError'
@@ -57,8 +76,6 @@ describe Exceptional::ControllerExceptionData, 'when no request/controller/param
     application_env_hash = @hash['application_environment']
     application_env_hash['environment'].should == 'test'
     application_env_hash['env'].should_not be_nil
-    application_env_hash['env']['SOMEVAR'].should == 'something'
-    application_env_hash['env']['SOMEOTHERVAR'].should == nil
     application_env_hash['host'].should == `hostname`.strip
     application_env_hash['run_as_user'].should == 'bob'
     application_env_hash['application_root_directory'].should == Dir.pwd
