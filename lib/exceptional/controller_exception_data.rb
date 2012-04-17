@@ -46,10 +46,10 @@ module Exceptional
     # https://github.com/rails/rails/blob/master/actionpack/lib/action_dispatch/http/parameter_filter.rb
     # https://github.com/exceptional/exceptional/issues/20
     def key_match?(key, keys_to_filter)
-      keys_to_filter.any? { |k|
-        regexp = k.is_a?(Regexp)? k : Regexp.new(k, true)
+      keys_to_filter.any? do |k| 
+        regexp = k.is_a?(Regexp)? k : Regexp.new(k.to_s, true) 
         key =~ regexp
-      }
+      end
     end
 
     def filter_parameters(hash)
