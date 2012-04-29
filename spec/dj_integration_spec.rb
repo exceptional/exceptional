@@ -3,11 +3,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 module Delayed
   class Job
     def log_exception(exception)
-    # do nothing for now
-  end
-  def name
-    "My delayed job"
-  end
+      # do nothing for now
+    end
+    def name
+      "My delayed job"
+    end
   end
 end
 
