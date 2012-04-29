@@ -1,9 +1,9 @@
-class Delayed::Job
-  def log_exception_with_exceptional(e)
-    Exceptional.handle(e, "Delayed::Job #{self.name}")
-    log_exception_without_exceptional(e)
+class Delayed::Worker
+  def handle_failed_job_with_exceptional(job, e)
+    Exceptional.handle(e, "Delayed::Worker \"#{self.name}\" died")
+    handle_failed_job_without_exceptional(job, e)
     Exceptional.context.clear!
   end
-  alias_method_chain :log_exception, :exceptional
+  alias_method_chain :handle_failed_job, :exceptional
   Exceptional.logger.info "DJ integration enabled"
 end
