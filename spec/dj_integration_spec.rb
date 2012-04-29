@@ -24,19 +24,16 @@ describe 'Delayed Job integration' do
     module Delayed
       class Worker
         def handle_failed_job(job, exception); end
-        def name; "My worker"; end
       end
     end
     load File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integration', 'dj.rb')
     @worker =  Delayed::Worker.new
     @exception = StandardError.new
-    @job = "dummy"
+    @job = mock(:name => "My delayed job")
   end
   describe "For Delayed Job > 1.8.5" do
-    before(:each) do
-    end
     it "should handle exceptions with Exceptional" do
-      Exceptional.should_receive(:handle).with(@exception, 'Delayed::Worker "My worker" died')
+      Exceptional.should_receive(:handle).with(@exception, 'Delayed::Job My delayed job')
       @worker.handle_failed_job(@job, @exception)
     end
     it "should clear context" do
