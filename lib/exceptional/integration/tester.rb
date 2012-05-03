@@ -10,7 +10,7 @@ module Exceptional
         unless Exceptional::Remote.error(Exceptional::ExceptionData.new(e, "Test Exception"))
           puts "Problem sending exception to Exceptional. Check your API key."
         else
-          puts "Test Exception sent. Please login to http://getexceptional.com to see it!"
+          puts "Test Exception sent. Please login to http://exceptional.io to see it!"
         end
       end
     end
