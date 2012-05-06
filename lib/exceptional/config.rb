@@ -20,7 +20,8 @@ module Exceptional
       def load(config_file=nil)
         if (config_file && File.file?(config_file))
           begin
-            config = YAML::load_file(config_file)
+            yaml = YAML::load_file(config_file)
+            config = yaml[ENV['RAILS_ENV'] || 'development'] || yaml
             env_config = config[application_environment] || {}
             @api_key = config['api-key'] || env_config['api-key']
 
