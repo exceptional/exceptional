@@ -1,13 +1,13 @@
 require 'rubygems'
 require 'rack'
 
-module Rack  
-  class RailsExceptional    
+module Rack
+  class RailsExceptional
 
     def initialize(app)
       @app = app
-    end    
-    
+    end
+
     def call(env)
       begin
         body = @app.call(env)
@@ -21,6 +21,6 @@ module Rack
       end
 
       body
-    end      
+    end
   end
 end

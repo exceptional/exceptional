@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'rack'
 
-module Rack  
-  class Exceptional    
+module Rack
+  class Exceptional
 
     def initialize(app, api_key = nil)
       @app = app
@@ -14,8 +14,8 @@ module Rack
         ::Exceptional::Config.enabled = true
         ::Exceptional.logger.info "Enabling Exceptional for Rack"
       end
-    end    
-    
+    end
+
     def call(env)
       begin
         status, headers, body =  @app.call(env)

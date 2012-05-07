@@ -1,5 +1,5 @@
 module Exceptional
-  module ShowExceptions
+  module DebugExceptions
 
     def self.included(base)
       base.send(:alias_method_chain,:render_exception,:exceptional)
