@@ -21,6 +21,9 @@ end
 
 describe 'Delayed Job integration' do
   before :each do
+    Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
+    Exceptional.stub(:handle)
+
     module Delayed
       class Worker
         def handle_failed_job(job, exception); end
