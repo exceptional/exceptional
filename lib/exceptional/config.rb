@@ -22,7 +22,9 @@ module Exceptional
           begin
             config = YAML::load_file(config_file)
             env_config = config[application_environment] || {}
-            @api_key = config['api-key'] || env_config['api-key']
+            @api_key = config['api-key'] ||
+                       env_config['api-key'] ||
+                       ENV['EXCEPTIONAL_API_KEY']
 
             @http_proxy_host = config['http-proxy-host']
             @http_proxy_port = config['http-proxy-port']
