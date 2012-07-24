@@ -13,7 +13,11 @@ module Exceptional
       if Exceptional::Config.should_send_to_api?
         Exceptional.logger.info("Loading Exceptional #{Exceptional::VERSION} for #{Rails::VERSION::STRING}")
         if defined?(ActionDispatch::DebugExceptions)
-          ActionDispatch::DebugExceptions.send(:include,Exceptional::DebugExceptions)
+          # rails 3.2.x
+          ActionDispatch::DebugExceptions.send(:include,Exceptional::ExceptionMiddleware)
+        elsif defined?(ActionDispatch::ShowExceptions)
+          # rails 3.0.x && 3.1.x
+          ActionDispatch::ShowExceptions.send(:include,Exceptional::ExceptionMiddleware)
         else
           app.config.middleware.use "Rack::RailsExceptional"
         end
