@@ -78,7 +78,7 @@ production:
   api-key: you-prod-api-key
 ```
 
-### Exceptional also supports your rack, sinatra and plain ruby apps
+### Exceptional also supports your rack, rake, sinatra and plain ruby apps
 For more information check out our docs site <http://docs.exceptional.io> 
 Or visit our knowledge base <http://support.exceptional.io/>
 
