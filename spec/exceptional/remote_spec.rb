@@ -28,4 +28,18 @@ describe Exceptional::Remote do
     Exceptional::Remote.should_receive(:call_remote).with(expected_url, Zlib::Deflate.deflate(startup_data.to_json,Zlib::BEST_SPEED))
     Exceptional::Remote.startup_announce(startup_data)
   end
+
+  it "should respect custom logging instructions" do
+    exceptions = []
+    Exceptional::Config.tap do |config|
+      config.stub(:send_to).and_return('log')
+      config.log_printer = lambda { |exception_data| exceptions << exception_data }
+    end
+    expected_data = { :test_data => true }
+    exceptions.should == []
+    Exceptional::Remote.error(expected_data)
+    exceptions.should == [expected_data]
+    Exceptional::Remote.error(expected_data)
+    exceptions.should == [expected_data, expected_data]
+  end
 end

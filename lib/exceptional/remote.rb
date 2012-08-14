@@ -14,6 +14,20 @@ module Exceptional
       end
 
       def error(exception_data)
+        send(:"error_to_#{Exceptional::Config.send_to}", exception_data)
+      end
+
+      private
+
+      def error_to_stdout(exception_data)
+        Exceptional::Config.stdout_printer.call(exception_data)
+      end
+
+      def error_to_log(exception_data)
+        Exceptional::Config.log_printer.call(exception_data)
+      end
+
+      def error_to_api(exception_data)
         uniqueness_hash = exception_data.uniqueness_hash
         hash_param = uniqueness_hash.nil? ? nil: "&hash=#{uniqueness_hash}"
         url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}#{hash_param}"
