@@ -10,10 +10,7 @@ gem 'rails',"2.3.8"
 
 gem "ginger"
 
-gem 'rspec-rails',"1.3.3"
-gem 'rspec-core'
-gem 'rspec-mocks'
-gem 'rspec-expectations'
+gem 'rspec-rails'
 
 gem 'json'
 
