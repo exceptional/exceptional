@@ -29,7 +29,7 @@ module Exceptional
 
       def error_to_api(exception_data)
         uniqueness_hash = exception_data.uniqueness_hash
-        hash_param = uniqueness_hash.nil? ? nil: "&hash=#{uniqueness_hash}"
+        hash_param = uniqueness_hash.nil? ? nil : "&hash=#{uniqueness_hash}"
         url = "/api/errors?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}#{hash_param}"
         compressed = Zlib::Deflate.deflate(exception_data.to_json, Zlib::BEST_SPEED)
         call_remote(url, compressed)
@@ -50,7 +50,7 @@ module Exceptional
           response = client.post(url, data)
           case response
             when Net::HTTPSuccess
-              Exceptional.logger.info( "#{url} - #{response.message}")
+              Exceptional.logger.info("#{url} - #{response.message}")
               return true
             else
               Exceptional.logger.error("#{url} - #{response.code} - #{response.message}")
