@@ -23,11 +23,11 @@ module Exceptional
 
       def load(config_file=nil)
 
-        @log_printer = lambda do |exception_data|
+        @log_printer ||= lambda do |exception_data|
           Exceptional.logger.info "Exceptional error: #{exception_data.inspect}"
         end
 
-        @stdout_printer = lambda do |exception_data|
+        @stdout_printer ||= lambda do |exception_data|
           puts "Exceptional error: #{exception_data.inspect}"
         end
 
