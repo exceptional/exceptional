@@ -51,7 +51,7 @@ module Exceptional
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
             @remote_host = config['remote-host'] unless config['remote-host'].nil?
 
-            @send_to = config['send_to'] || DEFAULTS[:send_to]
+            @send_to = env_config['send_to'] || DEFAULTS[:send_to]
             valid_send_to = %w(api log stdout)
             unless valid_send_to.include?(send_to)
               raise "the value of the send_to configuration entry must be one of #{valid_send_to}"
