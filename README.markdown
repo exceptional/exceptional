@@ -74,6 +74,18 @@ development:
 
 This allows you to monitor Exceptional processing in development mode. Valid values for `send_to` are `api` (the default), `log` and `stdout`.
 
+You can provide custom printers for the `log` and `stdout` destinations. For example, if you like using [`AwesomePrint`](https://github.com/michaeldv/awesome_print), you can use something like:
+
+```ruby
+Exceptional::Config.stdout_printer = lambda do |exception_data|
+  ap ["@@@ Exceptional error", exception_data]
+end
+
+Exceptional::Config.log_printer = lambda do |exception_data|
+  Rails.logger.ap ["@@@ Exceptional error", exception_data], :error
+end
+```
+
 ## Multiple Rails environments
 To use Exceptional within multiple Rails environments, edit your
 config/exceptional.yml to look like the following
