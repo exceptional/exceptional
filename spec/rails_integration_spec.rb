@@ -39,7 +39,7 @@ describe TestingController do
 
   it "filters parameters based on controller filter_parameter_logging" do
     Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
-    Exceptional::Remote.should_receive(:error) {|exception_data|
+    Exceptional::Sender.should_receive(:error) {|exception_data|
       exception_data.to_hash['request']['parameters']['credit_card_number'].should == '[FILTERED]'
     }
     send_request(:raises_something, {:credit_card_number => '1234566777775453', :something_else => 'boo'})
@@ -85,7 +85,7 @@ if ActionController::Base.respond_to?(:rescue_from)
     end
     it "has context and clears context after request" do
       Exceptional::Config.should_receive(:should_send_to_api?).and_return(true)
-      Exceptional::Remote.should_receive(:error) {|exception_data|
+      Exceptional::Sender.should_receive(:error) {|exception_data|
         exception_data.to_hash['context']['foo'] == 'bar'
       }
       send_request(:raises_with_context)

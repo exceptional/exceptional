@@ -36,7 +36,7 @@ context 'resuce errors from within a block' do
   it "collects context information but leaves thread local empty after block" do
     to_raise = FunkyException.new
     Exceptional::Config.should_receive(:should_send_to_api?).and_return(true)
-    Exceptional::Remote.should_receive(:error) {|exception_data|
+    Exceptional::Sender.should_receive(:error) {|exception_data|
       exception_data.to_hash['context']['foo'] == 'bar'
       exception_data.to_hash['context']['baz'] == 42
       exception_data.to_hash['context']['cats'] == {'lol' => 'bot'}

@@ -5,7 +5,7 @@ require 'net/https'
 require 'digest/md5'
 
 module Exceptional
-  class Remote
+  class Sender
     class << self
       def startup_announce(startup_data)
         url = "/api/announcements?api_key=#{::Exceptional::Config.api_key}&protocol_version=#{::Exceptional::PROTOCOL_VERSION}"
