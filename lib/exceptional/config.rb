@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 
 module Exceptional
   class Config
@@ -20,7 +21,7 @@ module Exceptional
       def load(config_file=nil)
         if (config_file && File.file?(config_file))
           begin
-            config = YAML::load_file(config_file)
+            config = YAML.load(ERB.new(File.new(config_file).read).result)
             env_config = config[application_environment] || {}
             @api_key = config['api-key'] ||
                        env_config['api-key'] ||
@@ -31,7 +32,7 @@ module Exceptional
             @http_proxy_username = config['http-proxy-username']
             @http_proxy_password = config['http-proxy-password']
             @http_open_timeout = config['http-open-timeout']
-            @http_read_timeout = config['http-read-timeout'] 
+            @http_read_timeout = config['http-read-timeout']
 
             @ssl = config['ssl'] || env_config['ssl']
             @enabled = env_config['enabled']
