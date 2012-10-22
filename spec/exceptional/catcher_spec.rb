@@ -10,7 +10,7 @@ describe Exceptional::Catcher do
       controller = mock('controller')
       request = mock('request')
       Exceptional::ControllerExceptionData.should_receive(:new).with(exception,controller,request).and_return(data = mock('exception_data'))
-      Exceptional::Remote.should_receive(:error).with(data)
+      Exceptional::Sender.should_receive(:error).with(data)
       Exceptional::Catcher.handle_with_controller(exception,controller,request)
     end
     # it "handle_with_rack should create exception_data object and send json to the api"
@@ -26,7 +26,7 @@ describe Exceptional::Catcher do
       controller = mock('controller')
       request = mock('request')
       Exceptional::ControllerExceptionData.should_not_receive(:new)
-      Exceptional::Remote.should_not_receive(:error)
+      Exceptional::Sender.should_not_receive(:error)
       expect{
         Exceptional::Catcher.handle_with_controller(exception,controller,request)
       }.to raise_error

@@ -4,7 +4,7 @@ module Exceptional
 
   module Integration
     def self.alert(msg, env={})
-      return Exceptional::Remote.error(Exceptional::AlertData.new(Alert.new(msg), "Alert"))
+      return Exceptional::Sender.error(Exceptional::AlertData.new(Alert.new(msg), "Alert"))
     end
   end
 end

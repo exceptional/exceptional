@@ -7,7 +7,7 @@ module Exceptional
       begin
         raise ExceptionalTestException.new, 'Test exception'
       rescue Exception => e
-        unless Exceptional::Remote.error(Exceptional::ExceptionData.new(e, "Test Exception"))
+        unless Exceptional::Sender.error(Exceptional::ExceptionData.new(e, "Test Exception"))
           puts "Problem sending exception to Exceptional. Check your API key."
         else
           puts "Test Exception sent. Please login to http://exceptional.io to see it!"
