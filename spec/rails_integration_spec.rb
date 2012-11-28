@@ -48,17 +48,17 @@ describe IgnoreAgentController do
   end
 
   it "should send the exception if agent is not ignored" do
-    Exceptional::Remote.should_receive(:error)
+    Exceptional::Sender.should_receive(:error)
     send_request(:raises_something)
   end
 
   it "should not send the exception if agent is ignored" do
-    Exceptional::Remote.should_not_receive(:error)
+    Exceptional::Sender.should_not_receive(:error)
     expect { send_request(:raise_but_ignore)}.to raise_exception
   end
 
   it "should not send the exception if class is ignored with regex" do
-    Exceptional::Remote.should_not_receive(:error)
+    Exceptional::Sender.should_not_receive(:error)
     expect { send_request(:raise_but_ignore_with_regex)}.to raise_exception
   end
 end
@@ -86,7 +86,7 @@ describe TestingController do
 
   it "filters parameters based on controller filter_parameter_logging" do
     Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
-    Exceptional::Remote.should_receive(:error) {|exception_data|
+    Exceptional::Sender.should_receive(:error) {|exception_data|
       exception_data.to_hash['request']['parameters']['credit_card_number'].should == '[FILTERED]'
     }
     send_request(:raises_something, {:credit_card_number => '1234566777775453', :something_else => 'boo'})
@@ -132,7 +132,7 @@ if ActionController::Base.respond_to?(:rescue_from)
     end
     it "has context and clears context after request" do
       Exceptional::Config.should_receive(:should_send_to_api?).and_return(true)
-      Exceptional::Remote.should_receive(:error) {|exception_data|
+      Exceptional::Sender.should_receive(:error) {|exception_data|
         exception_data.to_hash['context']['foo'] == 'bar'
       }
       send_request(:raises_with_context)

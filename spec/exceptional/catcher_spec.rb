@@ -10,7 +10,7 @@ describe Exceptional::Catcher do
       controller = mock('controller')
       request = mock('request')
       Exceptional::ControllerExceptionData.should_receive(:new).with(exception,controller,request).and_return(data = mock('exception_data'))
-      Exceptional::Remote.should_receive(:error).with(data)
+      Exceptional::Sender.should_receive(:error).with(data)
       Exceptional::Catcher.handle_with_controller(exception,controller,request)
     end
 
@@ -25,7 +25,7 @@ describe Exceptional::Catcher do
         Exceptional::Catcher.should_receive(:ignore_class?).with(@exception)
         Exceptional::Catcher.should_receive(:ignore_user_agent?).with(@request)
         Exceptional::ControllerExceptionData.should_receive(:new).with(@exception,@controller,@request).and_return(data = mock('exception_data'))
-        Exceptional::Remote.should_receive(:error).with(data)
+        Exceptional::Sender.should_receive(:error).with(data)
         Exceptional::Catcher.handle_with_controller(@exception, @controller, @request)
       end
       it "should ignore exceptions by class name" do
@@ -61,7 +61,7 @@ describe Exceptional::Catcher do
       controller = mock('controller')
       request = mock('request')
       Exceptional::ControllerExceptionData.should_not_receive(:new)
-      Exceptional::Remote.should_not_receive(:error)
+      Exceptional::Sender.should_not_receive(:error)
       expect{
         Exceptional::Catcher.handle_with_controller(exception,controller,request)
       }.to raise_error

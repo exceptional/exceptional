@@ -56,12 +56,34 @@ This Gem/Plugin posts exception data to Exceptional <http://exceptional.io>. Dat
 
 Exceptional will not report your exceptions in *development* environment by default. 
 
-To enable reporting of exceptions in development, please add the following lines to your `exceptional.yml`
+To enable reporting of exceptions in development, please add the following lines to your `exceptional.yml`.
 
 ```ruby
 development:
 
   enabled: true
+```
+
+To write Exceptional information to the log or STDOUT instead of sending it to the remote API, add the following line to your `exceptional.yml`.
+
+```ruby
+development:
+
+  send_to: stdout
+```
+
+This allows you to monitor Exceptional processing in development mode. Valid values for `send_to` are `api` (the default), `log` and `stdout`.
+
+You can provide custom printers for the `log` and `stdout` destinations. For example, if you like using [`AwesomePrint`](https://github.com/michaeldv/awesome_print), you can use something like:
+
+```ruby
+Exceptional::Config.stdout_printer = lambda do |exception_data|
+  ap ["@@@ Exceptional error", exception_data]
+end
+
+Exceptional::Config.log_printer = lambda do |exception_data|
+  Rails.logger.ap ["@@@ Exceptional error", exception_data], :error
+end
 ```
 
 ## Multiple Rails environments
