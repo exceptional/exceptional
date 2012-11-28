@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/exceptional/version', __FILE__)
+$:.unshift File.expand_path("../lib", __FILE__)
+require "exceptional/version"
 
 Gem::Specification.new do |gem|
   gem.name = %q{exceptional}
