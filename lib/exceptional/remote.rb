@@ -30,8 +30,12 @@ module Exceptional
         client = optional_proxy.new(config.remote_host, config.remote_port)
         client.open_timeout = config.http_open_timeout
         client.read_timeout = config.http_read_timeout
-        client.use_ssl = config.ssl?
-        client.verify_mode = OpenSSL::SSL::VERIFY_NONE if config.ssl?
+        if config.ssl?
+          client.use_ssl = config.ssl?
+          client.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          client.ca_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'certs'))
+        end
+
         begin
           response = client.post(url, data)
           case response

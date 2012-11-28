@@ -8,7 +8,7 @@ module Exceptional
     class << self
       DEFAULTS = {
         :ssl => false,
-        :remote_host_http => 'plugin.getexceptional.com',
+        :remote_host_http => 'plugin.exceptional.io',
         :http_open_timeout => 2,
         :http_read_timeout => 4,
         :disabled_by_default => %w(development test)
