@@ -50,7 +50,7 @@ context 'resuce errors from within a block' do
     Thread.current[:exceptional_context].should == nil
   end
 
-  it "clearr context with Exceptional.context.clear!" do
+  it "clear context with Exceptional.context.clear!" do
     Exceptional.context('foo' => 'bar')
     Thread.current[:exceptional_context].should_not == nil
     Exceptional.context.clear!
