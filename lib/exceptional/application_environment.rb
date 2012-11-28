@@ -33,7 +33,10 @@ module Exceptional
 
     def self.extract_environment(env)
       env.reject do |k, v|
-        (k =~ /^HTTP_/) || Exceptional::ENVIRONMENT_FILTER.include?(k)
+        is_http_header = (k =~ /^HTTP_/)
+        is_filtered = Exceptional::ENVIRONMENT_FILTER.include?(k)
+        matches_whitelist = Exceptional::ENVIRONMENT_WHITELIST.any?{|whitelist_filter| whitelist_filter.is_a?(Regexp) ? k =~ whitelist_filter : k.eql?(whitelist_filter)}
+        is_http_header || is_filtered || !matches_whitelist
       end
     end
 
