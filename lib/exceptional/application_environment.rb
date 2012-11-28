@@ -35,7 +35,10 @@ module Exceptional
       env.reject do |k, v|
         is_http_header = (k =~ /^HTTP_/)
         is_filtered = Exceptional::ENVIRONMENT_FILTER.include?(k)
-        matches_whitelist = Exceptional::ENVIRONMENT_WHITELIST.any?{|whitelist_filter| whitelist_filter.is_a?(Regexp) ? k =~ whitelist_filter : k.eql?(whitelist_filter)}
+        matches_whitelist = Exceptional::ENVIRONMENT_WHITELIST.
+          any? do |whitelist_filter|
+            whitelist_filter === k
+          end
         is_http_header || is_filtered || !matches_whitelist
       end
     end
