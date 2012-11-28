@@ -21,13 +21,60 @@ class TestingController < ActionController::Base
   end
 end
 
+class IgnoreAgentController < ActionController::Base
+
+  class SomethingIgnored < StandardError; end
+
+  def raises_something
+    raise StandardError
+  end
+
+  def raise_but_ignore
+    Exceptional::Config.ingore_user_agents = "BOTMEISTER"
+    request.user_agent = "BOTMEISTER"
+    raise StandardError
+  end
+
+  def raise_but_ignore_with_regex
+    Exceptional::Config.ignore_exceptions = [/Ignored/]
+    raise SomethingIgnored
+  end
+end
+
+describe IgnoreAgentController do
+  before :each do
+    @controller = IgnoreAgentController.new
+    Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
+  end
+
+  it "should send the exception if agent is not ignored" do
+    Exceptional::Remote.should_receive(:error)
+    send_request(:raises_something)
+  end
+
+  it "should not send the exception if agent is ignored" do
+    Exceptional::Remote.should_not_receive(:error)
+    expect { send_request(:raise_but_ignore)}.to raise_exception
+  end
+
+  it "should not send the exception if class is ignored with regex" do
+    Exceptional::Remote.should_not_receive(:error)
+    expect { send_request(:raise_but_ignore_with_regex)}.to raise_exception
+  end
+end
+
 describe TestingController do
   before :each do
     @controller = TestingController.new
   end
 
   it 'handle exception with Exceptional::Catcher' do
-    Exceptional::Catcher.should_receive(:handle_with_controller).with(an_instance_of(StandardError), @controller, an_instance_of(ActionController::TestRequest))
+    Exceptional::Catcher.should_receive(:handle_with_controller).
+      with(
+        an_instance_of(StandardError),
+        @controller,
+        an_instance_of(ActionController::TestRequest)
+          )
     send_request(:raises_something)
   end
 

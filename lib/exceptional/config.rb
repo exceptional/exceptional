@@ -14,8 +14,10 @@ module Exceptional
         :disabled_by_default => %w(development test)
       }
 
-      attr_accessor :api_key, :enabled
-      attr_accessor :http_proxy_host, :http_proxy_port, :http_proxy_username, :http_proxy_password, :ignored_agents, :ignored_exceptions
+      attr_accessor :api_key, :enabled, :http_proxy_host, :http_proxy_port,
+        :http_proxy_username, :http_proxy_password, :ignore_user_agents,
+        :ignore_exceptions
+
       attr_writer :ssl
 
       def load(config_file=nil)
@@ -68,12 +70,12 @@ module Exceptional
         @ssl ||= DEFAULTS[:ssl]
       end
       
-      def ignored_agents
-        @ignored_agents || []
+      def ignore_user_agents
+        @ignore_user_agents ||= []
       end
       
-      def ignored_exceptions
-        @ignored_exceptions || []
+      def ignore_exceptions
+        @ignore_exceptions ||= []
       end
 
       def remote_host
