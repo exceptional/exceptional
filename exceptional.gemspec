@@ -16,4 +16,9 @@ Gem::Specification.new do |gem|
   gem.rubyforge_project = %q{exceptional}
   gem.requirements << "json_pure, json-jruby or json gem required"
   gem.add_dependency 'rack'
+
+  gem.add_development_dependency 'rspec-rails'
+  gem.add_development_dependency 'json'
+  gem.add_development_dependency 'ginger'
+  gem.add_development_dependency 'rails', '2.3.8'
 end
