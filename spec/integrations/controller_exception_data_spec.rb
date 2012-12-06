@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 require 'digest/md5'
 
 
@@ -16,7 +16,7 @@ end
 
 describe Exceptional::ControllerExceptionData do
   it "raises useful error when to_json isn't available on to_hash" do
-    request = ActionController::TestRequest.new
+    request = ActionDispatch::TestRequest.new
     brokenJson = BrokenJSON.new
     session = {:boom => brokenJson}
     request.stub!(:session).and_return(session)

@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integration', 'rails')
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'exceptional', 'integration', 'rails')
 
 describe Exceptional, 'version number' do
   it "be available proramatically" do
@@ -13,89 +13,89 @@ describe ActiveSupport::JSON, 'standards compliant json' do
   end
 end
 
-class TestingController < ActionController::Base
-  filter_parameter_logging :password, /credit_card/
+class ExceptionalController < ActionController::Base
+  def show_detailed_exceptions?
+    true
+  end
+end
+
+class SimpleController < ExceptionalController
+  # filter_parameter_logging :password, /credit_card/ RAILS 2
 
   def raises_something
     raise StandardError
   end
 end
 
-class IgnoreAgentController < ActionController::Base
 
-  class SomethingIgnored < StandardError; end
+class IgnoreAgentController < ExceptionalController
+
+  class IgnoredError < StandardError; end
 
   def raises_something
-    raise StandardError
+    raise
   end
 
   def raise_but_ignore
-    Exceptional::Config.ingore_user_agents = "BOTMEISTER"
-    request.user_agent = "BOTMEISTER"
+    request.env["HTTP_USER_AGENT"] = "BOTMEISTER"
     raise StandardError
   end
 
   def raise_but_ignore_with_regex
-    Exceptional::Config.ignore_exceptions = [/Ignored/]
-    raise SomethingIgnored
+    raise IgnoredError
+  end
+
+  def local_request?
+    true
   end
 end
 
 describe IgnoreAgentController do
   before :each do
-    @controller = IgnoreAgentController.new
+    Exceptional::Config.ignore_user_agents = ["BOTMEISTER"]
+    Exceptional::Config.api_key = "api_key"
     Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
+    @controller = IgnoreAgentController
   end
 
   it "should send the exception if agent is not ignored" do
     Exceptional::Sender.should_receive(:error)
-    send_request(:raises_something)
+    send_request :raises_something
   end
 
   it "should not send the exception if agent is ignored" do
     Exceptional::Sender.should_not_receive(:error)
-    expect { send_request(:raise_but_ignore)}.to raise_exception
+    send_request :raise_but_ignore
   end
 
   it "should not send the exception if class is ignored with regex" do
+    Exceptional::Config.ignore_exceptions = [/IgnoredError/]
     Exceptional::Sender.should_not_receive(:error)
-    expect { send_request(:raise_but_ignore_with_regex)}.to raise_exception
+    send_request :raise_but_ignore_with_regex
   end
 end
 
-describe TestingController do
-  before :each do
-    @controller = TestingController.new
-  end
-
-  it 'handle exception with Exceptional::Catcher' do
-    Exceptional::Catcher.should_receive(:handle_with_controller).
-      with(
-        an_instance_of(StandardError),
-        @controller,
-        an_instance_of(ActionController::TestRequest)
-          )
-    send_request(:raises_something)
-  end
-
-  it "still return an error response to the user" do
-    Exceptional::Catcher.stub!(:handle_with_controller)
-    send_request(:raises_something)
-    @response.code.should == '500'
-  end
-
-  it "filters parameters based on controller filter_parameter_logging" do
+ describe SimpleController do
+   before :each do
+    Exceptional::Config.api_key = "api_key"
     Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
-    Exceptional::Sender.should_receive(:error) {|exception_data|
-      exception_data.to_hash['request']['parameters']['credit_card_number'].should == '[FILTERED]'
-    }
-    send_request(:raises_something, {:credit_card_number => '1234566777775453', :something_else => 'boo'})
-  end
-end
+    @controller = SimpleController
+   end
+
+   it 'handle exception with Exceptional::Catcher' do
+     Exceptional::Catcher.should_receive(:handle_with_controller).
+       with(
+         an_instance_of(StandardError),
+         an_instance_of(SimpleController),
+         an_instance_of(Rack::Request)
+           )
+       send_request :raises_something
+   end
+ end
+
 
 if ActionController::Base.respond_to?(:rescue_from)
-  class CustomError < StandardError;
-  end
+  class CustomError < StandardError; end
   class TestingWithRescueFromController < ActionController::Base
     rescue_from CustomError, :with => :custom_handler
 
@@ -119,7 +119,9 @@ if ActionController::Base.respond_to?(:rescue_from)
 
   describe TestingWithRescueFromController do
     before :each do
-      @controller = TestingWithRescueFromController.new
+      Exceptional::Config.api_key = "api_key"
+      Exceptional::Config.stub!(:should_send_to_api?).and_return(true)
+      @controller = TestingWithRescueFromController
     end
 
     it 'not handle exception with Exceptional that is dealt with by rescue_from' do
@@ -131,7 +133,6 @@ if ActionController::Base.respond_to?(:rescue_from)
       send_request(:raises_other_error)
     end
     it "has context and clears context after request" do
-      Exceptional::Config.should_receive(:should_send_to_api?).and_return(true)
       Exceptional::Sender.should_receive(:error) {|exception_data|
         exception_data.to_hash['context']['foo'] == 'bar'
       }

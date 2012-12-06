@@ -37,14 +37,14 @@ module Exceptional
       end
 
       def ignore_class?(exception)
-        Config.ignore_exceptions.any? do |exception_class|
-          exception_class === exception.class
+        Config.ignore_exceptions.flatten.any? do |exception_class|
+          exception_class === exception.class.to_s
         end
       end
 
       def ignore_user_agent?(request)
-        Config.ignore_user_agents.any? do |user_agent|
-          user_agent === request.user_agent
+        Config.ignore_user_agents.flatten.any? do |user_agent|
+          user_agent === request.user_agent.to_s
         end
       end
     end

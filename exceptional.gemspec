@@ -17,8 +17,9 @@ Gem::Specification.new do |gem|
   gem.requirements << "json_pure, json-jruby or json gem required"
   gem.add_dependency 'rack'
 
-  gem.add_development_dependency 'rspec-rails'
+  gem.add_development_dependency 'rspec', '~> 2.12.0'
+  gem.add_development_dependency 'rspec-rails', '~> 2.12.0'
   gem.add_development_dependency 'json'
-  gem.add_development_dependency 'ginger'
-  gem.add_development_dependency 'rails', '2.3.8'
+  gem.add_development_dependency 'appraisal'
+  gem.add_development_dependency 'mocha'
 end

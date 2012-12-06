@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 require 'digest/md5'
 
 describe Exceptional::RackExceptionData do

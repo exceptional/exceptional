@@ -7,7 +7,7 @@ end
 describe Rack::RailsExceptional do
 
   class TestingController < ActionController::Base
-    filter_parameter_logging :password, /credit_card/
+    # filter_parameter_logging :password, /credit_card/ RAILS 2
 
     def raises_something
       raise StandardError

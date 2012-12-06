@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe Exceptional::Startup, 'announce_and_authenticate' do
   it "raise StartupException if api_key is nil" do
     Exceptional::Config.api_key = ''
-    lambda { Exceptional::Startup.announce }.should raise_error(Exceptional::StartupException, /API Key/)
+    expect { Exceptional::Startup.announce }.to raise_error(Exceptional::StartupException, /API Key/)
   end
   it "calls Sender announce by default" do
     Exceptional::Config.api_key = '123'

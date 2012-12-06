@@ -1,15 +1,21 @@
-require 'spec/rake/spectask'
+require 'appraisal'
+require 'rubygems'
+require 'bundler/setup'
+
+require 'rspec/core/rake_task'
+
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.pattern = "spec/exceptional/**/*_spec.rb"
+  t.rspec_opts = ['--color']
+end
+
+RSpec::Core::RakeTask.new(:test_integrations) do |t|
+  t.pattern = "spec/integrations/*_spec.rb"
+  t.rspec_opts = ['--color']
+end
 
 task :default => [:spec]
 
-Spec::Rake::SpecTask.new("spec") do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['--color']
-end
-
-desc 'Run specs using ginger to test against all supported rails versions'
-task :ginger do
-  ARGV.clear
-  ARGV << 'spec'
-  load File.join(*%w[spec bin ginger])
+task :appraise do
+  exec 'rake appraisal test_integrations'
 end

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-context 'resuce errors from within a block' do
+describe 'resuce errors from within a block' do
   class FunkyException < StandardError;
   end
   it "Exceptional.rescue should send to exceptional and swallow error " do

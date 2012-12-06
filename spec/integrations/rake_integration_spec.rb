@@ -11,7 +11,7 @@ describe 'Rake integration' do
         def display_error_message(exception); end
       end
     end
-    load File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integration', 'rake.rb')
+    load File.join(File.dirname(__FILE__), '..', '..', 'lib', 'exceptional', 'integration', 'rake.rb')
     @application =  Rake::Application.new
     @exception = StandardError.new "Some rake error"
   end

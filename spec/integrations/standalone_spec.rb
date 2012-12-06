@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'exceptional', 'integration', 'rails')
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'exceptional', 'integration', 'rails')
 
 describe Exceptional do
   it "set the api key" do
