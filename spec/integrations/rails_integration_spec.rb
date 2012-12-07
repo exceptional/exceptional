@@ -82,12 +82,12 @@ end
     @controller = SimpleController
    end
 
-   it 'handle exception with Exceptional::Catcher' do
+   it 'should handle exception with Exceptional::Catcher' do
      Exceptional::Catcher.should_receive(:handle_with_controller).
        with(
          an_instance_of(StandardError),
          an_instance_of(SimpleController),
-         an_instance_of(Rack::Request)
+         an_instance_of(ActionDispatch::Request)
            )
        send_request :raises_something
    end

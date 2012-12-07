@@ -7,8 +7,8 @@ module Exceptional
 
     def render_exception_with_exceptional(env,exception)
       Exceptional::Catcher.handle_with_controller(exception,
-                                                    env['action_controller.instance'],
-                                                    Rack::Request.new(env))
+                                                  env['action_controller.instance'],
+                                                  ActionDispatch::Request.new(env))
       Exceptional.context.clear!
       render_exception_without_exceptional(env,exception)
     end
