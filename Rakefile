@@ -14,7 +14,7 @@ RSpec::Core::RakeTask.new(:test_integrations) do |t|
   t.rspec_opts = ['--color']
 end
 
-task :default => [:spec]
+task :default => [:spec, :appraise]
 
 task :appraise do
   exec 'rake appraisal test_integrations'
