@@ -9,16 +9,11 @@ end
 
 describe Exceptional::ControllerExceptionData do
   it "raises useful error when to_json isn't available on to_hash" do
-    begin
       data = Exceptional::ExceptionData.new(Exceptional::FunkyError.new)
       hash_without_json = {}
       hash_without_json.stub!(:to_json).and_raise(NoMethodError)
       data.stub!(:to_hash).and_return(hash_without_json)
-      data.to_json
-      fail 'expects to raise and error'
-    rescue StandardError => e
-      e.message.should =~ /to_json/
-    end
+      expect { data.to_json }.to raise_exception(/to_json/)
   end
 end
 
@@ -90,32 +85,32 @@ end
 describe Exceptional::ControllerExceptionData, 'with request/controller/params' do
 
   class Exceptional::SomeController < ActionController::Base
-    # filter_parameter_logging :filter_me # RAILS 2
   end
 
   before :each do
     @controller = Exceptional::SomeController.new
-    @request = ActionDispatch::TestRequest.new({'action' => 'some_action' })
-    @request.request_uri = '/some_path?var1=abc'
-    @request.env["QUERY_STRING"] = "var1=abc"
+    @request = ActionDispatch::TestRequest.new
+    @request.stub!(:parameters).and_return({'var1' => 'abc', 'action' => 'some_action', 'filter_me' => 'private'})
+    @request.stub!(:url).and_return('http://youtube.com/watch?v=oHg5SJYRHA0')
     @request.stub!(:request_method).and_return(:get)
     @request.stub!(:remote_ip).and_return('1.2.3.4')
     @request.stub!(:env).and_return({'SOME_VAR' => 'abc', 'HTTP_CONTENT_TYPE' => 'text/html'})
+    @request.env["action_dispatch.parameter_filter"] = [:filter_me]
     @error = Exceptional::FunkyError.new('some message')
     data = Exceptional::ControllerExceptionData.new(@error, @controller, @request)
     @hash = data.to_hash
   end
 
-  # it "captures request" do
-  #   request_hash = @hash['request']
-  #   request_hash['url'].should == 'http://test.host/some_path?var1=abc'
-  #   request_hash['controller'].should == 'Exceptional::SomeController'
-  #   request_hash['action'].should == 'some_action'
-  #   request_hash['parameters'].should == {'var1' => 'abc', 'action' => 'some_action', 'filter_me' => '[FILTERED]'}
-  #   request_hash['request_method'].should == 'get'
-  #   request_hash['remote_ip'].should == '1.2.3.4'
-  #   request_hash['headers'].should == {'Content-Type' => 'text/html'}
-  # end
+  it "captures request" do
+    request_hash = @hash['request']
+    request_hash['url'].should == 'http://youtube.com/watch?v=oHg5SJYRHA0'
+    request_hash['controller'].should == 'Exceptional::SomeController'
+    request_hash['action'].should == 'some_action'
+    request_hash['parameters'].should == {'var1' => 'abc', 'action' => 'some_action', 'filter_me' => '[FILTERED]'}
+    request_hash['request_method'].should == 'get'
+    request_hash['remote_ip'].should == '1.2.3.4'
+    request_hash['headers'].should == {'Content-Type' => 'text/html'}
+  end
 
   it "filter out objects that aren't jsonable" do
     class Crazy
