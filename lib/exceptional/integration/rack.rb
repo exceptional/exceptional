@@ -17,12 +17,11 @@ module Rack
     end
 
     def call(env)
-      begin
-        status, headers, body =  @app.call(env)
-      rescue Exception => e
-        ::Exceptional::Catcher.handle_with_rack(e,env, Rack::Request.new(env))
-        raise(e)
-      end
+      status, headers, body =  @app.call(env)
+    rescue Exception => e
+      ::Exceptional::Catcher.handle_with_rack(e, env, Rack::Request.new(env))
+      raise(e)
     end
+
   end
 end
