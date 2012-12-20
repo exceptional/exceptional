@@ -30,8 +30,8 @@ module Exceptional
         end
         log
       rescue
-        return Rails.logger if defined?(Rails) && defined?(Rails.logger)
-        return RAILS_DEFAULT_LOGGER if defined?(RAILS_DEFAULT_LOGGER)
+        return Rails.logger if defined?(Rails) && defined?(Rails.logger) && Rails.logger
+        return RAILS_DEFAULT_LOGGER if defined?(RAILS_DEFAULT_LOGGER) && RAILS_DEFAULT_LOGGER
         return Logger.new(STDERR)
       end
     end
