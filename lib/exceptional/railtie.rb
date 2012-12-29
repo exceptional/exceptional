@@ -10,6 +10,10 @@ module Exceptional
       Exceptional::Config.load config_file if File.exist?(config_file)
       # On Heroku config is loaded via the ENV so no need to load it from the file
 
+      if defined?(ActionController::Base)
+        ActionController::Base.send(:include,Exceptional::ActionControllerMethods)
+      end
+
       if Exceptional::Config.should_send_to_api?
         Exceptional.logger.info("Loading Exceptional #{Exceptional::VERSION} for #{Rails::VERSION::STRING}")
         if defined?(ActionDispatch::DebugExceptions)
