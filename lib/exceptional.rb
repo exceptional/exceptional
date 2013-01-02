@@ -38,7 +38,7 @@ module Exceptional
   def self.handle(exception, name=nil)
     Exceptional::Catcher.handle(exception, name)
   end
-  
+
   def self.rescue(name=nil, context=nil, &block)
     begin
       self.context(context) unless context.nil?
@@ -58,7 +58,7 @@ module Exceptional
       Exceptional::Catcher.handle(e,name)
       raise(e)
     ensure
-      self.clear!      
+      self.clear!
     end
   end
 
