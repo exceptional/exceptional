@@ -1,6 +1,6 @@
 module Exceptional
   module ActionControllerMethods
-    def rescue_action_with_exceptional(exception)
+    def rescue_with_exceptional(exception)
       unless exception_handled_by_rescue_from?(exception)
         Exceptional::Catcher.handle_with_controller(exception, self, request)
         Exceptional.context.clear!
