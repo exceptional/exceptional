@@ -7,6 +7,17 @@ module Exceptional
       end
     end
 
+    def exceptional_rescue(context=nil, &block)
+      begin
+        Exceptional.context(context) unless context.nil?
+        block.call
+      rescue Exception => exception
+        Exceptional::Catcher.handle_with_controller(exception, self, request)
+      ensure
+        Exceptional.context.clear!
+      end
+    end
+
     private
 
     def exception_handled_by_rescue_from?(exception)
