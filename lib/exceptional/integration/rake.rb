@@ -21,31 +21,19 @@ module Exceptional::Rake
   #
   # Exceptional::Config.load("/path/to/config.yml")
   #
-  def self.included(base)
-    base.send(:alias_method,
-              :standard_exception_handling,
-              :standard_exception_handling_with_exceptional)
-  end
+  def display_error_message(ex)
+    Exceptional.handle(ex, reconstruct_command_line)
+    super(ex)
+    Exceptional.clear!
+  end 
 
-  def standard_exception_handling_with_exceptional
-      begin
-        yield
-      rescue SystemExit => ex
-        # Exit silently with current status
-        raise
-      rescue OptionParser::InvalidOption => ex
-        $stderr.puts ex.message
-        exit(false)
-      rescue Exception => ex
-        # Exit with error message
-        Exceptional::Catcher.handle(ex)
-        display_error_message(ex)
-        Exceptional.clear!
-        exit(false)
-      end
-  end
+  def reconstruct_command_line
+    "rake #{ARGV.join( ' ' )}" 
+  end 
+
 end
-
-Rake::Application.send(:include,Exceptional::Rake)
-
-Exceptional.logger.info "Rake integration enabled"
+Rake.application.instance_eval do
+  class << self
+    include Exceptional::RakeHandler
+  end 
+end
