@@ -51,8 +51,8 @@ module Exceptional
             @enabled = env_config['enabled']
             @remote_port = config['remote-port'].to_i unless config['remote-port'].nil?
             @remote_host = config['remote-host'] unless config['remote-host'].nil?
-            @ignored_agents = config['ignored-agents']
-            @ignored_exceptions = config['ignored-exceptions']
+            @ignore_user_agents = config['ignore-user-agents']
+            @ignore_exceptions = config['ignore-exceptions']
             @send_to = env_config['send_to'] || DEFAULTS[:send_to]
 
             valid_send_to = %w(api log stdout)
@@ -90,11 +90,11 @@ module Exceptional
       def send_to
         @send_to ||= DEFAULTS[:send_to]
       end
-      
+
       def ignore_user_agents
         @ignore_user_agents ||= []
       end
-      
+
       def ignore_exceptions
         @ignore_exceptions ||= []
       end
