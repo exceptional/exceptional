@@ -8,3 +8,5 @@ http-proxy-username: bob
 http-proxy-password: jack
 http-open-timeout: 5
 http-read-timeout: 10
+ignore-user-agents: [Googlebot, msnbot]
+ignore-exceptions: ["Mongoid::Errors::DocumentNotFound"]

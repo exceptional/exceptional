@@ -25,7 +25,7 @@ describe Exceptional::Config, 'defaults' do
     %w(development test).each do |env|
       Exceptional::Config.stub!(:application_environment).and_return(env)
       Exceptional::Config.should_send_to_api?.should == false
-    end    
+    end
   end
   it "be enabled based on environment by default" do
     %w(production staging).each do |env|
@@ -50,12 +50,14 @@ describe Exceptional::Config, 'defaults' do
       Exceptional::Config.http_proxy_password.should == 'jack'
       Exceptional::Config.http_open_timeout.should == 5
       Exceptional::Config.http_read_timeout.should == 10
+      Exceptional::Config.ignore_user_agents.should == %w(Googlebot msnbot)
+      Exceptional::Config.ignore_exceptions.should == %w(Mongoid::Errors::DocumentNotFound)
     end
-    it "allow disable production environment" do      
+    it "allow disable production environment" do
       Exceptional::Config.load('spec/fixtures/exceptional_disabled.yml')
       Exceptional::Config.api_key.should == 'abc123'
       Exceptional::Config.should_send_to_api?.should == false
-    end    
+    end
     it "allow olded format for exception.yml" do
       Exceptional::Config.load('spec/fixtures/exceptional_old.yml')
       Exceptional::Config.api_key.should == 'abc123'
