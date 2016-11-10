@@ -1,3 +1,13 @@
+# DEPRECATION NOTICE
+
+[exceptional.io](http://exceptional.io) was officially shutdown on September 1, 2016 in favor of [Airbrake](https://airbrake.io).
+
+The [exceptional notifier](https://github.com/exceptional/exceptional) is now officially deprecated.
+
+This repository is no longer accepting pull requests or issues.
+
+The Exceptional team recommends using [Airbrake](https://airbrake.io) moving forward.
+
 # Exceptional <http://exceptional.io>
 
 Exceptional helps you track errors in your Ruby apps
