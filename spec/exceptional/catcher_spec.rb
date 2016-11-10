@@ -105,29 +105,40 @@ describe Exceptional::Catcher do
   end
 
   describe "when Exceptional reporting is off" do
+      let(:exception) { mock('exception') }
+      let(:controller) { mock('controller') }
+      let(:request){ mock('request') }
 
     before do
       Exceptional::Config.stub(:should_send_to_api?).and_return(false)
     end
 
-    describe "#handle, #handle_with_controller and #handle_with_rack" do
+    shared_examples_for "silences exception, does not report" do
+      it "does not reraise the exception" do
+        expect { subject }.to_not raise_exception
+      end
 
-      it "should reraise the exception and not report it" do
-        exception = mock('exception')
-        controller = mock('controller')
-        request = mock('request')
-
+      it "does not report exception" do
         Exceptional::ControllerExceptionData.should_not_receive(:new)
         Exceptional::Sender.should_not_receive(:error)
-
-        ["rails", "rack", ""].each do |handler|
-          method_name = "handle"
-          method_name << "_with_#{handler}" unless handler.empty? 
-          expect do
-            Exceptional::Catcher.send(method_name, exception, controller, request)
-          end.to raise_exception
-        end
+        subject
       end
+    end
+
+    context "#handle_with_controller" do
+      subject { Exceptional::Catcher.send(:handle_with_controller, exception, controller, request) }
+
+      it_behaves_like "silences exception, does not report"
+    end
+
+    context "#handler_with_controller" do
+      subject { Exceptional::Catcher.send(:handle_with_controller, exception, controller, request) }
+      it_behaves_like "silences exception, does not report"
+    end
+
+    context "#handle" do
+      subject { Exceptional::Catcher.send(:handle, exception) }
+      it_behaves_like "silences exception, does not report"
     end
   end
 end

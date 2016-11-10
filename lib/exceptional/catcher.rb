@@ -10,8 +10,6 @@ module Exceptional
 
           data = ControllerExceptionData.new(exception, controller, request)
           Sender.error(data)
-        else
-          raise exception
         end
 
       end
@@ -21,8 +19,6 @@ module Exceptional
         if Config.should_send_to_api?
           data = RackExceptionData.new(exception, environment, request)
           Sender.error(data)
-        else
-          raise exception
         end
 
       end
@@ -33,8 +29,6 @@ module Exceptional
         if Config.should_send_to_api?
           data = ExceptionData.new(exception, name)
           Sender.error(data)
-        else
-          raise exception
         end
 
       end
